@@ -1,0 +1,5 @@
+X:\Android\Bildget\app\build\intermediates\classes\debug
+X:\Android\Bildget\app\build\intermediates\pre-dexed\debug\support-annotations-21.0.0-72c65a722439c8e4f195c0f0484c32650413cddd.jar
+X:\Android\Bildget\app\build\intermediates\pre-dexed\debug\internal_impl-21.0.0-0b7c4e93dd2e578b22da7e342f604b493495abd2.jar
+X:\Android\Bildget\app\build\intermediates\pre-dexed\debug\classes-d63dbc9c269207af5d070b5f58734abeef0ecff0.jar
+X:\Android\Bildget\app\build\intermediates\pre-dexed\debug\classes-65fced2df66a62ef3a39d4c395952e166b6a27c8.jar

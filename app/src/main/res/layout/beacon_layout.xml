@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <TextView
+        android:id="@+id/beacon_item_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:text="Large Text"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/beacon_item_RSSI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/beacon_item_name"
+        android:layout_marginLeft="40dp"
+        android:layout_toRightOf="@+id/beacon_item_name"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/beacon_item_UUID"
+        style="@style/myText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/beacon_item_name"
+        android:layout_below="@+id/beacon_item_name"
+        android:layout_marginTop="10dp"
+        android:text="Medium Text" />
+
+    <TextView
+        android:id="@+id/beacon_item_MACaddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/beacon_item_UUID"
+        android:layout_below="@+id/beacon_item_UUID"
+        android:layout_marginTop="10dp"
+        android:text="TextView" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:background="@android:color/darker_gray" />
+
+</RelativeLayout>
