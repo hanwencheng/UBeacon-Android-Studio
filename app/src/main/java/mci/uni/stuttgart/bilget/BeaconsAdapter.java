@@ -24,13 +24,13 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	//state variable;
 	private Context context;
 	private BeaconsViewHolder contextBeaconsViewHolder;
-	Fragment conteFragment;
+	Fragment contextFragment;
 	BeaconDBHelper beaconDBHelper;
 
     // Provide a suitable constructor (depends on the kind of dataSet)
     public BeaconsAdapter(List<BeaconsInfo> beaconsMap, Fragment fragment, BeaconDBHelper beaconDBHelper) {
     	this.beaconsList = beaconsMap;
-    	this.conteFragment = fragment;
+    	this.contextFragment = fragment;
     	this.beaconDBHelper = beaconDBHelper;
     }
 
@@ -57,7 +57,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	beaconsViewHolder.vUUID.setText(beaconInfo.UUID);
     	beaconsViewHolder.vMACaddress.setText(beaconInfo.MACaddress);
     	//call the background database query function
-    	conteFragment.getLoaderManager().initLoader(0, null, new BeaconDataLoaderCallbacks());
+    	contextFragment.getLoaderManager().initLoader(0, null, new BeaconDataLoaderCallbacks());
     }
 
     // Return the size of your data set (invoked by the layout manager)

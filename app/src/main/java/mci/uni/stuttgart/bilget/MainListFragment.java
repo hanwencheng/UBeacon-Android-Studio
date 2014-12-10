@@ -44,8 +44,8 @@ public class MainListFragment extends Fragment {
 	private Adapter<BeaconsViewHolder> mAdapter;
 	private LayoutManager mLayoutManager;
 	private BluetoothAdapter mBluetoothAdapter;
-	private Map<String, BeaconsInfo> resultsMap;
-	private List<BeaconsInfo> resultList;
+    private Map<String, BeaconsInfo> resultsMap;
+    private List<BeaconsInfo> resultList;
 	private SwipeRefreshLayout swipeLayout;
 	
 	//state variables

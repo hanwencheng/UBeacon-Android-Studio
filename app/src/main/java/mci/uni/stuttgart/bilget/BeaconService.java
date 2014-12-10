@@ -20,6 +20,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.ParcelUuid;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -144,12 +145,12 @@ public class BeaconService extends Service {
 	        new ScanCallback() {
 		public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
 			addBeaconToMap(result, resultsMap);
-		};
-		
+		}
+
 		public void onScanFailed(int errorCode) {
 			Log.i(TAG, "scan error code is:" + errorCode);
 		}
-		
+
 		public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
 			Log.i(TAG, "event linstener is called!!!!");
 			Log.i(TAG, "batch result are:" + results);
@@ -164,18 +165,27 @@ public class BeaconService extends Service {
 	
 	protected void addBeaconToMap(ScanResult result, Map<String,BeaconsInfo> map){
 		int receiveRSSI = result.getRssi();
-
 		BluetoothDevice receiveBeacon = result.getDevice();
-		String deveiceName = receiveBeacon.getName();
+
 		String deviceMAC = receiveBeacon.getAddress();
-		
 		ScanRecord receiveRecord = result.getScanRecord();
 		String bleName = receiveRecord.getDeviceName();
-		String bleUUID = receiveRecord.getServiceUuids().toString();
+        //name inspector
+		String deviceName = "NULL NAME";
+        String mServiceName = receiveBeacon.getName();
+        if(mServiceName != null){
+            deviceName = mServiceName;
+        }
+        //uuid inspector
+        List <ParcelUuid> mServiceUUID =  receiveRecord.getServiceUuids();
+        String bleUUID ="NULL UUID";
+        if(mServiceUUID != null){
+		    bleUUID = receiveRecord.getServiceUuids().toString();
+        }
 		Log.i("recordInfo", receiveRecord.toString());
 		
 		BeaconsInfo beaconInfo = new BeaconsInfo();
-		beaconInfo.name = deveiceName;
+		beaconInfo.name = deviceName;
 		beaconInfo.RSSI = Integer.toString(receiveRSSI) + "db";
 		beaconInfo.MACaddress = deviceMAC;
 		beaconInfo.UUID = bleUUID;
@@ -185,12 +195,9 @@ public class BeaconService extends Service {
 	
 	protected void mapToList(Map<String, BeaconsInfo> map, List<BeaconsInfo> list){
 		list.clear();
-//		for(BeaconsInfo beaconsInfo : map.values()){
-//			list.add(beaconsInfo);
-//		}
-		if(!map.isEmpty()){
-		
-		}
+		for(BeaconsInfo beaconsInfo : map.values()){
+            list.add(beaconsInfo);
+        }
 		// speak out the most close place.
 		if(!list.isEmpty()){
 			Collections.sort(list);
