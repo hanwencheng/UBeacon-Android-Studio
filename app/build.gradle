@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "mci.uni.stuttgart.bilget"
-        minSdkVersion 21
+        minSdkVersion 18
         targetSdkVersion 21
     }
 

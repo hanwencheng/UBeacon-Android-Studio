@@ -1,11 +1,7 @@
 package mci.uni.stuttgart.bilget;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -18,12 +14,19 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class BeaconService extends Service {
 	private static String TAG = "beacon service";
@@ -36,9 +39,14 @@ public class BeaconService extends Service {
 	private Map<String, BeaconsInfo> resultsMap;
 	private List<BeaconsInfo> resultList;
 	private int count;
-	private BluetoothAdapter mBluetoothAdapter;
 
-	private final IBeacon.Stub mBinder = new IBeacon.Stub() {
+    //config variable
+	private BluetoothAdapter mBluetoothAdapter;
+    private BluetoothLeScanner mBluetoothLeScanner;
+    private ScanSettings scanSettings;
+    private Object scanCallback;
+
+    private final IBeacon.Stub mBinder = new IBeacon.Stub() {
 	    public int getCount(){
 			return count;
 	    }
@@ -75,6 +83,7 @@ public class BeaconService extends Service {
         mBluetoothAdapter = bluetoothManager.getAdapter();
         resultsMap = new HashMap<String, BeaconsInfo>();
         resultList =  new ArrayList<BeaconsInfo>();
+        initScanCallback();
         scanRunnable.run();
 		super.onCreate();
 	}
@@ -106,26 +115,29 @@ public class BeaconService extends Service {
 	
 	public void scanBLE(boolean enable) {
 //		final List<BeaconsInfo> mList = new ArrayList<BeaconsInfo>();
-		final BluetoothLeScanner mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-		ScanSettings scanSettings = new ScanSettings.Builder()
-				.setScanMode(ScanSettings.SCAN_MODE_BALANCED)
-//				.setReportDelay(10001)
-				.build();
+
+        if (Build.VERSION.SDK_INT >= 21) {
+		    mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+            scanSettings = new ScanSettings.Builder()
+                    .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+    //				.setReportDelay(10001)
+                    .build();
+        }
+
 //		List<ScanFilter> uuidFilter = new ScanFilter.Builder()
 //				.setRssiRange(-75, 0)
 //				.build();
 		if (enable) {
             mScanning = true;
             resultsMap.clear();
-            mBluetoothLeScanner.startScan(null,scanSettings,mScanCallback);
-            mBluetoothLeScanner.flushPendingScanResults(mScanCallback);
+            startScan();
 //			Stops scanning after a pre-defined scan period.
             scanHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mScanning = false;
                     Log.i(TAG, "now scan will stop");
-                    mBluetoothLeScanner.stopScan(mScanCallback);
+                    stopScan();
                     mapToList(resultsMap, resultList);
                     Log.i(TAG, "now the list is" + resultList);
                 }
@@ -133,66 +145,12 @@ public class BeaconService extends Service {
         } else {
         	if (mScanning) {
         		mScanning = false;
-        		mBluetoothLeScanner.flushPendingScanResults(mScanCallback);
-        		mBluetoothLeScanner.stopScan(mScanCallback);
+        		stopScan();
 			}
         }
 		Log.i(TAG, "now the scanning state is" + mScanning);
-	}	
-	
-	// Device scan callback.
-	private ScanCallback mScanCallback =
-	        new ScanCallback() {
-		public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
-			addBeaconToMap(result, resultsMap);
-		}
-
-		public void onScanFailed(int errorCode) {
-			Log.i(TAG, "scan error code is:" + errorCode);
-		}
-
-		public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
-			Log.i(TAG, "event linstener is called!!!!");
-			Log.i(TAG, "batch result are:" + results);
-//			mAdapter.notifyDataSetChanged();
-			for (int i = 0; i < results.size(); i++) {
-				ScanResult result = results.get(i);
-				Log.i(TAG, "add item" + result + "to list");
-				addBeaconToMap(result, resultsMap);
-			}
-		}
-	};
-	
-	protected void addBeaconToMap(ScanResult result, Map<String,BeaconsInfo> map){
-		int receiveRSSI = result.getRssi();
-		BluetoothDevice receiveBeacon = result.getDevice();
-
-		String deviceMAC = receiveBeacon.getAddress();
-		ScanRecord receiveRecord = result.getScanRecord();
-		String bleName = receiveRecord.getDeviceName();
-        //name inspector
-		String deviceName = "NULL NAME";
-        String mServiceName = receiveBeacon.getName();
-        if(mServiceName != null){
-            deviceName = mServiceName;
-        }
-        //uuid inspector
-        List <ParcelUuid> mServiceUUID =  receiveRecord.getServiceUuids();
-        String bleUUID ="NULL UUID";
-        if(mServiceUUID != null){
-		    bleUUID = receiveRecord.getServiceUuids().toString();
-        }
-		Log.i("recordInfo", receiveRecord.toString());
-		
-		BeaconsInfo beaconInfo = new BeaconsInfo();
-		beaconInfo.name = deviceName;
-		beaconInfo.RSSI = Integer.toString(receiveRSSI) + "db";
-		beaconInfo.MACaddress = deviceMAC;
-		beaconInfo.UUID = bleUUID;
-		
-		map.put(deviceMAC, beaconInfo);
 	}
-	
+
 	protected void mapToList(Map<String, BeaconsInfo> map, List<BeaconsInfo> list){
 		list.clear();
 		for(BeaconsInfo beaconsInfo : map.values()){
@@ -212,5 +170,110 @@ public class BeaconService extends Service {
 	    editor.putBoolean(SERVICE_IS_RUNNING, running);
 	    editor.apply();
 	}
+
+//====================================backward-compatible functions========================================
+//=========================================================================================================
+
+    private void startScan(){
+        if (Build.VERSION.SDK_INT < 21) {
+            mBluetoothAdapter.startLeScan((BluetoothAdapter.LeScanCallback) scanCallback);
+        } else {
+            mBluetoothLeScanner.startScan(null,scanSettings,(ScanCallback) scanCallback);
+            mBluetoothLeScanner.flushPendingScanResults((ScanCallback) scanCallback);
+        }
+    }
+
+    private void stopScan(){
+        if (Build.VERSION.SDK_INT < 21) {
+            mBluetoothAdapter.stopLeScan((BluetoothAdapter.LeScanCallback)scanCallback);
+        } else {
+            mBluetoothLeScanner.flushPendingScanResults((ScanCallback) scanCallback);
+            mBluetoothLeScanner.stopScan((ScanCallback) scanCallback);
+        }
+    }
+
+
+    private void initScanCallback(){
+    // Device scan callback in API 21.
+        if (Build.VERSION.SDK_INT >= 21) {
+            scanCallback = new ScanCallback() {
+                        public void onScanResult(int callbackType, android.bluetooth.le.ScanResult result) {
+                            addBeaconToMap(result, resultsMap);
+                        }
+
+                        public void onScanFailed(int errorCode) {
+                            Log.i(TAG, "scan error code is:" + errorCode);
+                        }
+
+                        public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
+                            Log.i(TAG, "event linstener is called!!!!");
+                            Log.i(TAG, "batch result are:" + results);
+//			mAdapter.notifyDataSetChanged();
+                            for (int i = 0; i < results.size(); i++) {
+                                ScanResult result = results.get(i);
+                                Log.i(TAG, "add item" + result + "to list");
+                                addBeaconToMap(result, resultsMap);
+                            }
+                        }
+                    };
+        }else{
+            // Device scan callback from API 18.
+            scanCallback =
+                    new BluetoothAdapter.LeScanCallback() {
+                        @Override
+                        public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+                            BeaconsInfo beaconInfo = new BeaconsInfo();
+                            beaconInfo.RSSI = Integer.toString(rssi) + "db";
+                            beaconInfo.MACaddress = device.getAddress();
+
+                            String recordInfo = new String(scanRecord);
+                            String recordUUID ="NULL UUID";
+                            if(!recordInfo.equals("")){
+                                recordUUID = recordInfo;
+                            }
+                            beaconInfo.UUID = recordUUID;
+
+                            String deviceName = "NULL NAME";
+                            String mServiceName = device.getName();
+                            if(mServiceName != null){
+                                deviceName = mServiceName;
+                            }
+                            beaconInfo.name = deviceName;
+                        }
+                    };
+        }
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void addBeaconToMap(ScanResult result, Map<String,BeaconsInfo> map){
+        int receiveRSSI = result.getRssi();
+        BluetoothDevice receiveBeacon = result.getDevice();
+
+        String deviceMAC = receiveBeacon.getAddress();
+        ScanRecord receiveRecord = result.getScanRecord();
+        String bleName = receiveRecord.getDeviceName();
+        //name inspector
+        String deviceName = "NULL NAME";
+        String mServiceName = receiveBeacon.getName();
+        if(mServiceName != null){
+            deviceName = mServiceName;
+        }
+        //uuid inspector
+        List <ParcelUuid> mServiceUUID =  receiveRecord.getServiceUuids();
+        String bleUUID ="NULL UUID";
+        if(mServiceUUID != null){
+            bleUUID = receiveRecord.getServiceUuids().toString();
+        }
+        Log.i("recordInfo", receiveRecord.toString());
+
+        BeaconsInfo beaconInfo = new BeaconsInfo();
+        beaconInfo.name = deviceName;
+        beaconInfo.RSSI = Integer.toString(receiveRSSI) + "db";
+        beaconInfo.MACaddress = deviceMAC;
+        beaconInfo.UUID = bleUUID;
+
+        map.put(deviceMAC, beaconInfo);
+    }
 
 }

@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -212,8 +213,12 @@ public class MainListFragment extends Fragment {
 			resultList.addAll(beaconsInfo);
 			if (!resultList.isEmpty() && !resultList.get(0).name.equals(currentLocation)) {
 				currentLocation = resultList.get(0).name;
-				mSpeech.speak("you are now approaching" + currentLocation, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME); 
 				//TODO should be set when transfer list
+                if (Build.VERSION.SDK_INT < 21) {
+                    mSpeech.speak("you are now approaching" + currentLocation, TextToSpeech.QUEUE_FLUSH, null);
+                } else {
+				    mSpeech.speak("you are now approaching" + currentLocation, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME);
+                }
 			}
 			mAdapter.notifyDataSetChanged();
 		} catch (RemoteException e) {
