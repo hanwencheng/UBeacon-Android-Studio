@@ -7,11 +7,13 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 
 	private LocationInfo entryData;
 	private BeaconDBHelper beaconDBHelper;
+    private String MACAddress;
 	private static final String TAG = "BeaconDataLoader";
 	
-	public BeaconDataLoader(Context context, BeaconDBHelper beaconDBHelper) {
+	public BeaconDataLoader(Context context, BeaconDBHelper beaconDBHelper, String MACAddress) {
 		super(context);
 		this.beaconDBHelper = beaconDBHelper;
+        this.MACAddress = MACAddress;
 	}
 
 	@Override
@@ -23,7 +25,7 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 //				"my beautiful desk!");
 //		long firstRowId = DatabaseUtil.insertData(beaconDBHelper, hanwensHome);
 //		Log.d(TAG, firstRowId + " is inserted and the table is initialed" +hanwensHome);
-		LocationInfo locationInfo = DatabaseUtil.queryData(beaconDBHelper, "E7D38F1CF82E", null);
+		LocationInfo locationInfo = DatabaseUtil.queryData(beaconDBHelper, MACAddress, null);
 		return locationInfo;
 	}
 	

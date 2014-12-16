@@ -82,7 +82,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 
 		@Override
 		public Loader<LocationInfo> onCreateLoader(int id, Bundle args) {
-			return new BeaconDataLoader(context, beaconDBHelper);
+			return new BeaconDataLoader(context, beaconDBHelper,
+                    contextBeaconsViewHolder.vMACaddress.getText().toString());//TODO
 		}
 
 		@Override
@@ -91,7 +92,9 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 			if(data!= null && data.category!=null){
 				Log.d(TAG, "get location info from the database" + data);
 				contextBeaconsViewHolder.vMACaddress.setText(data.description);
-			}
+			}else{
+                contextBeaconsViewHolder.vMACaddress.setText("Not Found");
+            }
 		}
 
 		@Override

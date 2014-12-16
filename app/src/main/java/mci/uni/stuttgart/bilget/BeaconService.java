@@ -81,8 +81,8 @@ public class BeaconService extends Service {
 		final BluetoothManager bluetoothManager =
 				(BluetoothManager) getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
-        resultsMap = new HashMap<String, BeaconsInfo>();
-        resultList =  new ArrayList<BeaconsInfo>();
+        resultsMap = new HashMap<>();
+        resultList =  new ArrayList<>();
         initScanCallback();
         scanRunnable.run();
 		super.onCreate();
@@ -239,6 +239,7 @@ public class BeaconService extends Service {
                                 deviceName = mServiceName;
                             }
                             beaconInfo.name = deviceName;
+                            resultsMap.put(beaconInfo.MACaddress, beaconInfo);
                         }
                     };
         }

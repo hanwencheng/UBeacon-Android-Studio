@@ -1,11 +1,5 @@
 package mci.uni.stuttgart.bilget;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.Service;
@@ -39,13 +33,15 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
+
 public class MainListFragment extends Fragment {
 
 	private RecyclerView mRecyclerView;
 	private Adapter<BeaconsViewHolder> mAdapter;
-	private LayoutManager mLayoutManager;
-	private BluetoothAdapter mBluetoothAdapter;
-    private Map<String, BeaconsInfo> resultsMap;
     private List<BeaconsInfo> resultList;
 	private SwipeRefreshLayout swipeLayout;
 	
@@ -98,6 +94,22 @@ public class MainListFragment extends Fragment {
 	            }, 1000);
 			}
 		});
+
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                boolean enable = false;
+                if(mRecyclerView != null && mRecyclerView.getChildCount() > 0){
+                    enable = mRecyclerView.getChildAt(0).getTop() == 0 ;//TODO
+                }
+                swipeLayout.setEnabled(enable);
+            }
+        });
 		
 		startServiceButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -123,21 +135,19 @@ public class MainListFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         ((LinearLayoutManager) mLayoutManager).setOrientation(LinearLayout.VERTICAL);
-        
-        resultsMap = new HashMap<String, BeaconsInfo>();
+
         resultList =  new ArrayList<BeaconsInfo>();
         // specify an adapter (see also next example)
         mAdapter = new BeaconsAdapter(resultList, this, new BeaconDBHelper(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         
         mHandler = new Handler();
-        mSpeech = new TextToSpeech(getActivity(), null);
-        
-        checkTTS();
-        
+//        mSpeech = new TextToSpeech(getActivity(), null);
+//        checkTTS();
+
         checkBLE(getActivity());
         
         checkBluetooth(getActivity());
@@ -163,7 +173,7 @@ public class MainListFragment extends Fragment {
 	     // Initializes Bluetooth adapter.
         final BluetoothManager bluetoothManager =
                 (BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
+        BluetoothAdapter mBluetoothAdapter = bluetoothManager.getAdapter();
      // Ensures Bluetooth is available on the device and it is enabled. If not,
      // displays a dialog requesting user permission to enable Bluetooth.
 	     if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
@@ -178,22 +188,6 @@ public class MainListFragment extends Fragment {
 		Intent checkTTSIntent = new Intent();
 		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
 		startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
-		mSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
-			@Override
-			public void onError(String utteranceId) {
-				Log.d(SPEAK_NAME, "speech error");
-			}
-
-			@Override
-			public void onStart(String utteranceId) {
-				Log.d(SPEAK_NAME, "speech start");
-			}
-
-			@Override
-			public void onDone(String utteranceId) {
-				Log.d(SPEAK_NAME, "speech done");
-			}
-		});
 	}
 	
     
@@ -276,14 +270,20 @@ public class MainListFragment extends Fragment {
 //	==========================================================================================
 	@Override
 	public void onStop() {
-		mSpeech.shutdown();
-		Log.i(TAG, "application stops, text to speech is shut down");
+        if(mSpeech!= null){
+            mSpeech.stop();
+		    mSpeech.shutdown();
+            mSpeech = null;
+		    Log.i(TAG, "application stops, text to speech is shut down");
+        }
 		super.onStop();
 	}
 	
 	@Override
 	public void onStart() {
-		checkTTS();
+        if(mSpeech == null){
+		    checkTTS();
+        }
 		super.onStart();
 	}
 	@Override
@@ -341,10 +341,27 @@ public class MainListFragment extends Fragment {
 						Log.d(TAG, "speech engine init");
 					}
 				});
+                mSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+                    @Override
+                    public void onError(String utteranceId) {
+                        Log.d(SPEAK_NAME, "speech error");
+                    }
+
+                    @Override
+                    public void onStart(String utteranceId) {
+                        Log.d(SPEAK_NAME, "speech start");
+                    }
+
+                    @Override
+                    public void onDone(String utteranceId) {
+                        Log.d(SPEAK_NAME, "speech done");
+                    }
+                });
             }
             else {
                 //no data - install it now
                 Intent installTTSIntent = new Intent();
+                Log.d(TAG, "speech engine installed");
                 installTTSIntent.setAction(TextToSpeech.Engine.ACTION_INSTALL_TTS_DATA);
                 startActivity(installTTSIntent);
             }
