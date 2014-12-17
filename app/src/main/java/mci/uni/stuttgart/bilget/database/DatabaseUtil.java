@@ -1,12 +1,13 @@
 package mci.uni.stuttgart.bilget.database;
 
-import mci.uni.stuttgart.bilget.database.BeaconLocationData.LocationEntry;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+
+import mci.uni.stuttgart.bilget.database.BeaconLocationData.LocationEntry;
 
 public class DatabaseUtil {
 	private static final String SPACE = " ";

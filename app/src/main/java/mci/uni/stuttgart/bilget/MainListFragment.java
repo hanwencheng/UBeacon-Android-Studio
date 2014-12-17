@@ -26,9 +26,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -44,7 +49,7 @@ public class MainListFragment extends Fragment {
 	private Adapter<BeaconsViewHolder> mAdapter;
     private List<BeaconsInfo> resultList;
 	private SwipeRefreshLayout swipeLayout;
-	
+
 	//state variables
 	private boolean mScanning;
 	private Handler mHandler;
@@ -57,7 +62,8 @@ public class MainListFragment extends Fragment {
 	private final static long UPDATE_PERIOD = BeaconService.SCAN_PERIOD ; 
 	private final static String SPEAK_NAME = "name";//text to speech utteranceId
 	private final static String TAG = "Ubeacon";
-	
+    private final static String IS_TTS_ENABLE = "isTTSEnabled";
+
 	private Button startServiceButton;
 	private Button stopServiceButton;
 	
@@ -71,12 +77,13 @@ public class MainListFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+        setHasOptionsMenu(true);//default is false;
 		View rootView = inflater.inflate(R.layout.fragment_main, container,
 				false);
-		
 		swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-		
+		registerForContextMenu(mRecyclerView);//TODO to be checked
+
 		startServiceButton = (Button) rootView.findViewById(R.id.service_start);
 		stopServiceButton = (Button) rootView.findViewById(R.id.service_stop);
 		
@@ -146,7 +153,7 @@ public class MainListFragment extends Fragment {
         
         mHandler = new Handler();
 //        mSpeech = new TextToSpeech(getActivity(), null);
-//        checkTTS();
+//        enableTTS();
 
         checkBLE(getActivity());
         
@@ -154,8 +161,48 @@ public class MainListFragment extends Fragment {
         
 		return rootView;
 	}
-	
-//	========================================Helper Functions========================================
+
+//		======================action bar callback======================
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.settings, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_enableTTS:
+                if(item.isChecked()){
+                    disableTTS();
+                    item.setChecked(false);
+                }else{
+                    enableTTS();
+                    item.setChecked(true);
+                }
+                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                pref.edit().putBoolean(IS_TTS_ENABLE, item.isChecked()).apply();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.options, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+//        AdapterView.AdapterContextMenuInfo info =  item.getMenuInfo();
+        //TODO to be add the actions
+        return super.onContextItemSelected(item);
+    }
+
+    //	========================================Helper Functions========================================
 //	================================================================================================
 	
 	private void checkBLE(Context context) {
@@ -183,12 +230,23 @@ public class MainListFragment extends Fragment {
 	    	 Toast.makeText(context, R.string.bluetooth_is_supported, Toast.LENGTH_SHORT).show();
 	     }
 	}
-	
-	private void checkTTS(){
-		Intent checkTTSIntent = new Intent();
-		checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
-		startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+
+	private void enableTTS(){
+        if(mSpeech == null) {
+            Intent checkTTSIntent = new Intent();
+            checkTTSIntent.setAction(TextToSpeech.Engine.ACTION_CHECK_TTS_DATA);
+            startActivityForResult(checkTTSIntent, MY_DATA_CHECK_CODE);
+        }
 	}
+
+    private void disableTTS(){
+        if(mSpeech!= null){
+            mSpeech.stop();
+            mSpeech.shutdown();
+            mSpeech = null;
+            Log.i(TAG, "application stops, text to speech is shut down");
+        }
+    }
 	
     
     private void setStartButtonEnable(boolean isEnable) {
@@ -205,7 +263,7 @@ public class MainListFragment extends Fragment {
 			List<BeaconsInfo> beaconsInfo = beaconInteface.getList();
 			resultList.clear();
 			resultList.addAll(beaconsInfo);
-			if (!resultList.isEmpty() && !resultList.get(0).name.equals(currentLocation)) {
+			if (!resultList.isEmpty() && mSpeech!=null && !resultList.get(0).name.equals(currentLocation)) {
 				currentLocation = resultList.get(0).name;
 				//TODO should be set when transfer list
                 if (Build.VERSION.SDK_INT < 21) {
@@ -270,19 +328,17 @@ public class MainListFragment extends Fragment {
 //	==========================================================================================
 	@Override
 	public void onStop() {
-        if(mSpeech!= null){
-            mSpeech.stop();
-		    mSpeech.shutdown();
-            mSpeech = null;
-		    Log.i(TAG, "application stops, text to speech is shut down");
-        }
+        disableTTS();
 		super.onStop();
 	}
 	
 	@Override
 	public void onStart() {
         if(mSpeech == null){
-		    checkTTS();
+            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            if(pref.getBoolean(IS_TTS_ENABLE, true)) {  //TODO default value is true.
+                enableTTS();
+            }
         }
 		super.onStart();
 	}

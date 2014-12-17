@@ -18,13 +18,15 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int action_settings=0x7f08000c;
+        public static final int action_enableTTS=0x7f08000e;
         public static final int beacon_item_MACaddress=0x7f080004;
         public static final int beacon_item_RSSI=0x7f080002;
         public static final int beacon_item_UUID=0x7f080003;
         public static final int beacon_item_name=0x7f080001;
         public static final int container=0x7f080000;
         public static final int my_recycler_view=0x7f080009;
+        public static final int option_disableTTS=0x7f08000d;
+        public static final int option_enableTTS=0x7f08000c;
         public static final int recylerView=0x7f08000b;
         public static final int service_start=0x7f080007;
         public static final int service_stop=0x7f080008;
@@ -40,6 +42,8 @@ public final class R {
     }
     public static final class menu {
         public static final int main=0x7f070000;
+        public static final int options=0x7f070001;
+        public static final int settings=0x7f070002;
     }
     public static final class string {
         public static final int action_settings=0x7f050000;
@@ -48,9 +52,12 @@ public final class R {
         public static final int ble_is_supported=0x7f050003;
         public static final int ble_not_supported=0x7f050004;
         public static final int bluetooth_is_supported=0x7f050005;
-        public static final int hello_world=0x7f050006;
-        public static final int start_service=0x7f050007;
-        public static final int stop_service=0x7f050008;
+        public static final int button_pressed=0x7f050006;
+        public static final int disableTTS=0x7f050007;
+        public static final int enableTTS=0x7f050008;
+        public static final int hello_world=0x7f050009;
+        public static final int start_service=0x7f05000a;
+        public static final int stop_service=0x7f05000b;
     }
     public static final class style {
         /** 

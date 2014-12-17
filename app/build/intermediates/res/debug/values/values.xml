@@ -12,6 +12,9 @@
     <string name="ble_is_supported">Greetings! BLE is supported!</string>
     <string name="ble_not_supported">Oh! BLE is not supported!</string>
     <string name="bluetooth_is_supported">Greetings! Bluetooth is supported!</string>
+    <string name="button_pressed">test button is pressed!</string>
+    <string name="disableTTS">disable TTS</string>
+    <string name="enableTTS">enableTTS</string>
     <string name="hello_world">Hello world!</string>
     <string name="start_service">update start</string>
     <string name="stop_service">update stop</string>

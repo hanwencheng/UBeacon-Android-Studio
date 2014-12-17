@@ -1,11 +1,12 @@
 package mci.uni.stuttgart.bilget.database;
 
-import mci.uni.stuttgart.bilget.database.BeaconLocationData.LocationEntry;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import mci.uni.stuttgart.bilget.database.BeaconLocationData.LocationEntry;
 
 public class BeaconDBHelper extends SQLiteOpenHelper {
 	

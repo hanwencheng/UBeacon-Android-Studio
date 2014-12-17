@@ -1,6 +1,5 @@
 package mci.uni.stuttgart.bilget;
 
-import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -229,6 +228,7 @@ public class BeaconService extends Service {
                             String recordInfo = new String(scanRecord);
                             String recordUUID ="NULL UUID";
                             if(!recordInfo.equals("")){
+                                Log.d(TAG, "the scan record string is" + recordInfo);
                                 recordUUID = recordInfo;
                             }
                             beaconInfo.UUID = recordUUID;
