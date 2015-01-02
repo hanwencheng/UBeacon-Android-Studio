@@ -202,7 +202,7 @@ public class MainListFragment extends Fragment {
         return super.onContextItemSelected(item);
     }
 
-    //	========================================Helper Functions========================================
+//	========================================Helper Functions========================================
 //	================================================================================================
 	
 	private void checkBLE(Context context) {

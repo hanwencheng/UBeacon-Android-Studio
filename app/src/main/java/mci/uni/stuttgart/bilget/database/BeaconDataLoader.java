@@ -26,6 +26,7 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 //		long firstRowId = DatabaseUtil.insertData(beaconDBHelper, hanwensHome);
 //		Log.d(TAG, firstRowId + " is inserted and the table is initialed" +hanwensHome);
 		LocationInfo locationInfo = DatabaseUtil.queryData(beaconDBHelper, MACAddress, null);
+        //TODO if the data is not found, then call internet downloading
 		return locationInfo;
 	}
 	
@@ -51,7 +52,6 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 	
 	@Override
 	public void onCanceled(LocationInfo data) {
-		// TODO Auto-generated method stub
 		super.onCanceled(data);
 	}
 	
