@@ -7,7 +7,6 @@ import android.util.Log;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,21 +19,24 @@ public class ParserUtil {
     private final static String rootObjectName = "data";
     private final static String TAG = "jsonParserUtil";
 
-    public static List parseLocation(InputStream in) throws UnsupportedEncodingException {
+    public static List<LocationInfo> parseLocation(InputStream in) throws IOException {
         JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        try {
+            return readRootObject(jsonReader);
+        }finally{
+            jsonReader.close();
+        }
 
-
-        return null;
     }
 
-    private List readLocationArray(JsonReader jsonReader) {
-        List locations = null;
+    private static List<LocationInfo> readRootObject(JsonReader jsonReader) {
+        List<LocationInfo> locations = null;
         try {
             jsonReader.beginObject();
             if(jsonReader.hasNext()){ //only do once
                 String name = jsonReader.nextName();
                 if(name.equals(rootObjectName)){
-                    locations = readLocations(jsonReader);
+                    locations = readLocationsArray(jsonReader);
                 }
             }
             jsonReader.endObject();
@@ -45,12 +47,13 @@ public class ParserUtil {
         return locations;
     }
 
-    private List readLocations(JsonReader jsonReader){
+    //read the location array
+    private static List<LocationInfo> readLocationsArray(JsonReader jsonReader){
         List<LocationInfo> locations = new ArrayList<>();
         try {
             jsonReader.beginArray();
             while(jsonReader.hasNext()) {
-                locations.add(readLocation(jsonReader));
+                locations.add(readMacAddress(jsonReader));
             }
             jsonReader.endArray();
         } catch (IOException e) {
@@ -60,35 +63,53 @@ public class ParserUtil {
         return locations;
     }
 
-    private LocationInfo readMacAddress(JsonReader jsonReader){
-        LocationInfo location;
+    //read the object with only one property : macAddress
+    private static LocationInfo readMacAddress(JsonReader jsonReader){
+        LocationInfo location = null;
         try {
             jsonReader.beginObject();
-            //TODO
+            if(jsonReader.peek() != JsonToken.NULL) {
+                String macAddress = jsonReader.nextName();
+                Log.d(TAG, "read new location info with mac address" + macAddress);
+                location = readLocation(jsonReader, macAddress);
+            }
             jsonReader.endObject();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return
+        return location;
     }
 
-    private LocationInfo readLocation(JsonReader jsonReader){
-
+    //read the location information properties.
+    private static LocationInfo readLocation(JsonReader jsonReader, String macAddress){
+        String category = null, subcategory = null, label = null, description = null;
+        LocationInfo locationInfo = null;
         try {
             jsonReader.beginObject();
-            jsonReader.
             while(jsonReader.hasNext()){
                 if (jsonReader.peek() != JsonToken.NULL){
-
+                    String name = jsonReader.nextName();
+                    switch (name){
+                        case "category" : category = jsonReader.nextString();
+                            break;
+                        case "subcategory" : subcategory = jsonReader.nextString();
+                            break;
+                        case "label" : label = jsonReader.nextString();
+                            break;
+                        case "description" : description = jsonReader.nextString();
+                            break;
+                        default: jsonReader.skipValue();
+                    }
+                }else{
+                    jsonReader.skipValue();
                 }
             }
-
+            locationInfo = new LocationInfo(macAddress, category, subcategory, label, description);
             jsonReader.endObject();
         } catch (IOException e) {
             e.printStackTrace();
             Log.d(TAG, "error happened in read macAddress object");
         }
-
-        return null;
+        return locationInfo;
     }
 }
