@@ -118,7 +118,7 @@ public class BeaconService extends Service {
         if (Build.VERSION.SDK_INT >= 21) {
 		    mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
             scanSettings = new ScanSettings.Builder()
-                    .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
+                    .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
     //				.setReportDelay(10001)
                     .build();
         }

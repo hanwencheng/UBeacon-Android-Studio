@@ -1,5 +1,13 @@
 package mci.uni.stuttgart.bilget;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
@@ -9,18 +17,22 @@ import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Loader;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
 	private List<BeaconsInfo> beaconsList;//need to be filled
 	private static final String TAG = "BeaconAdapter";
-	
+
 	//state variable;
 	private Context context;
 	private BeaconsViewHolder contextBeaconsViewHolder;
@@ -93,7 +105,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 				Log.d(TAG, "get location info from the database" + data);
 				contextBeaconsViewHolder.vMACaddress.setText(data.description);
 			}else{
-                contextBeaconsViewHolder.vMACaddress.setText("Not Found");
+                contextBeaconsViewHolder.vMACaddress.setText("Not Found");//TODO start download action
             }
 		}
 
@@ -102,5 +114,83 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 			//Do nothing.
 		}
     	
+    }
+
+//============================================Network Callback==========================================
+//======================================================================================================
+
+    private class downloadJSON extends AsyncTask<URL, Integer, String>{
+
+        @Override
+        protected String doInBackground(URL... params) {
+            String result = null;
+            for (URL param : params) {
+                try {
+                    result = downloadURL(param);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                if(isCancelled()) break;
+            }
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String aString) {
+            Log.d(TAG, "the download result is" + aString);
+            super.onPostExecute(aString);
+        }
+    }
+
+    private String downloadURL(URL url) throws IOException{
+        InputStream inputStream = null;
+        int len = 100;
+
+        url =  new URL("http://meschup.hcilab.org/map/");//TODO
+
+        try {
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setReadTimeout(10000 /* milliseconds */);
+            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setRequestMethod("GET");
+            conn.setDoInput(true);
+            // Starts the query
+            conn.connect();
+            int response = conn.getResponseCode();
+            Log.d(TAG, "The response is: " + response);
+            inputStream = conn.getInputStream();
+
+            // Convert the InputStream into a string
+            String contentAsString = readIt(inputStream, len);
+            return contentAsString;
+
+            // Makes sure that the InputStream is closed after the app is
+            // finished using it.
+        } finally {
+            if (inputStream != null) {
+                inputStream.close();
+            }
+        }
+    }
+
+    private void checkNetwork() throws MalformedURLException {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            URL testURL = new URL("http://meschup.hcilab.org/map/");
+            new downloadJSON().execute(testURL);
+        } else {
+            Toast.makeText(context, R.string.ble_is_supported, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // Reads an InputStream and converts it to a String.
+    public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+        Reader reader = null;
+        reader = new InputStreamReader(stream, "UTF-8");
+        char[] buffer = new char[len];
+        reader.read(buffer);
+        return new String(buffer);
     }
 }

@@ -2,6 +2,7 @@ package mci.uni.stuttgart.bilget.database;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.util.Log;
 
 public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 
@@ -25,9 +26,8 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 //				"my beautiful desk!");
 //		long firstRowId = DatabaseUtil.insertData(beaconDBHelper, hanwensHome);
 //		Log.d(TAG, firstRowId + " is inserted and the table is initialed" +hanwensHome);
-		LocationInfo locationInfo = DatabaseUtil.queryData(beaconDBHelper, MACAddress, null);
         //TODO if the data is not found, then call internet downloading
-		return locationInfo;
+		return DatabaseUtil.queryData(beaconDBHelper, MACAddress, null);
 	}
 	
 	@Override
@@ -41,6 +41,11 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 	
 	@Override
 	public void deliverResult(LocationInfo data) {
+        if(data == null){
+            Log.d(TAG,"query information is null");
+        }else{
+            Log.d(TAG,"find the location info!");
+        }
 		entryData = data;
 		super.deliverResult(data);
 	}
