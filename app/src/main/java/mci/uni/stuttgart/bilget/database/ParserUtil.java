@@ -21,6 +21,7 @@ public class ParserUtil {
 
     public static List<LocationInfo> parseLocation(InputStream in) throws IOException {
         JsonReader jsonReader = new JsonReader(new InputStreamReader(in, "UTF-8"));
+        jsonReader.setLenient(true);
         try {
             return readRootObject(jsonReader);
         }finally{

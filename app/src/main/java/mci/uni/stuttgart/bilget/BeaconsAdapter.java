@@ -13,6 +13,8 @@ import java.util.List;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import mci.uni.stuttgart.bilget.database.BeaconDataLoader;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
+import mci.uni.stuttgart.bilget.database.ParserUtil;
+
 import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
@@ -27,6 +29,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import org.json.JSONObject;
 
 public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
@@ -106,6 +110,13 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 				contextBeaconsViewHolder.vMACaddress.setText(data.description);
 			}else{
                 contextBeaconsViewHolder.vMACaddress.setText("Not Found");//TODO start download action
+                URL testURL = null;
+                try {
+                    testURL = new URL("http://meschup.hcilab.org/map/");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                new downloadJSON().execute(testURL);
             }
 		}
 
@@ -162,6 +173,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 
             // Convert the InputStream into a string
             String contentAsString = readIt(inputStream, len);
+            List<LocationInfo> locationInfos = ParserUtil.parseLocation(inputStream);
+            Log.d(TAG, "location infos are" + locationInfos);
             return contentAsString;
 
             // Makes sure that the InputStream is closed after the app is
