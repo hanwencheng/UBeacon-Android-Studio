@@ -172,10 +172,11 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
             inputStream = conn.getInputStream();
 
             // Convert the InputStream into a string
-            String contentAsString = readIt(inputStream, len);
             List<LocationInfo> locationInfos = ParserUtil.parseLocation(inputStream);
-            Log.d(TAG, "location infos are" + locationInfos);
-            return contentAsString;
+//            String contentAsString = readIt(inputStream, len);
+//            Log.d(TAG, "location infos are" + locationInfos);
+//            return contentAsString;
+            return null; //TODO
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.

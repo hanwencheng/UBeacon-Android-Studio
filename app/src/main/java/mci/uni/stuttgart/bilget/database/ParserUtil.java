@@ -35,6 +35,7 @@ public class ParserUtil {
         try {
             jsonReader.beginObject();
             if(jsonReader.hasNext()){ //only do once
+                Log.d(TAG, "next is" + jsonReader.peek());
                 String name = jsonReader.nextName();
                 if(name.equals(rootObjectName)){
                     locations = readLocationsArray(jsonReader);
@@ -106,6 +107,7 @@ public class ParserUtil {
                 }
             }
             locationInfo = new LocationInfo(macAddress, category, subcategory, label, description);
+            Log.d(TAG,locationInfo.toString());
             jsonReader.endObject();
         } catch (IOException e) {
             e.printStackTrace();
