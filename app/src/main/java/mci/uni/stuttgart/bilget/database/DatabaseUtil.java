@@ -7,14 +7,14 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import mci.uni.stuttgart.bilget.database.BeaconLocationData.LocationEntry;
+import mci.uni.stuttgart.bilget.database.BeaconLocationTable.LocationEntry;
 
 public class DatabaseUtil {
 	private static final String SPACE = " ";
 	private static final String SINGLE_QUOTE = "'";
 	private static final String TAG = "Database Util";
 	
-	protected static long insertData(BeaconDBHelper mDbHelper, LocationInfo locationInfo){
+	public static long insertData(BeaconDBHelper mDbHelper, LocationInfo locationInfo){
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
@@ -28,7 +28,7 @@ public class DatabaseUtil {
 		long newRowId;
 		newRowId = db.insertWithOnConflict(LocationEntry.TABLE_NAME,
 				null,
-//				LocationEntry.COLUMN_NAME_NULL, 
+//				LocationE去ntry.COLUMN_NAME_NULL,
 				values,
 				SQLiteDatabase.CONFLICT_REPLACE);
 		return newRowId;

@@ -13,6 +13,7 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 	
 	public BeaconDataLoader(Context context, BeaconDBHelper beaconDBHelper, String MACAddress) {
 		super(context);
+        Log.d(TAG,"new data loader is created with macaddress" + MACAddress);
 		this.beaconDBHelper = beaconDBHelper;
         this.MACAddress = MACAddress;
 	}

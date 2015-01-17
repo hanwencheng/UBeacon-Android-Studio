@@ -1,4 +1,4 @@
-package mci.uni.stuttgart.bilget.database;
+package mci.uni.stuttgart.bilget.network;
 
 import android.util.JsonReader;
 import android.util.JsonToken;
@@ -9,6 +9,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import mci.uni.stuttgart.bilget.database.LocationInfo;
 
 /**
  * Json parser for the location data

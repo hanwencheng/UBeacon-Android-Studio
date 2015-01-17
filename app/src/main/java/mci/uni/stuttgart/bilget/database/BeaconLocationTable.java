@@ -7,16 +7,16 @@ import android.provider.BaseColumns;
  * @author Hanwen
  *
  */
-public class BeaconLocationData {
+public class BeaconLocationTable {
 	
-	public BeaconLocationData(){
+	public BeaconLocationTable(){
 		
 	}
 	//base column include the _count and _id property.
 	public static abstract class LocationEntry implements BaseColumns{
 		public static final String TABLE_NAME = "entry";
 		
-		public static final String COLUMN_NAME_ENTRY_ID = "entryid";
+		public static final String COLUMN_NAME_ENTRY_ID = "locationid";
 		public static final String COLUNM_NAME_DEVICE_TITLE = "name";
 		public static final String COLUMN_NAME_LOCATION = "location";
 		public static final String COLUMN_NAME_MACADDRESS = "macaddress";

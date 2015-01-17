@@ -69,8 +69,6 @@ public class MainListFragment extends Fragment {
 	
 	private IBeacon beaconInteface;
 	
-	private BeaconDBHelper mDbHelper;
-	
 //	========================================Initialization==========================================
 //	================================================================================================
 	
