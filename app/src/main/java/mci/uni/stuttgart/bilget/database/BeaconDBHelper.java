@@ -39,7 +39,7 @@ public class BeaconDBHelper extends SQLiteOpenHelper {
     private static final String SQL_CREATE_URL = "CREATE TABLE "
             + DownloadUrlTable.URLEntry.TABLE_NAME
             + " (" + DownloadUrlTable.URLEntry.COLUNM_NAME_URL + TEXT_TYPE + COMMA_SEP
-            + DownloadUrlTable.URLEntry._ID + INT_TYPE + IS_PRIMARY + AUTO_INCREMENT + COMMA_SEP
+            + DownloadUrlTable.URLEntry._ID + INT_TYPE + IS_PRIMARY + AUTO_INCREMENT
             +" )";
 	
 	public BeaconDBHelper(Context context) {
@@ -65,8 +65,8 @@ public class BeaconDBHelper extends SQLiteOpenHelper {
 				+ LocationEntry.COLUNM_NAME_DESCRIPTION  + ") "
 				+ " VALUES ( 'E7D38F1CF82E', 'indoor','desk','hanwen''s desk','my beautiful desk!')");
 
-        db.execSQL("INSERT INTO" + DownloadUrlTable.URLEntry.TABLE_NAME
-                + " ( " + DownloadUrlTable.URLEntry.COLUNM_NAME_URL + COMMA_SEP
+        db.execSQL("INSERT INTO " + DownloadUrlTable.URLEntry.TABLE_NAME
+                + " ( " + DownloadUrlTable.URLEntry.COLUNM_NAME_URL
                 + ")"
                 + " VALUES ( 'http://meschup.hcilab.org/map/' )");
 //		long firstRowId = DatabaseUtil.insertData(this, hanwensHome);
