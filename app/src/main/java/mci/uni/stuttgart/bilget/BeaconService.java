@@ -223,6 +223,7 @@ public class BeaconService extends Service {
                         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
                             BeaconsInfo beaconInfo = new BeaconsInfo();
                             beaconInfo.RSSI = Integer.toString(rssi) + "db";
+                            Log.i(TAG, "macaddress from low API is" + device.getAddress());
                             beaconInfo.MACaddress = device.getAddress();
 
                             String recordInfo = new String(scanRecord);
@@ -252,6 +253,7 @@ public class BeaconService extends Service {
         BluetoothDevice receiveBeacon = result.getDevice();
 
         String deviceMAC = receiveBeacon.getAddress();
+        Log.d(TAG, "macaddress from API 21 is" + deviceMAC);
         ScanRecord receiveRecord = result.getScanRecord();
         String bleName = receiveRecord.getDeviceName();
         //name inspector

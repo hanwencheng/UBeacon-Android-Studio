@@ -42,11 +42,16 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	Fragment contextFragment;
 	BeaconDBHelper beaconDBHelper;
 
+    BeaconDataLoaderCallbacks mDataCallbacks;
+    int loaderID;
+
     // Provide a suitable constructor (depends on the kind of dataSet)
     public BeaconsAdapter(List<BeaconsInfo> beaconsMap, Fragment fragment, BeaconDBHelper beaconDBHelper) {
     	this.beaconsList = beaconsMap;
     	this.contextFragment = fragment;
     	this.beaconDBHelper = beaconDBHelper;
+        mDataCallbacks = new BeaconDataLoaderCallbacks();
+        loaderID = 0;
     }
 
     // Create new views (invoked by the layout manager)
@@ -72,7 +77,10 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	beaconsViewHolder.vUUID.setText(beaconInfo.UUID);
     	beaconsViewHolder.vMACaddress.setText(beaconInfo.MACaddress);
     	//call the background database query function
-    	contextFragment.getLoaderManager().initLoader(0, null, new BeaconDataLoaderCallbacks());
+        Bundle bundle = new Bundle();
+        bundle.putString("mac", beaconInfo.MACaddress);
+    	contextFragment.getLoaderManager().initLoader(loaderID, bundle, mDataCallbacks);
+        loaderID++;
     }
 
     // Return the size of your data set (invoked by the layout manager)
@@ -97,17 +105,18 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 
 		@Override
 		public Loader<LocationInfo> onCreateLoader(int id, Bundle args) {
-			return new BeaconDataLoader(context, beaconDBHelper,
-                    contextBeaconsViewHolder.vMACaddress.getText().toString());//TODO
+            String mac = args.getString("mac");
+			return new BeaconDataLoader(context, beaconDBHelper, mac);
 		}
 
 		@Override
 		public void onLoadFinished(Loader<LocationInfo> loader,
 				LocationInfo data) {
 			if(data!= null && data.category!=null){
-				Log.d(TAG, "get location info from the database" + data);
+				Log.i(TAG, "3:get location info from the database" + data);
 				contextBeaconsViewHolder.vMACaddress.setText(data.description);
 			}else{
+                Log.i(TAG, "3:the data itself or the category is null" + data);
                 contextBeaconsViewHolder.vMACaddress.setText("Not Found");//TODO start download action
                 URL testURL = null;
                 try {

@@ -27,8 +27,11 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 //				"my beautiful desk!");
 //		long firstRowId = DatabaseUtil.insertData(beaconDBHelper, hanwensHome);
 //		Log.d(TAG, firstRowId + " is inserted and the table is initialed" +hanwensHome);
+        String macAddressWithoutColon = MACAddress.replace(":","");
         //TODO if the data is not found, then call internet downloading
-		return DatabaseUtil.queryData(beaconDBHelper, MACAddress, null);
+		LocationInfo location =  DatabaseUtil.queryData(beaconDBHelper, macAddressWithoutColon, null);
+        Log.i(TAG, "1:the callback of location query is" +MACAddress + "::" + location);
+        return location;
 	}
 	
 	@Override
@@ -43,9 +46,9 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 	@Override
 	public void deliverResult(LocationInfo data) {
         if(data == null){
-            Log.d(TAG,"query information is null");
+            Log.i(TAG,"2:query information is null" + MACAddress);
         }else{
-            Log.d(TAG,"find the location info!");
+            Log.i(TAG,"2:find the location info!" + MACAddress);
         }
 		entryData = data;
 		super.deliverResult(data);
