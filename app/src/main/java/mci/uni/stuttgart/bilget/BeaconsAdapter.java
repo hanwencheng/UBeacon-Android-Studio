@@ -115,7 +115,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-//                new downloadJSON().execute(testURL);
+                new downloadJSON().execute(testURL);
             }
 		}
 
@@ -129,11 +129,11 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 //============================================Network Callback==========================================
 //======================================================================================================
 
-    private class downloadJSON extends AsyncTask<URL, Integer, String>{
+    private class downloadJSON extends AsyncTask<URL, Integer, Boolean>{
 
         @Override
-        protected String doInBackground(URL... params) {
-            String result = null;
+        protected Boolean doInBackground(URL... params) {
+            boolean result = false;
             for (URL param : params) {
                 try {
                     result = downloadURL(param);
@@ -146,44 +146,50 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         }
 
         @Override
-        protected void onPostExecute(String aString) {
-            Log.d(TAG, "the download result is" + aString);
-            super.onPostExecute(aString);
+        protected void onPostExecute(Boolean aBoolean) {
+            Log.d(TAG, "the download result is" + aBoolean);
+            super.onPostExecute(aBoolean);
         }
     }
 
-    private String downloadURL(URL url) throws IOException{
+    private boolean downloadURL( URL url) throws IOException{
         InputStream inputStream = null;
         int len = 100;
 
         url =  new URL("http://meschup.hcilab.org/map/");//TODO
 
-        try {
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
-            conn.setDoInput(true);
-            // Starts the query
-            conn.connect();
-            int response = conn.getResponseCode();
-            Log.d(TAG, "The response is: " + response);
-            inputStream = conn.getInputStream();
+        if(!DatabaseUtil.queryURL(beaconDBHelper , url.toString())) {
+            try {
+                Log.i(TAG, "has not visited , start download");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setReadTimeout(10000 /* milliseconds */);
+                conn.setConnectTimeout(15000 /* milliseconds */);
+                conn.setRequestMethod("GET");
+                conn.setDoInput(true);
+                // Starts the query
+                conn.connect();
+                int response = conn.getResponseCode();
+                Log.d(TAG, "The response is: " + response);
+                inputStream = conn.getInputStream();
 
-            // Convert the InputStream into a string
-            List<LocationInfo> locationInfos = ParserUtil.parseLocation(inputStream);
-            for(LocationInfo locationInfo: locationInfos){
-                long rowNum = DatabaseUtil.insertData(beaconDBHelper, locationInfo);
-                Log.d(TAG, "insert a new row, row number is" + rowNum);
-            }
-            return null; //TODO
+                // Convert the InputStream into a string
+                List<LocationInfo> locationInfos = ParserUtil.parseLocation(inputStream);
+                for (LocationInfo locationInfo : locationInfos) {
+                    long rowNum = DatabaseUtil.insertData(beaconDBHelper, locationInfo);
+                    Log.d(TAG, "insert a new row, row number is" + rowNum);
+                }
+                return true; //TODO
 
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
-        } finally {
-            if (inputStream != null) {
-                inputStream.close();
+                // Makes sure that the InputStream is closed after the app is
+                // finished using it.
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
             }
+        }else{
+            Log.i(TAG, "url is already visited once");
+            return false;
         }
     }
 

@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
  */
 public class DownloadUrlTable {
     public DownloadUrlTable(){
+
     }
 
     //base column include the _count and _id property.

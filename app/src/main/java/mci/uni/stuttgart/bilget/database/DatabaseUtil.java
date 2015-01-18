@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import mci.uni.stuttgart.bilget.database.BeaconLocationTable.LocationEntry;
+import mci.uni.stuttgart.bilget.network.DownloadUrlTable;
 
 public class DatabaseUtil {
 	private static final String SPACE = " ";
@@ -28,7 +29,7 @@ public class DatabaseUtil {
 		long newRowId;
 		newRowId = db.insertWithOnConflict(LocationEntry.TABLE_NAME,
 				null,
-//				LocationE去ntry.COLUMN_NAME_NULL,
+//				LocationEntry.COLUMN_NAME_NULL,
 				values,
 				SQLiteDatabase.CONFLICT_REPLACE);
 		return newRowId;
@@ -72,6 +73,38 @@ public class DatabaseUtil {
 		locationCursor.close();
 		return location;
 	}
+
+    public static boolean queryURL(BeaconDBHelper mDbHelper, String queryURL){
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+        if(queryURL == null){
+            try {
+                throw new Exception();
+            } catch (Exception e) {
+                Log.e(TAG, "there is no url to querying", e);
+                e.printStackTrace();
+            }
+            return false;
+        }
+        String[] projection = {
+                DownloadUrlTable.URLEntry.COLUNM_NAME_URL,
+                DownloadUrlTable.URLEntry._ID
+        };
+//		String [] projection = null;
+        String selection = SPACE + DownloadUrlTable.URLEntry.COLUNM_NAME_URL +  " = " + SINGLE_QUOTE + queryURL + SINGLE_QUOTE;
+//		String sortOrder = LocationEntry._ID + " DESC"; TODO
+
+        Cursor cursor = db.query(
+                DownloadUrlTable.URLEntry.TABLE_NAME,
+                projection,
+                selection,
+                null,
+                null,
+                null,
+                null);
+        int foundNum = cursor.getCount();
+        Log.d(TAG,"get the cursor" + DatabaseUtils.dumpCursorToString(cursor) + foundNum);
+        return foundNum > 0;
+    }
 
 	/**
 	 *  here using selectionArgs and selection instead of only using selection;
@@ -118,6 +151,17 @@ public class DatabaseUtil {
 		    selectionArgs);
 		return count;
 	}
+
+    private static String addSingleQuote(String original){
+        if (original.indexOf("'") > 0) {
+            Log.d(TAG,"original string has single quote : " + original);
+            String neu =  original.replace("'", "''");
+            Log.d( TAG,"translated string is " + neu);
+            return neu;
+        }else{
+            return original;
+        }
+    }
 	
 	private static class LocationCursor extends CursorWrapper{
 

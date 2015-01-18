@@ -60,14 +60,14 @@ public class BeaconService extends Service {
 	
 	@Override
 	public IBinder onBind(Intent intent) {
-		Log.i(TAG, "a client is bound to service");
+		Log.d(TAG, "a client is bound to service");
         return mBinder;
         
 	}
 	
 	@Override
 	public boolean onUnbind(Intent intent) {
-		Log.i(TAG, "a client is unbound");
+		Log.d(TAG, "a client is unbound");
 		return super.onUnbind(intent);
 	}
 	
@@ -135,10 +135,10 @@ public class BeaconService extends Service {
                 @Override
                 public void run() {
                     mScanning = false;
-                    Log.i(TAG, "now scan will stop");
+                    Log.d(TAG, "now scan will stop");
                     stopScan();
                     mapToList(resultsMap, resultList);
-                    Log.i(TAG, "now the list is" + resultList);
+                    Log.d(TAG, "now the list is" + resultList);
                 }
             }, SCAN_PERIOD);
         } else {
@@ -147,7 +147,7 @@ public class BeaconService extends Service {
         		stopScan();
 			}
         }
-		Log.i(TAG, "now the scanning state is" + mScanning);
+		Log.d(TAG, "now the scanning state is" + mScanning);
 	}
 
 	protected void mapToList(Map<String, BeaconsInfo> map, List<BeaconsInfo> list){
@@ -201,16 +201,16 @@ public class BeaconService extends Service {
                         }
 
                         public void onScanFailed(int errorCode) {
-                            Log.i(TAG, "scan error code is:" + errorCode);
+                            Log.d(TAG, "scan error code is:" + errorCode);
                         }
 
                         public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
-                            Log.i(TAG, "event linstener is called!!!!");
-                            Log.i(TAG, "batch result are:" + results);
+                            Log.d(TAG, "event linstener is called!!!!");
+                            Log.d(TAG, "batch result are:" + results);
 //			mAdapter.notifyDataSetChanged();
                             for (int i = 0; i < results.size(); i++) {
                                 ScanResult result = results.get(i);
-                                Log.i(TAG, "add item" + result + "to list");
+                                Log.d(TAG, "add item" + result + "to list");
                                 addBeaconToMap(result, resultsMap);
                             }
                         }
@@ -266,7 +266,7 @@ public class BeaconService extends Service {
         if(mServiceUUID != null){
             bleUUID = receiveRecord.getServiceUuids().toString();
         }
-        Log.i("recordInfo", receiveRecord.toString());
+        Log.d("recordInfo", receiveRecord.toString());
 
         BeaconsInfo beaconInfo = new BeaconsInfo();
         beaconInfo.name = deviceName;
