@@ -35,6 +35,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
 	private List<BeaconsInfo> beaconsList;//need to be filled
 	private static final String TAG = "BeaconAdapter";
+    private static final String NOTFOUND = "-";
 
 	//state variable;
 	private Context context;
@@ -74,7 +75,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	Log.i("@","beaconsInfo is" + beaconInfo);
     	beaconsViewHolder.vName.setText(beaconInfo.name);
     	beaconsViewHolder.vRSSI.setText(beaconInfo.RSSI);
-    	beaconsViewHolder.vUUID.setText(beaconInfo.UUID);
+    	beaconsViewHolder.vLabel.setText(beaconInfo.UUID);
     	beaconsViewHolder.vMACaddress.setText(beaconInfo.MACaddress);
     	//call the background database query function
         Bundle bundle = new Bundle();
@@ -114,9 +115,15 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 				LocationInfo data) {
 			if(data!= null && data.category!=null){
 				Log.i(TAG, "3:get location info from the database" + data);
-				contextBeaconsViewHolder.vMACaddress.setText(data.description);
+				contextBeaconsViewHolder.vMACaddress.setText(data.subcategory);
+                contextBeaconsViewHolder.vDescription.setText(data.description);
+                contextBeaconsViewHolder.vLabel.setText(data.label);
+                contextBeaconsViewHolder.vCategory.setText(data.category);
 			}else{
                 Log.i(TAG, "3:the data itself or the category is null" + data);
+                contextBeaconsViewHolder.vDescription.setText(NOTFOUND);
+                contextBeaconsViewHolder.vLabel.setText(NOTFOUND);
+                contextBeaconsViewHolder.vCategory.setText(NOTFOUND);
                 contextBeaconsViewHolder.vMACaddress.setText("Not Found");//TODO start download action
                 URL testURL = null;
                 try {
