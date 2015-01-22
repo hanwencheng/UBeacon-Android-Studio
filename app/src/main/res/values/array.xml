@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <string-array name="prefFrequencyValues">
+        <item name="High">2</item>
+        <item name="Balanced">1</item>
+        <item name="Low">0</item>
+    </string-array>
+    <string-array name="prefFrequency">
+        <item name="High">High</item>
+        <item name="Balanced">Balanced</item>
+        <item name="Low">Low</item>
+    </string-array>
+</resources>

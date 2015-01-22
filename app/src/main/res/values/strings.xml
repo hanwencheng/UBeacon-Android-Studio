@@ -13,5 +13,16 @@
     <string name="enableTTS">enableTTS</string>
     <string name="disableTTS">disable TTS</string>
     <string name="button_pressed">test button is pressed!</string>
+    <string name="pref_audio">audio</string>
+    <string name="pref_approaching">Audio notice</string>
+    <string name="pref_audio_summary">when you get approach a beacon it will send the notice \"your text\" + beaconsName</string>
+    <string name="pref_scan">Scan</string>
+    <string name="pref_approaching_default">you are approaching</string>
+    <string name="pref_guide_switch_summary">using audio guide to indicate the nearest beacon</string>
+    <string name="pref_guide_switch">Audio guide swtich</string>
+    <string name="pref_threshold">RSSI threshold</string>
+    <string name="pref_threshold_summary">75 means \"-75db\", and so on</string>
+    <string name="pref_frequency_summary">Scanning Frequency</string>
+    <string name="pref_frequency">Scanning frequency</string>
 
 </resources>

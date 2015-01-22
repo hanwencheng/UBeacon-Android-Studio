@@ -56,6 +56,7 @@ public class MainListFragment extends Fragment {
 	
 	private final static int REQUEST_ENABLE_BT = 1;
 	private final static int MY_DATA_CHECK_CODE = 2;
+    private final static int REQUEST_SETTINGS =3;
 	
 	private TextToSpeech mSpeech;
 	private final static long UPDATE_PERIOD = BeaconService.SCAN_PERIOD ; 
@@ -180,6 +181,9 @@ public class MainListFragment extends Fragment {
                 SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 pref.edit().putBoolean(IS_TTS_ENABLE, item.isChecked()).apply();
                 return true;
+            case R.id.action_setting_activity:
+                Intent i = new Intent(getActivity(), SettingsActivity.class);
+                startActivityForResult(i, REQUEST_SETTINGS);
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -384,6 +388,14 @@ public class MainListFragment extends Fragment {
     			getActivity().finish();
     		}
     	}
+
+        if (requestCode ==REQUEST_SETTINGS){
+            if(resultCode == Activity.RESULT_OK){
+                Toast.makeText(getActivity(), "let's change the settings", Toast.LENGTH_SHORT).show();
+            }else{
+                //TODO
+            }
+        }
         
         if (requestCode == MY_DATA_CHECK_CODE) {
             if (resultCode == TextToSpeech.Engine.CHECK_VOICE_DATA_PASS) {

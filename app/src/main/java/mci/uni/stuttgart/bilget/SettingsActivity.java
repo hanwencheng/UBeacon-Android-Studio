@@ -1,6 +1,9 @@
 package mci.uni.stuttgart.bilget;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -17,7 +20,10 @@ public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.settings);
+
+        getFragmentManager().beginTransaction()
+                .add(android.R.id.content, new SettingsFragment()) //TODO
+                .commit();
 
         // Add a button to the header list.
         if (hasHeaders()) {
@@ -27,13 +33,28 @@ public class SettingsActivity extends PreferenceActivity {
         }
     }
 
-    public static class SettingsFragment extends PreferenceFragment{
+
+
+    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
             PreferenceManager.setDefaultValues(getActivity(), R.xml.settings, false);
             addPreferencesFromResource(R.xml.settings);
+
+            //set default value
+            ListPreference prefFrequency = (ListPreference) findPreference ("prefFrequency");
+            prefFrequency.setDefaultValue(1);
+        }
+
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("")) {
+                Preference connectionPref = findPreference(key);
+                // Set summary to be the user-description for the selected value
+                connectionPref.setSummary(sharedPreferences.getString(key, ""));
+            }
         }
     }
 

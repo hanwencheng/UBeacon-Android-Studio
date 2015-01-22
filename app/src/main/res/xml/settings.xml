@@ -1,15 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/pref_user_profile">
-        <EditTextPreference android:title="@string/pref_user_name" android:summary="@string/pref_user_name_summary" android:key="prefUsername">
+    <PreferenceCategory android:title="@string/pref_audio">
+        <EditTextPreference
+            android:title="@string/pref_approaching"
+            android:summary="@string/pref_audio_summary"
+            android:defaultValue="@string/pref_approaching_default"
+            android:key="prefAudio">
         </EditTextPreference>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/pref_update_setting">
-        <CheckBoxPreference android:defaultvalue="false" android:key="prefSendReport" android:summary="@string/pref_send_report_summary" android:title="@string/pref_send_report">
-        </CheckBoxPreference>
+    <PreferenceCategory android:title="@string/pref_scan">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="prefGuideSwitch"
+            android:summary="@string/pref_guide_switch_summary"
+            android:title="@string/pref_guide_switch">
+        </SwitchPreference>
 
-        <ListPreference android:key="prefSyncFrequency" android:entries="@array/syncFrequency" android:summary="@string/pref_sync_frequency_summary" android:entryvalues="@array/syncFrequencyValues" android:title="@string/pref_sync_frequency">
+        <EditTextPreference
+            android:title="@string/pref_threshold"
+            android:summary="@string/pref_threshold_summary"
+            android:defaultValue="75"
+            android:key="prefThreshold">
+        </EditTextPreference>
+
+        <ListPreference
+            android:key="prefFrequency"
+            android:entries="@array/prefFrequency"
+            android:entryValues="@array/prefFrequencyValues"
+            android:title="@string/pref_frequency">
         </ListPreference>
     </PreferenceCategory>
 </PreferenceScreen>
