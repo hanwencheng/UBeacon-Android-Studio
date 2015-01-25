@@ -22,10 +22,9 @@ int id swipeRefreshLayout 0x7f0a000c
 int id swipe_container 0x7f0a0007
 int id tableRow1 0x7f0a0008
 int layout activity_main 0x7f030000
-int layout activity_settings 0x7f030001
-int layout beacon_layout 0x7f030002
-int layout fragment_main 0x7f030003
-int layout swipe 0x7f030004
+int layout beacon_layout 0x7f030001
+int layout fragment_main 0x7f030002
+int layout swipe 0x7f030003
 int menu main 0x7f090000
 int menu options 0x7f090001
 int menu settings 0x7f090002

@@ -22,4 +22,4 @@
         <item name="High">High</item>
         <item name="Balanced">Balanced</item>
         <item name="Low">Low</item>
-    </string-array></file><file name="activity_settings" path="X:\Android\Bildget\app\src\main\res\layout\activity_settings.xml" qualifiers="" type="layout"/></source><source path="X:\Android\Bildget\app\build\generated\res\rs\debug"/><source path="X:\Android\Bildget\app\build\generated\res\generated\debug"/></dataSet><dataSet config="debug"><source path="X:\Android\Bildget\app\src\debug\res"/></dataSet><mergedItems/></merger>
+    </string-array></file></source><source path="X:\Android\Bildget\app\build\generated\res\rs\debug"/><source path="X:\Android\Bildget\app\build\generated\res\generated\debug"/></dataSet><dataSet config="debug"><source path="X:\Android\Bildget\app\src\debug\res"/></dataSet><mergedItems/></merger>

@@ -31,4 +31,8 @@
             android:title="@string/pref_frequency">
         </ListPreference>
     </PreferenceCategory>
+
+    <Preference android:title="Acts like a button"
+        android:key="button"
+        android:summary="This will act like a button"/>
 </PreferenceScreen>

@@ -1,5 +1,6 @@
 package mci.uni.stuttgart.bilget;
 
+import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -7,7 +8,10 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.text.Layout;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.util.List;
@@ -34,8 +38,7 @@ public class SettingsActivity extends PreferenceActivity {
     }
 
 
-
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener{
+    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
@@ -44,8 +47,12 @@ public class SettingsActivity extends PreferenceActivity {
             addPreferencesFromResource(R.xml.settings);
 
             //set default value
-            ListPreference prefFrequency = (ListPreference) findPreference ("prefFrequency");
+            ListPreference prefFrequency = (ListPreference) findPreference("prefFrequency");
             prefFrequency.setDefaultValue(1);
+
+
+//            createButton();
+
         }
 
         @Override
@@ -56,65 +63,21 @@ public class SettingsActivity extends PreferenceActivity {
                 connectionPref.setSummary(sharedPreferences.getString(key, ""));
             }
         }
-    }
 
-//    /**
-//     * Populate the activity with the top-level headers.
-//     */
-//    @Override
-//    public void onBuildHeaders(List<Header> target) {
-//        loadHeadersFromResource(R.xml.preference_headers, target);
-//    }
-//
-//    /**
-//     * This fragment shows the preferences for the first header.
-//     */
-//    public static class Prefs1Fragment extends PreferenceFragment {
-//        @Override
-//        public void onCreate(Bundle savedInstanceState) {
-//            super.onCreate(savedInstanceState);
-//
-//            // Make sure default values are applied.  In a real app, you would
-//            // want this in a shared function that is used to retrieve the
-//            // SharedPreferences wherever they are needed.
-//            PreferenceManager.setDefaultValues(getActivity(),
-//                    R.xml.advanced_preferences, false);
-//
-//            // Load the preferences from an XML resource
-//            addPreferencesFromResource(R.xml.fragmented_preferences);
-//        }
-//    }
-//
-//    /**
-//     * This fragment contains a second-level set of preference that you
-//     * can get to by tapping an item in the first preferences fragment.
-//     */
-//    public static class Prefs1FragmentInner extends PreferenceFragment {
-//        @Override
-//        public void onCreate(Bundle savedInstanceState) {
-//            super.onCreate(savedInstanceState);
-//
-//            // Can retrieve arguments from preference XML.
-//            Log.i("args", "Arguments: " + getArguments());
-//
-//            // Load the preferences from an XML resource
-//            addPreferencesFromResource(R.xml.fragmented_preferences_inner);
-//        }
-//    }
-//
-//    /**
-//     * This fragment shows the preferences for the second header.
-//     */
-//    public static class Prefs2Fragment extends PreferenceFragment {
-//        @Override
-//        public void onCreate(Bundle savedInstanceState) {
-//            super.onCreate(savedInstanceState);
-//
-//            // Can retrieve arguments from headers XML.
-//            Log.i("args", "Arguments: " + getArguments());
-//
-//            // Load the preferences from an XML resource
-//            addPreferencesFromResource(R.xml.preference_dependencies);
-//        }
-//    }
+        private void createButton(){
+            Preference button = (Preference)findPreference("button");
+//            button.set(new ActionBar.LayoutParams(
+//                            ViewGroup.LayoutParams.WRAP_CONTENT,
+//                            ViewGroup.LayoutParams.WRAP_CONTENT)
+//            );
+            button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference arg0) {
+                    getActivity().setResult(RESULT_OK);
+                    getActivity().finish();
+                    return true;
+                }
+            });
+        }
+    }
 }

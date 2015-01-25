@@ -286,6 +286,27 @@ public class MainListFragment extends Fragment {
 			mHandler.postDelayed(updateUI, UPDATE_PERIOD);
 		}
 	};
+
+    //show the preference
+    private String getPreference(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        StringBuilder builder = new StringBuilder();
+
+        builder.append("\n audio: "
+                + preferences.getString("prefAudio", "default"));
+
+        builder.append("\n Send report:"
+                + preferences.getBoolean("prefGuideSwitch", false));
+
+        builder.append("\n Sync Frequency: "
+                + preferences.getString("prefThreshold", "default"));
+
+        builder.append("\n Sync Frequency: "
+                + preferences.getString("prefFrequency", "default"));
+
+        return builder.toString();
+    }
 	
 //	=====================================Service Function=====================================
 //	==========================================================================================
@@ -390,10 +411,10 @@ public class MainListFragment extends Fragment {
     	}
 
         if (requestCode ==REQUEST_SETTINGS){
+                Toast.makeText(getActivity(), "let's change the settings" + getPreference(), Toast.LENGTH_SHORT).show();
             if(resultCode == Activity.RESULT_OK){
-                Toast.makeText(getActivity(), "let's change the settings", Toast.LENGTH_SHORT).show();
-            }else{
                 //TODO
+            }else{
             }
         }
         
