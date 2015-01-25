@@ -74,7 +74,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	BeaconsInfo beaconInfo = beaconsList.get(position);
     	Log.i("@","beaconsInfo is" + beaconInfo);
     	beaconsViewHolder.vName.setText(beaconInfo.name);
-    	beaconsViewHolder.vRSSI.setText(beaconInfo.RSSI);
+        String rangeHint = readRssi(beaconInfo.RSSI);
+    	beaconsViewHolder.vRSSI.setText(rangeHint);
     	beaconsViewHolder.vLabel.setText(beaconInfo.UUID);
     	beaconsViewHolder.vMACaddress.setText(beaconInfo.MACaddress);
     	//call the background database query function
@@ -228,5 +229,21 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         char[] buffer = new char[len];
         reader.read(buffer);
         return new String(buffer);
+    }
+
+//=============================================RSSI INDICATOR===========================================
+//======================================================================================================
+
+    private String readRssi(int rssi){
+        rssi = Math.abs(rssi);
+        String hint = "out of range";
+        if(rssi < 45){
+            hint = "very close";
+        }else if(rssi < 60){
+            hint = "near";
+        }else if(rssi < 45 ){
+            hint = "in the range";
+        }
+        return hint;
     }
 }

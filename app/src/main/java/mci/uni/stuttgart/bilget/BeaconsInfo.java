@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 public class BeaconsInfo implements Comparable<BeaconsInfo>{
 	protected String name;
-	protected String RSSI;
+	protected int RSSI;
 	protected String UUID;
 	protected String MACaddress;
 
@@ -15,13 +15,11 @@ public class BeaconsInfo implements Comparable<BeaconsInfo>{
 
 	public int compareTo(@NonNull BeaconsInfo another) {
 
-		String intRSSI = this.RSSI.replace("db","");
-		String anotherRSSI = another.RSSI.replace("db","");
-		long thisRssi = Integer.parseInt(intRSSI);
-		long anotherRssi = Integer.parseInt(anotherRSSI);
-		if(thisRssi < anotherRssi){
+		int thisRSSI = this.RSSI;
+		int anotherRSSI = another.RSSI;
+		if(thisRSSI < anotherRSSI){
 			return 1;
-		}else if(thisRssi > anotherRssi){
+		}else if(thisRSSI > anotherRSSI){
 			return -1;
 		}else{
 			return 0;

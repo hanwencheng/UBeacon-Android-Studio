@@ -267,10 +267,12 @@ public class MainListFragment extends Fragment {
 			if (!resultList.isEmpty() && mSpeech!=null && !resultList.get(0).name.equals(currentLocation)) {
 				currentLocation = resultList.get(0).name;
 				//TODO should be set when transfer list
-                if (Build.VERSION.SDK_INT < 21) {
-                    mSpeech.speak("you are now approaching" + currentLocation, TextToSpeech.QUEUE_FLUSH, null);
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
+                if (Build.VERSION.SDK_INT < 21) {//TODO get the information from preference
+                    mSpeech.speak(audioHint + currentLocation, TextToSpeech.QUEUE_FLUSH, null);
                 } else {
-				    mSpeech.speak("you are now approaching" + currentLocation, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME);
+				    mSpeech.speak(audioHint + currentLocation, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME);
                 }
 			}
 			mAdapter.notifyDataSetChanged();
