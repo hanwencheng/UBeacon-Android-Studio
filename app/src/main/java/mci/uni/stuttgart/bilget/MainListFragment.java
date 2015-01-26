@@ -42,7 +42,9 @@ import java.util.List;
 
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 
-public class MainListFragment extends Fragment {
+public class MainListFragment extends Fragment
+                                implements SharedPreferences.OnSharedPreferenceChangeListener
+{
 
 	private RecyclerView mRecyclerView;
 	private Adapter<BeaconsViewHolder> mAdapter;
@@ -63,6 +65,11 @@ public class MainListFragment extends Fragment {
 	private final static String SPEAK_NAME = "name";//text to speech utteranceId
 	private final static String TAG = "Ubeacon";
     private final static String IS_TTS_ENABLE = "isTTSEnabled";
+
+    //preference settings
+    private int thresholdPref;
+    private String frequencyPref;
+    private String audioHintPref;
 
 	private Button startServiceButton;
 	private Button stopServiceButton;
@@ -455,5 +462,20 @@ public class MainListFragment extends Fragment {
             }
         }
     }
-    
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.i(TAG,"preference !" + key);
+        if (key.equals("prefThreshold")) {
+            Log.i(TAG,"preference threshold changed!");
+            //TODO callback in service
+        }
+        if( key.equals("prefFrequency")) {
+            Log.i(TAG,"preference frequency changed!");
+            //TODO callback in service
+        }
+        if( key.equals("prefAudio")) {
+            Log.i(TAG,"preference audioHint changed!");
+        }
+    }
 }

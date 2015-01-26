@@ -69,7 +69,6 @@ public class SettingsActivity extends PreferenceActivity {
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            Log.i(TAG,"preference !" + key);
             if (key.equals("prefThreshold")) {
                 Log.i(TAG,"preference threshold!");
                 // Set summary to be the user-description for the selected value
