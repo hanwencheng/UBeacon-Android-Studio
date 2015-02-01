@@ -40,6 +40,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import mci.uni.stuttgart.bilget.algorithm.CalcList;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 
 public class MainListFragment extends Fragment
@@ -75,6 +76,8 @@ public class MainListFragment extends Fragment
 	private Button stopServiceButton;
 	
 	private IBeacon beaconInteface;
+    private SharedPreferences sharedPreferences;
+    private CalcList calcList;
 	
 //	========================================Initialization==========================================
 //	================================================================================================
@@ -91,6 +94,9 @@ public class MainListFragment extends Fragment
 
 		startServiceButton = (Button) rootView.findViewById(R.id.service_start);
 		stopServiceButton = (Button) rootView.findViewById(R.id.service_stop);
+
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        calcList = new CalcList();// init algorithm module
 		
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -185,8 +191,7 @@ public class MainListFragment extends Fragment
                     enableTTS();
                     item.setChecked(true);
                 }
-                SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                pref.edit().putBoolean(IS_TTS_ENABLE, item.isChecked()).apply();
+                sharedPreferences.edit().putBoolean(IS_TTS_ENABLE, item.isChecked()).apply();
                 return true;
             case R.id.action_setting_activity:
                 Intent i = new Intent(getActivity(), SettingsActivity.class);
@@ -269,12 +274,12 @@ public class MainListFragment extends Fragment
 //			List<BeaconsInfo> beaconsInfo = Collections.checkedList( beaconInteface.getList(), BeaconsInfo.class);
 			@SuppressWarnings("unchecked")
 			List<BeaconsInfo> beaconsInfo = beaconInteface.getList();
+            List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);
 			resultList.clear();
-			resultList.addAll(beaconsInfo);
+			resultList.addAll(newList);
 			if (!resultList.isEmpty() && mSpeech!=null && !resultList.get(0).name.equals(currentLocation)) {
 				currentLocation = resultList.get(0).name;
 				//TODO should be set when transfer list
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
                 if (Build.VERSION.SDK_INT < 21) {//TODO get the information from preference
                     mSpeech.speak(audioHint + currentLocation, TextToSpeech.QUEUE_FLUSH, null);
@@ -298,21 +303,20 @@ public class MainListFragment extends Fragment
 
     //show the preference
     private String getPreference(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         StringBuilder builder = new StringBuilder();
 
         builder.append("\n audio: "
-                + preferences.getString("prefAudio", "default"));
+                + sharedPreferences.getString("prefAudio", "default"));
 
         builder.append("\n Send report:"
-                + preferences.getBoolean("prefGuideSwitch", false));
+                + sharedPreferences.getBoolean("prefGuideSwitch", false));
 
         builder.append("\n Sync Frequency: "
-                + preferences.getString("prefThreshold", "default"));
+                + sharedPreferences.getString("prefThreshold", "default"));
 
         builder.append("\n Sync Frequency: "
-                + preferences.getString("prefFrequency", "default"));
+                + sharedPreferences.getString("prefFrequency", "default"));
 
         return builder.toString();
     }
@@ -366,8 +370,7 @@ public class MainListFragment extends Fragment
 	@Override
 	public void onStart() {
         if(mSpeech == null){
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            if(pref.getBoolean(IS_TTS_ENABLE, true)) {  //TODO default value is true.
+            if(sharedPreferences.getBoolean(IS_TTS_ENABLE, true)) {  //TODO default value is true.
                 enableTTS();
             }
         }

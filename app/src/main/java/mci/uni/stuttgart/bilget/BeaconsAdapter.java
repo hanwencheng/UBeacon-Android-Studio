@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
+import mci.uni.stuttgart.bilget.algorithm.RangeThreshold;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import mci.uni.stuttgart.bilget.database.BeaconDataLoader;
 import mci.uni.stuttgart.bilget.database.DatabaseUtil;
@@ -235,13 +236,14 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 //======================================================================================================
 
     private String readRssi(int rssi){
-        rssi = Math.abs(rssi);
+        Log.i(TAG,"origin rssi is" + rssi);
+        rssi = Math.abs(rssi);//because the origin number is negative
         String hint = "out of range";
-        if(rssi < 45){
+        if(rssi < RangeThreshold.NEAR){
             hint = "very close";
-        }else if(rssi < 60){
+        }else if(rssi < RangeThreshold.MIDDLE){
             hint = "near";
-        }else if(rssi < 45 ){
+        }else if(rssi < RangeThreshold.FAR ){
             hint = "in the range";
         }
         return hint;

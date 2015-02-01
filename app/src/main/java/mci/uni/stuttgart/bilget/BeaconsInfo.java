@@ -4,10 +4,10 @@ package mci.uni.stuttgart.bilget;
 import android.support.annotation.NonNull;
 
 public class BeaconsInfo implements Comparable<BeaconsInfo>{
-	protected String name;
-	protected int RSSI;
-	protected String UUID;
-	protected String MACaddress;
+    public String name;
+    public int RSSI;//default value is a negative value.
+    public String UUID;
+	public String MACaddress;
 
 	public String toString() {
 		return "name:" + name + ";RSSI:" + RSSI + ";category:" +UUID;
