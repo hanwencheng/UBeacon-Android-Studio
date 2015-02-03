@@ -39,7 +39,7 @@ public class CalcList {
 
     public List<BeaconsInfo> calcList(List<BeaconsInfo> inputList){
         ouputList = new ArrayList<>();
-        keySet = map.keySet();
+        keySet = map.keySet();//TODO should instance a new set with reference.
         //iterate all the beacons in the list
         for(BeaconsInfo beaconInfo : inputList){
             String macAddress = beaconInfo.MACaddress;
