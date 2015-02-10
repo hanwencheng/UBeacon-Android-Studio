@@ -39,8 +39,10 @@ public class CalcList {
     }
 
     public List<BeaconsInfo> calcList(List<BeaconsInfo> inputList){
+
         outputList = new ArrayList<>();
         keySet = new HashSet<>(map.keySet());
+
         //iterate all the beacons in the list
         for(BeaconsInfo beaconInfo : inputList){
             String macAddress = beaconInfo.MACaddress;
