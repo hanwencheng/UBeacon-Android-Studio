@@ -120,9 +120,10 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
             BeaconsViewHolder mBeaconsViewHolder = viewMap.get(this.mac);
 			if(data!= null && data.category!=null){
 				Log.d(TAG, "3:get location info from the database" + data);
-                mBeaconsViewHolder.vMACaddress.setText(data.subcategory);
+                mBeaconsViewHolder.vName.setText(data.label);
+//                mBeaconsViewHolder.vMACaddress.setText(data.subcategory);
                 mBeaconsViewHolder.vDescription.setText(data.description);
-                mBeaconsViewHolder.vLabel.setText(data.label);
+                mBeaconsViewHolder.vLabel.setText(data.subcategory);
                 mBeaconsViewHolder.vCategory.setText(data.category);
 			}else{
                 Log.d(TAG, "3:the data itself or the category is null" + data);
