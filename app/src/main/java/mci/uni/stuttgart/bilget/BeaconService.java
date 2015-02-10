@@ -223,7 +223,6 @@ public class BeaconService extends Service {
                         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
                             BeaconsInfo beaconInfo = new BeaconsInfo();
                             beaconInfo.RSSI = rssi;
-                            Log.i(TAG, "macaddress from low API is" + device.getAddress());
                             beaconInfo.MACaddress = device.getAddress();
 
                             String recordInfo = new String(scanRecord);

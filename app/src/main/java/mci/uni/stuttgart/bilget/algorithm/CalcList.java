@@ -2,6 +2,7 @@ package mci.uni.stuttgart.bilget.algorithm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,11 +18,11 @@ public class CalcList {
 
     private static CalcList instance = null;
 
-    List<BeaconsInfo> ouputList;
+    List<BeaconsInfo> outputList;
     Map<String, BeaconsInfo> beaconStorageMap;
-    //a map to store the rssi information for the current ouputList.
+    //a map to store the rssi information for the current outputList.
     Map<String, int[]> map;
-    //a key set to store the key which is not in the input ouputList.
+    //a key set to store the key which is not in the input outputList.
     Set<String> keySet;
 
     //should be instanced when scan start
@@ -38,21 +39,22 @@ public class CalcList {
     }
 
     public List<BeaconsInfo> calcList(List<BeaconsInfo> inputList){
-        ouputList = new ArrayList<>();
-        keySet = map.keySet();
+        outputList = new ArrayList<>();
+        keySet = new HashSet<>(map.keySet());
         //iterate all the beacons in the list
         for(BeaconsInfo beaconInfo : inputList){
             String macAddress = beaconInfo.MACaddress;
+            //update our data
             beaconStorageMap.put(macAddress, beaconInfo);
             int rssi = Math.abs(beaconInfo.RSSI);
 
             if(updateMap(macAddress, rssi)){
-                ouputList.add(beaconInfo);
+                outputList.add(beaconInfo);
             }
         }
 
         calculateOthers(keySet);
-        return ouputList;
+        return outputList;
     }
 
     private boolean updateMap(String macAddress, int rssi){
@@ -63,7 +65,7 @@ public class CalcList {
             //if the beacon is in our range threshold.
             if(rssiReversed > 0 ) {
                 initArray[0] =  rssiReversed;//other two value would be 0
-                for(int i =1;i<RangeThreshold.TOTAL;i++){
+                for(int i = 1; i < RangeThreshold.TOTAL ; i++ ){
                     initArray[i] = -1;
                 }
                 map.put(macAddress, initArray);
@@ -74,7 +76,7 @@ public class CalcList {
         }else{
             //every element sequentially backward, push rssi into it
             popInArray(rssiReversed, rssiArray);
-            //delete the key in the keyset.
+            //delete the key in the keyset. !important step!
             keySet.remove(macAddress);
             return calculateArray(rssiArray, macAddress);
         }
@@ -121,14 +123,15 @@ public class CalcList {
 
     private void calculateOthers(Set<String> addressSet){
         for(String address : addressSet){
-            int[] rssiArray = map.get(address);
-            popInArray(0, rssiArray);
+            //if it is not in our input list
+                int[] rssiArray = map.get(address);
+                popInArray(0, rssiArray);
 
-            if(!calculateArray(rssiArray, address)){
-                beaconStorageMap.remove(address);//delete if not exist here, until next time it be discovered again.
-            }else{
-                ouputList.add(beaconStorageMap.get(address));//else add it into ouputList
-            }
+                if (!calculateArray(rssiArray, address)) {
+                    beaconStorageMap.remove(address);//delete if not exist here, until next time it be discovered again.
+                } else {
+                    outputList.add(beaconStorageMap.get(address));//else add it into outputList
+                }
         }
     }
 }

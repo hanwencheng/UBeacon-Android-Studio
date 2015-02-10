@@ -23,7 +23,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import mci.uni.stuttgart.bilget.algorithm.RangeThreshold;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
@@ -40,11 +42,10 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 
 	//state variable;
 	private Context context;
-	private BeaconsViewHolder contextBeaconsViewHolder;
 	Fragment contextFragment;
 	BeaconDBHelper beaconDBHelper;
 
-    BeaconDataLoaderCallbacks mDataCallbacks;
+    private Map<String, BeaconsViewHolder> viewMap;
     int loaderID;
 
     // Provide a suitable constructor (depends on the kind of dataSet)
@@ -52,7 +53,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	this.beaconsList = beaconsMap;
     	this.contextFragment = fragment;
     	this.beaconDBHelper = beaconDBHelper;
-        mDataCallbacks = new BeaconDataLoaderCallbacks();
+        this.viewMap = new HashMap<>();
         loaderID = 0;
     }
 
@@ -64,8 +65,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                                .inflate(R.layout.beacon_layout, parent, false);
         // set the view's size, margins, paddings and layout parameters
         BeaconsViewHolder beaconViewHolder = new BeaconsViewHolder(v);
-        this.contextBeaconsViewHolder = beaconViewHolder;
-       
+
         return beaconViewHolder;
     }
 
@@ -73,7 +73,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     @Override
     public void onBindViewHolder(BeaconsViewHolder beaconsViewHolder, int position) {
     	BeaconsInfo beaconInfo = beaconsList.get(position);
-    	Log.i("@","beaconsInfo is" + beaconInfo);
+    	Log.d(TAG," 0 : beaconsInfo is" + beaconInfo);
     	beaconsViewHolder.vName.setText(beaconInfo.name);
         String rangeHint = readRssi(beaconInfo.RSSI);
     	beaconsViewHolder.vRSSI.setText(rangeHint);
@@ -82,7 +82,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	//call the background database query function
         Bundle bundle = new Bundle();
         bundle.putString("mac", beaconInfo.MACaddress);
-    	contextFragment.getLoaderManager().initLoader(loaderID, bundle, mDataCallbacks);
+        viewMap.put(beaconInfo.MACaddress, beaconsViewHolder);
+    	contextFragment.getLoaderManager().initLoader(loaderID, bundle, new BeaconDataLoaderCallbacks());
         loaderID++;
     }
 
@@ -105,28 +106,30 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 //======================================================================================================
     
     private class BeaconDataLoaderCallbacks implements LoaderCallbacks<LocationInfo>{
+        private String mac;
 
 		@Override
 		public Loader<LocationInfo> onCreateLoader(int id, Bundle args) {
-            String mac = args.getString("mac");
+            this.mac = args.getString("mac");
 			return new BeaconDataLoader(context, beaconDBHelper, mac);
 		}
 
 		@Override
 		public void onLoadFinished(Loader<LocationInfo> loader,
 				LocationInfo data) {
+            BeaconsViewHolder mBeaconsViewHolder = viewMap.get(this.mac);
 			if(data!= null && data.category!=null){
-				Log.i(TAG, "3:get location info from the database" + data);
-				contextBeaconsViewHolder.vMACaddress.setText(data.subcategory);
-                contextBeaconsViewHolder.vDescription.setText(data.description);
-                contextBeaconsViewHolder.vLabel.setText(data.label);
-                contextBeaconsViewHolder.vCategory.setText(data.category);
+				Log.d(TAG, "3:get location info from the database" + data);
+                mBeaconsViewHolder.vMACaddress.setText(data.subcategory);
+                mBeaconsViewHolder.vDescription.setText(data.description);
+                mBeaconsViewHolder.vLabel.setText(data.label);
+                mBeaconsViewHolder.vCategory.setText(data.category);
 			}else{
-                Log.i(TAG, "3:the data itself or the category is null" + data);
-                contextBeaconsViewHolder.vDescription.setText(NOTFOUND);
-                contextBeaconsViewHolder.vLabel.setText(NOTFOUND);
-                contextBeaconsViewHolder.vCategory.setText(NOTFOUND);
-                contextBeaconsViewHolder.vMACaddress.setText("Not Found");//TODO start download action
+                Log.d(TAG, "3:the data itself or the category is null" + data);
+                mBeaconsViewHolder.vDescription.setText(NOTFOUND);
+                mBeaconsViewHolder.vLabel.setText(NOTFOUND);
+                mBeaconsViewHolder.vCategory.setText(NOTFOUND);
+                mBeaconsViewHolder.vMACaddress.setText("Not Found");//TODO start download action
                 URL testURL = null;
                 try {
                     testURL = new URL("http://meschup.hcilab.org/map/");
@@ -236,7 +239,6 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 //======================================================================================================
 
     private String readRssi(int rssi){
-        Log.i(TAG,"origin rssi is" + rssi);
         rssi = Math.abs(rssi);//because the origin number is negative
         String hint = "out of range";
         if(rssi < RangeThreshold.NEAR){

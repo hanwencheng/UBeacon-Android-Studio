@@ -11,12 +11,14 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -78,6 +80,8 @@ public class MainListFragment extends Fragment
 	private IBeacon beaconInteface;
     private SharedPreferences sharedPreferences;
     private CalcList calcList;
+
+    MediaPlayer beapSounds;
 	
 //	========================================Initialization==========================================
 //	================================================================================================
@@ -96,7 +100,10 @@ public class MainListFragment extends Fragment
 		stopServiceButton = (Button) rootView.findViewById(R.id.service_stop);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        calcList = new CalcList();// init algorithm module
+        calcList = CalcList.getInstance();// init algorithm module
+
+        //create sounds
+        beapSounds = MediaPlayer.create(getActivity(), Settings.System.DEFAULT_NOTIFICATION_URI);
 		
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -133,6 +140,7 @@ public class MainListFragment extends Fragment
 			@Override
 			public void onClick(View v) {
 				Log.i(TAG, "start button clicked");
+                speakOut("scanning start");
 				Intent intent = new Intent(getActivity(), BeaconService.class);
 				getActivity().bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
 			}
@@ -142,6 +150,7 @@ public class MainListFragment extends Fragment
 			@Override
 			public void onClick(View v) {
 				Log.i(TAG, "stop button clicked");
+                speakOut("scanning stops");
 				doUnBindService();
 				//unBind service and end the UI update runnable.
 				getActivity().unbindService(mServiceConnection);
@@ -274,23 +283,32 @@ public class MainListFragment extends Fragment
 //			List<BeaconsInfo> beaconsInfo = Collections.checkedList( beaconInteface.getList(), BeaconsInfo.class);
 			@SuppressWarnings("unchecked")
 			List<BeaconsInfo> beaconsInfo = beaconInteface.getList();
-            List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);
+            List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);//TODO
 			resultList.clear();
 			resultList.addAll(newList);
-			if (!resultList.isEmpty() && mSpeech!=null && !resultList.get(0).name.equals(currentLocation)) {
-				currentLocation = resultList.get(0).name;
-				//TODO should be set when transfer list
-                String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
-                if (Build.VERSION.SDK_INT < 21) {//TODO get the information from preference
-                    mSpeech.speak(audioHint + currentLocation, TextToSpeech.QUEUE_FLUSH, null);
-                } else {
-				    mSpeech.speak(audioHint + currentLocation, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME);
+
+            if(!resultList.isEmpty()){
+                beapSounds.start();
+                if (mSpeech!=null && !resultList.get(0).name.equals(currentLocation)) {
+                    currentLocation = resultList.get(0).name;
+                    String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
+                    speakOut(audioHint + currentLocation);
                 }
-			}
+            }
+
 			mAdapter.notifyDataSetChanged();
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
+    }
+
+    //speak something with android TTS.
+    private void speakOut(String words){
+        if (Build.VERSION.SDK_INT < 21) {//TODO get the information from preference
+            mSpeech.speak(words, TextToSpeech.QUEUE_FLUSH, null);
+        } else {
+            mSpeech.speak(words, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME);
+        }
     }
      
 	Runnable updateUI = new Runnable() {
@@ -361,6 +379,7 @@ public class MainListFragment extends Fragment
 	
 //	=====================================LifeCycle EventListeners=============================
 //	==========================================================================================
+//  lifecycle is : onCreate -> onStart -> onResume -> onPause -> onStop -> onDestroy
 	@Override
 	public void onStop() {
         disableTTS();
@@ -394,9 +413,9 @@ public class MainListFragment extends Fragment
 			}else{
 				Intent intent = new Intent(getActivity(), BeaconService.class);
 				getActivity().bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
+                speakOut("scanning continues");
 				Toast.makeText(getActivity(), "service is still running, bind again", Toast.LENGTH_SHORT).show();
 			}
-			
 		}
 	}
 	

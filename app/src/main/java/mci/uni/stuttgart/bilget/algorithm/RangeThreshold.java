@@ -6,11 +6,11 @@ package mci.uni.stuttgart.bilget.algorithm;
  */
 public class RangeThreshold {
 
-    public static int TOTAL = 3;
+    public static int TOTAL = 4;
 
     public static int NEAR = 45;
     public static int MIDDLE = 60;
     public static int FAR = 75;
 
-    public static int THRESHOLD = 30;
+    public static int THRESHOLD = 20;
 }

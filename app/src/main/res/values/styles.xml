@@ -22,4 +22,9 @@
         <item name="android:typeface">monospace</item>
     </style>
 
+    <style name="BeaconView">
+        <item name="android:background">@drawable/button</item>
+        <item name="android:layout_margin">3dp</item>
+    </style>
+
 </resources>

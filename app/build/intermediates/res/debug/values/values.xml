@@ -53,6 +53,10 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
+    <style name="BeaconView">
+        <item name="android:background">@drawable/button</item>
+        <item name="android:layout_margin">3dp</item>
+    </style>
     <style name="myText">
         <item name="android:textColor">#ff0000</item>
         <item name="android:typeface">monospace</item>

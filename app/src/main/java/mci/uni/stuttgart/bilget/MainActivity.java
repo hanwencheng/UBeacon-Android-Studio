@@ -1,6 +1,8 @@
 package mci.uni.stuttgart.bilget;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -19,6 +21,8 @@ public class MainActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new MainListFragment()).commit();
 		}
+        //add apps audio volume control.
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 	}
 
 	@Override
