@@ -48,6 +48,11 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     private Map<String, BeaconsViewHolder> viewMap;
     int loaderID;
 
+    public interface OnListHeadChange{
+        public void onLabelNameChange(String labelName, int position);
+    }
+    OnListHeadChange mCallback;
+
     // Provide a suitable constructor (depends on the kind of dataSet)
     public BeaconsAdapter(List<BeaconsInfo> beaconsMap, Fragment fragment, BeaconDBHelper beaconDBHelper) {
     	this.beaconsList = beaconsMap;
@@ -55,6 +60,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	this.beaconDBHelper = beaconDBHelper;
         this.viewMap = new HashMap<>();
         loaderID = 0;
+        mCallback = (OnListHeadChange) contextFragment;
     }
 
     // Create new views (invoked by the layout manager)
@@ -82,6 +88,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	//call the background database query function
         Bundle bundle = new Bundle();
         bundle.putString("mac", beaconInfo.MACaddress);
+        bundle.putInt("position", position);
         viewMap.put(beaconInfo.MACaddress, beaconsViewHolder);
     	contextFragment.getLoaderManager().initLoader(loaderID, bundle, new BeaconDataLoaderCallbacks());
         loaderID++;
@@ -107,10 +114,12 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     
     private class BeaconDataLoaderCallbacks implements LoaderCallbacks<LocationInfo>{
         private String mac;
+        private int position;
 
 		@Override
 		public Loader<LocationInfo> onCreateLoader(int id, Bundle args) {
             this.mac = args.getString("mac");
+            this.position = args.getInt("position");
 			return new BeaconDataLoader(context, beaconDBHelper, mac);
 		}
 
@@ -121,10 +130,12 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 			if(data!= null && data.category!=null){
 				Log.d(TAG, "3:get location info from the database" + data);
                 mBeaconsViewHolder.vName.setText(data.label);
-//                mBeaconsViewHolder.vMACaddress.setText(data.subcategory);
+                mBeaconsViewHolder.vMACaddress.setText(this.mac);
                 mBeaconsViewHolder.vDescription.setText(data.description);
                 mBeaconsViewHolder.vLabel.setText(data.subcategory);
                 mBeaconsViewHolder.vCategory.setText(data.category);
+                Log.i(TAG, "inteface is" + mCallback);
+                mCallback.onLabelNameChange(data.label, position);
 			}else{
                 Log.d(TAG, "3:the data itself or the category is null" + data);
                 mBeaconsViewHolder.vDescription.setText(NOTFOUND);
@@ -180,6 +191,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 
         url =  new URL("http://meschup.hcilab.org/map/");//TODO
 
+        //TODO
         if(!DatabaseUtil.queryURL(beaconDBHelper , url.toString())) {
             try {
                 Log.i(TAG, "has not visited , start download");

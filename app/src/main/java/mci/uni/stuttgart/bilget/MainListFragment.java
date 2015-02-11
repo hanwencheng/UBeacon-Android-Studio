@@ -46,7 +46,8 @@ import mci.uni.stuttgart.bilget.algorithm.CalcList;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 
 public class MainListFragment extends Fragment
-                                implements SharedPreferences.OnSharedPreferenceChangeListener
+                                implements SharedPreferences.OnSharedPreferenceChangeListener,
+        BeaconsAdapter.OnListHeadChange
 {
 
 	private RecyclerView mRecyclerView;
@@ -289,10 +290,11 @@ public class MainListFragment extends Fragment
 
             if(!resultList.isEmpty()){
                 beapSounds.start();
-                if (mSpeech!=null && !resultList.get(0).name.equals(currentLocation)) {
-                    currentLocation = resultList.get(0).name;
-                    String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
-                    speakOut(audioHint + currentLocation);
+                //TODO
+                if (mSpeech!=null && !resultList.get(0).MACaddress.equals(currentLocation)) {
+//                    currentLocation = resultList.get(0).MACaddress;
+//                    String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
+//                    speakOut(audioHint + currentLocation);
                 }
             }
 
@@ -300,6 +302,19 @@ public class MainListFragment extends Fragment
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
+    }
+
+
+    @Override
+    public void onLabelNameChange(String labelName, int position) {
+        Log.i(TAG,"get label name is" + labelName);
+        String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
+        if(position == 0 && labelName != null){
+            if(!currentLocation.equals(labelName)){
+                currentLocation = labelName;
+                speakOut(audioHint + currentLocation);
+            }
+        }
     }
 
     //speak something with android TTS.
@@ -413,7 +428,7 @@ public class MainListFragment extends Fragment
 			}else{
 				Intent intent = new Intent(getActivity(), BeaconService.class);
 				getActivity().bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
-                speakOut("scanning continues");
+//                speakOut("scanning continues");
 				Toast.makeText(getActivity(), "service is still running, bind again", Toast.LENGTH_SHORT).show();
 			}
 		}
@@ -500,4 +515,5 @@ public class MainListFragment extends Fragment
             Log.i(TAG,"preference audioHint changed!");
         }
     }
+
 }
