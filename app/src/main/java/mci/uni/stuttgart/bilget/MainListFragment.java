@@ -310,7 +310,7 @@ public class MainListFragment extends Fragment
         Log.i(TAG,"get label name is" + labelName);
         String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
         if(position == 0 && labelName != null){
-            if(!currentLocation.equals(labelName)){
+            if(currentLocation == null ||!currentLocation.equals(labelName)){
                 currentLocation = labelName;
                 speakOut(audioHint + currentLocation);
             }

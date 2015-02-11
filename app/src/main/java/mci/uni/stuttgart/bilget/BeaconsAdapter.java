@@ -141,7 +141,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 mBeaconsViewHolder.vDescription.setText(NOTFOUND);
                 mBeaconsViewHolder.vLabel.setText(NOTFOUND);
                 mBeaconsViewHolder.vCategory.setText(NOTFOUND);
-                mBeaconsViewHolder.vMACaddress.setText("Not Found");//TODO start download action
+
+                mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action
                 URL testURL = null;
                 try {
                     testURL = new URL("http://meschup.hcilab.org/map/");
