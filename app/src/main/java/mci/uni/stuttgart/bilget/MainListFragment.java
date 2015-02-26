@@ -83,6 +83,7 @@ public class MainListFragment extends Fragment
     private CalcList calcList;
 
     MediaPlayer beapSounds;
+    SoundPoolPlayer soundPoolPlayer;
 	
 //	========================================Initialization==========================================
 //	================================================================================================
@@ -104,7 +105,8 @@ public class MainListFragment extends Fragment
         calcList = CalcList.getInstance();// init algorithm module
 
         //create sounds
-        beapSounds = MediaPlayer.create(getActivity(), R.raw.Arcade_Action_04);
+        beapSounds = MediaPlayer.create(getActivity(), Settings.System.DEFAULT_NOTIFICATION_URI);
+        soundPoolPlayer = SoundPoolPlayer.getInstance(getActivity());
 		
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -289,7 +291,10 @@ public class MainListFragment extends Fragment
 			resultList.addAll(newList);
 
             if(!resultList.isEmpty()){
-                beapSounds.start();
+                //beapSounds.start();
+                //this default sound is disabled because it is annoying in sumsung device
+                soundPoolPlayer.play(R.raw.arcade_action_04);
+
                 //TODO
                 if (mSpeech!=null && !resultList.get(0).MACaddress.equals(currentLocation)) {
 //                    currentLocation = resultList.get(0).MACaddress;

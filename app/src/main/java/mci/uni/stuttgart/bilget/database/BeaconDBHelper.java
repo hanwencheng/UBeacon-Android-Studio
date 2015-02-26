@@ -11,7 +11,7 @@ import mci.uni.stuttgart.bilget.network.DownloadUrlTable;
 
 public class BeaconDBHelper extends SQLiteOpenHelper {
 	
-	public static final int DATABASE_VERSION = 3;
+	public static final int DATABASE_VERSION = 4;
 	public static final String DATABASE_NAME = "BeaconLocation.db";
 
 	private static final String TAG = "Beacon DB open helper";
@@ -65,10 +65,10 @@ public class BeaconDBHelper extends SQLiteOpenHelper {
 				+ LocationEntry.COLUNM_NAME_DESCRIPTION  + ") "
 				+ " VALUES ( 'E7D38F1CF82E', 'indoor','desk','hanwen''s desk','my beautiful desk!')");
 
-        db.execSQL("INSERT INTO " + DownloadUrlTable.URLEntry.TABLE_NAME
-                + " ( " + DownloadUrlTable.URLEntry.COLUNM_NAME_URL
-                + ")"
-                + " VALUES ( 'http://meschup.hcilab.org/map/' )");
+//        db.execSQL("INSERT INTO " + DownloadUrlTable.URLEntry.TABLE_NAME
+//                + " ( " + DownloadUrlTable.URLEntry.COLUNM_NAME_URL
+//                + ")"
+//                + " VALUES ( 'http://meschup.hcilab.org/map/' )");
 //		long firstRowId = DatabaseUtil.insertData(this, hanwensHome);
 //		Log.d(TAG, firstRowId + " is inserted and the table is initialed");
 	} 

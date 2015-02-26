@@ -211,11 +211,15 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 inputStream = conn.getInputStream();
 
                 // Convert the InputStream into a string
-                List<LocationInfo> locationInfos = ParserUtil.parseLocation(inputStream);
-                for (LocationInfo locationInfo : locationInfos) {
-                    long rowNum = DatabaseUtil.insertData(beaconDBHelper, locationInfo);
-                    Log.d(TAG, "insert a new row, row number is" + rowNum);
+                if(inputStream != null) {
+                    List<LocationInfo> locationInfos = ParserUtil.parseLocation(inputStream);
+                    for (LocationInfo locationInfo : locationInfos) {
+                        long rowNum = DatabaseUtil.insertData(beaconDBHelper, locationInfo);
+                        Log.d(TAG, "insert a new row, row number is" + rowNum);
+                    }
                 }
+                long rowNumber = DatabaseUtil.insertURL(beaconDBHelper, url.toString());
+                Log.d(TAG, "inset new row in url table, now the size is" + rowNumber);
                 return true; //TODO
 
                 // Makes sure that the InputStream is closed after the app is

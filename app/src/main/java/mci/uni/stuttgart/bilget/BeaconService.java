@@ -207,7 +207,7 @@ public class BeaconService extends Service {
                         public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
                             Log.d(TAG, "event linstener is called!!!!");
                             Log.d(TAG, "batch result are:" + results);
-//			mAdapter.notifyDataSetChanged();
+                            //mAdapter.notifyDataSetChanged();
                             for (int i = 0; i < results.size(); i++) {
                                 ScanResult result = results.get(i);
                                 Log.d(TAG, "add item" + result + "to list");

@@ -74,6 +74,28 @@ public class DatabaseUtil {
 		return location;
 	}
 
+    public static long insertURL(BeaconDBHelper mDbHelper, String insertURL){
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+//		values.put(LocationEntry.COLUMN_NAME_CATEGORY, 1);
+        values.put(DownloadUrlTable.URLEntry.COLUNM_NAME_URL, insertURL);
+
+        long newRowId;
+        newRowId = db.insertWithOnConflict(DownloadUrlTable.URLEntry.TABLE_NAME,
+//                null,
+				DownloadUrlTable.URLEntry.COLUMN_NAME_NULL,
+                values,
+                SQLiteDatabase.CONFLICT_REPLACE);
+        return newRowId;
+    }
+
+    /**
+     * query url in our database
+     * @param mDbHelper
+     * @param queryURL
+     * @return if found return true
+     */
     public static boolean queryURL(BeaconDBHelper mDbHelper, String queryURL){
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
         if(queryURL == null){

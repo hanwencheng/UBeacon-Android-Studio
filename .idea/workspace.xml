@@ -18,8 +18,6 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CUSTOM_FILTER" value="our" />
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="INFO" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: mci.uni.stuttgart.bilget" />
   </component>
   <component name="ChangeListManager">
@@ -56,25 +54,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="MainListFragment.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="MainListFragment.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/MainListFragment.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3324468" vertical-offset="695" max-vertical-offset="7020">
-              <caret line="106" column="66" selection-start-line="106" selection-start-column="66" selection-end-line="106" selection-end-column="66" />
+            <state vertical-scroll-proportion="-12.423077" vertical-offset="663" max-vertical-offset="8041">
+              <caret line="101" column="64" selection-start-line="101" selection-start-column="64" selection-end-line="101" selection-end-column="64" />
               <folding>
-                <element signature="e#12361#12485#0" expanded="true" />
-                <element signature="e#12481#12482#0" expanded="true" />
-                <element signature="e#16231#16254#0" expanded="true" />
-                <element signature="e#16341#16367#0" expanded="true" />
-                <element signature="e#16980#17121#0" expanded="true" />
-                <element signature="e#17114#17115#0" expanded="true" />
-                <element signature="e#17303#17304#0" expanded="true" />
-                <element signature="e#17384#17385#0" expanded="true" />
-                <element signature="e#17477#17478#0" expanded="true" />
-                <element signature="e#17558#17559#0" expanded="true" />
-                <element signature="e#17650#17651#0" expanded="true" />
-                <element signature="e#17730#17731#0" expanded="true" />
+                <element signature="e#12641#12765#0" expanded="true" />
+                <element signature="e#12761#12762#0" expanded="true" />
+                <element signature="e#16511#16534#0" expanded="true" />
+                <element signature="e#16621#16647#0" expanded="true" />
+                <element signature="e#17260#17401#0" expanded="true" />
+                <element signature="e#17394#17395#0" expanded="true" />
+                <element signature="e#17583#17584#0" expanded="true" />
+                <element signature="e#17664#17665#0" expanded="true" />
+                <element signature="e#17757#17758#0" expanded="true" />
+                <element signature="e#17838#17839#0" expanded="true" />
+                <element signature="e#17930#17931#0" expanded="true" />
+                <element signature="e#18010#18011#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CalcList.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/algorithm/CalcList.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.7647815" vertical-offset="1292" max-vertical-offset="2346">
+              <caret line="118" column="0" selection-start-line="117" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -82,22 +90,9 @@
       <file leaf-file-name="BeaconService.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconService.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="870" max-vertical-offset="3705">
-              <caret line="229" column="46" selection-start-line="229" selection-start-column="46" selection-end-line="229" selection-end-column="46" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="722" max-vertical-offset="4199">
+              <caret line="87" column="5" selection-start-line="87" selection-start-column="5" selection-end-line="87" selection-end-column="5" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="SettingsActivity.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/SettingsActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-17.307692" vertical-offset="0" max-vertical-offset="1530">
-              <caret line="48" column="49" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="49" />
-              <folding>
-                <element signature="e#2010#2067#0" expanded="true" />
-                <element signature="e#2223#2280#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -105,43 +100,50 @@
       <file leaf-file-name="BeaconsAdapter.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-14.423077" vertical-offset="1350" max-vertical-offset="3555">
-              <caret line="151" column="75" selection-start-line="151" selection-start-column="67" selection-end-line="151" selection-end-column="75" />
+            <state vertical-scroll-proportion="-100.92308" vertical-offset="487" max-vertical-offset="4097">
+              <caret line="219" column="17" selection-start-line="219" selection-start-column="17" selection-end-line="219" selection-end-column="17" />
               <folding>
-                <element signature="e#9497#9527#0" expanded="true" />
+                <element signature="e#9753#9783#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="settings.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/xml/settings.xml">
+      <file leaf-file-name="BeaconDataLoader.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDataLoader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.423077" vertical-offset="2" max-vertical-offset="780">
-              <caret line="13" column="45" selection-start-line="13" selection-start-column="45" selection-end-line="13" selection-end-column="45" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1241">
+              <caret line="31" column="45" selection-start-line="31" selection-start-column="33" selection-end-line="31" selection-end-column="45" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="array.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
+      <file leaf-file-name="DatabaseUtil.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/DatabaseUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
-              <caret line="2" column="43" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="68" max-vertical-offset="3536">
+              <caret line="33" column="47" selection-start-line="33" selection-start-column="47" selection-end-line="33" selection-end-column="47" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="beacon_layout.xml" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/beacon_layout.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
+      <file leaf-file-name="BeaconDBHelper.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDBHelper.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-22.25926" vertical-offset="374" max-vertical-offset="1125">
-              <caret line="65" column="42" selection-start-line="65" selection-start-column="42" selection-end-line="65" selection-end-column="42" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="799" max-vertical-offset="1598">
+              <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="DownloadUrlTable.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/network/DownloadUrlTable.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="459">
+              <caret line="7" column="25" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -840,9 +842,7 @@
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/UrlDBHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/network/UrlDBHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconLocationTable.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDBHelper.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/network/DownloadUrlTable.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/DatabaseUtil.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsViewHolder.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/xml/preference_headers" />
         <option value="$PROJECT_DIR$/app/src/main/res/xml/fragmented_preferences.xml" />
@@ -854,7 +854,6 @@
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsInfo.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/RangeThreshold.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDataLoader.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconService.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/algorithm/RangeThreshold.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/drawable/drawable.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
@@ -866,8 +865,13 @@
         <option value="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/xml/settings.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/beacon_layout.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconService.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/SoundPoolPlayer.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/SoundPoolPlayer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/MainListFragment.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDBHelper.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsAdapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/DatabaseUtil.java" />
       </list>
     </option>
   </component>
@@ -936,7 +940,7 @@
         </expanded-state>
         <selected-state>
           <State>
-            <id>Abstraction issues</id>
+            <id>Deprecation</id>
           </State>
         </selected-state>
       </profile-state>
@@ -1347,7 +1351,7 @@
     <property name="recentsLimit" value="5" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="915bcb30" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_5_API_21_x86" />
-    <property name="options.lastSelected" value="preferences.keymap" />
+    <property name="options.lastSelected" value="reference.settingsdialog.IDE.editor.colors.Font" />
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
@@ -1377,6 +1381,7 @@
       <recent name="X:\Android\Bildget\app\src\main\res\menu" />
     </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="mci.uni.stuttgart.bilget" />
       <recent name="mci.uni.stuttgart.bilget.algorithm" />
       <recent name="mci.uni.stuttgart.bilget.network" />
       <recent name="mci.uni.stuttgart.bilget.database" />
@@ -1630,14 +1635,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="2010" max-vertical-offset="4095">
-          <caret line="134" column="29" selection-start-line="134" selection-start-column="29" selection-end-line="134" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsInfo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="510">
@@ -1771,21 +1768,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/DatabaseUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1165" max-vertical-offset="3720">
-          <caret line="76" column="26" selection-start-line="76" selection-start-column="26" selection-end-line="76" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDataLoader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.3333334" vertical-offset="0" max-vertical-offset="1460">
-          <caret line="42" column="9" selection-start-line="42" selection-start-column="9" selection-end-line="42" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconLocationTable.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6666667" vertical-offset="140" max-vertical-offset="740">
@@ -1823,26 +1805,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/algorithm/CalcList.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1340" max-vertical-offset="2760">
-          <caret line="48" column="29" selection-start-line="48" selection-start-column="29" selection-end-line="48" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.01992032" vertical-offset="0" max-vertical-offset="753">
           <caret line="1" column="5" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDBHelper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="975" max-vertical-offset="1515">
-          <caret line="65" column="41" selection-start-line="65" selection-start-column="41" selection-end-line="65" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1935,30 +1901,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/network/ParserUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6362468" vertical-offset="0" max-vertical-offset="1740">
-          <caret line="43" column="17" selection-start-line="43" selection-start-column="17" selection-end-line="43" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/network/DownloadUrlTable.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.13496144" vertical-offset="0" max-vertical-offset="778">
-          <caret line="7" column="25" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="29" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
-          <caret line="2" column="43" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="43" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/build/generated/source/r/debug/mci/uni/stuttgart/bilget/R.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3439575" vertical-offset="686" max-vertical-offset="1515">
@@ -1994,25 +1936,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/SettingsActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-17.307692" vertical-offset="0" max-vertical-offset="1530">
-          <caret line="48" column="49" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="49" />
-          <folding>
-            <element signature="e#2010#2067#0" expanded="true" />
-            <element signature="e#2223#2280#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3705">
-          <caret line="229" column="46" selection-start-line="229" selection-start-column="46" selection-end-line="229" selection-end-column="46" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml">
       <provider editor-type-id="android-designer">
         <state />
@@ -2024,34 +1947,119 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsAdapter.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/values/array.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-14.423077" vertical-offset="1350" max-vertical-offset="3555">
-          <caret line="151" column="75" selection-start-line="151" selection-start-column="67" selection-end-line="151" selection-end-column="75" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="270">
+          <caret line="2" column="43" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/network/ParserUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.15424165" vertical-offset="0" max-vertical-offset="1740">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/SoundPoolPlayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="182" max-vertical-offset="960">
+          <caret line="33" column="29" selection-start-line="33" selection-start-column="22" selection-end-line="33" selection-end-column="29" />
           <folding>
-            <element signature="e#9497#9527#0" expanded="true" />
+            <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/SettingsActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5984042" vertical-offset="0" max-vertical-offset="1530">
+          <caret line="48" column="49" selection-start-line="48" selection-start-column="49" selection-end-line="48" selection-end-column="49" />
+          <folding>
+            <element signature="e#2010#2067#0" expanded="true" />
+            <element signature="e#2223#2280#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/network/DownloadUrlTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="459">
+          <caret line="7" column="25" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDBHelper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="799" max-vertical-offset="1598">
+          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/MainListFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3324468" vertical-offset="695" max-vertical-offset="7020">
-          <caret line="106" column="66" selection-start-line="106" selection-start-column="66" selection-end-line="106" selection-end-column="66" />
+        <state vertical-scroll-proportion="-12.423077" vertical-offset="663" max-vertical-offset="8041">
+          <caret line="101" column="64" selection-start-line="101" selection-start-column="64" selection-end-line="101" selection-end-column="64" />
           <folding>
-            <element signature="e#12361#12485#0" expanded="true" />
-            <element signature="e#12481#12482#0" expanded="true" />
-            <element signature="e#16231#16254#0" expanded="true" />
-            <element signature="e#16341#16367#0" expanded="true" />
-            <element signature="e#16980#17121#0" expanded="true" />
-            <element signature="e#17114#17115#0" expanded="true" />
-            <element signature="e#17303#17304#0" expanded="true" />
-            <element signature="e#17384#17385#0" expanded="true" />
-            <element signature="e#17477#17478#0" expanded="true" />
-            <element signature="e#17558#17559#0" expanded="true" />
-            <element signature="e#17650#17651#0" expanded="true" />
-            <element signature="e#17730#17731#0" expanded="true" />
+            <element signature="e#12641#12765#0" expanded="true" />
+            <element signature="e#12761#12762#0" expanded="true" />
+            <element signature="e#16511#16534#0" expanded="true" />
+            <element signature="e#16621#16647#0" expanded="true" />
+            <element signature="e#17260#17401#0" expanded="true" />
+            <element signature="e#17394#17395#0" expanded="true" />
+            <element signature="e#17583#17584#0" expanded="true" />
+            <element signature="e#17664#17665#0" expanded="true" />
+            <element signature="e#17757#17758#0" expanded="true" />
+            <element signature="e#17838#17839#0" expanded="true" />
+            <element signature="e#17930#17931#0" expanded="true" />
+            <element signature="e#18010#18011#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/DatabaseUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="68" max-vertical-offset="3536">
+          <caret line="33" column="47" selection-start-line="33" selection-start-column="47" selection-end-line="33" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/database/BeaconDataLoader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="463" max-vertical-offset="1241">
+          <caret line="31" column="45" selection-start-line="31" selection-start-column="33" selection-end-line="31" selection-end-column="45" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconsAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-100.92308" vertical-offset="487" max-vertical-offset="4097">
+          <caret line="219" column="17" selection-start-line="219" selection-start-column="17" selection-end-line="219" selection-end-column="17" />
+          <folding>
+            <element signature="e#9753#9783#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/BeaconService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="722" max-vertical-offset="4199">
+          <caret line="87" column="5" selection-start-line="87" selection-start-column="5" selection-end-line="87" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/mci/uni/stuttgart/bilget/algorithm/CalcList.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7647815" vertical-offset="1292" max-vertical-offset="2346">
+          <caret line="118" column="0" selection-start-line="117" selection-start-column="0" selection-end-line="118" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
