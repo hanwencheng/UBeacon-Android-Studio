@@ -4,10 +4,12 @@ import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +63,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         this.viewMap = new HashMap<>();
         loaderID = 0;
         mCallback = (OnListHeadChange) contextFragment;
+        checkNetwork();
     }
 
     // Create new views (invoked by the layout manager)
@@ -134,18 +137,20 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 mBeaconsViewHolder.vDescription.setText(data.description);
                 mBeaconsViewHolder.vLabel.setText(data.subcategory);
                 mBeaconsViewHolder.vCategory.setText(data.category);
-                Log.i(TAG, "inteface is" + mCallback);
+                Log.i(TAG, "interface is" + mCallback);
                 mCallback.onLabelNameChange(data.label, position);
 			}else{
                 Log.d(TAG, "3:the data itself or the category is null" + data);
                 mBeaconsViewHolder.vDescription.setText(NOTFOUND);
                 mBeaconsViewHolder.vLabel.setText(NOTFOUND);
                 mBeaconsViewHolder.vCategory.setText(NOTFOUND);
-
                 mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action
                 URL testURL = null;
                 try {
-                    testURL = new URL("http://meschup.hcilab.org/map/");
+                    SharedPreferences sharedPreferences =
+                            PreferenceManager.getDefaultSharedPreferences(contextFragment.getActivity());
+                    testURL = new URL(sharedPreferences.getString("prefLink", "http://meschup.hcilab.org/map/"));
+                    Log.i(TAG, "our database comes from" + testURL);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
@@ -180,17 +185,15 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         }
 
         @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            Log.d(TAG, "the download result is" + aBoolean);
-            super.onPostExecute(aBoolean);
+        protected void onPostExecute(Boolean mBoolean) {
+            Log.d(TAG, "the download result is" + mBoolean);
+            super.onPostExecute(mBoolean);
         }
     }
 
     private boolean downloadURL( URL url) throws IOException{
         InputStream inputStream = null;
         int len = 100;
-
-        url =  new URL("http://meschup.hcilab.org/map/");//TODO
 
         //TODO
         if(!DatabaseUtil.queryURL(beaconDBHelper , url.toString())) {
@@ -228,15 +231,12 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         }
     }
 
-    private void checkNetwork() throws MalformedURLException {
+    private void checkNetwork() {
         ConnectivityManager connMgr = (ConnectivityManager)
-                context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                contextFragment.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            URL testURL = new URL("http://meschup.hcilab.org/map/");
-            new downloadJSON().execute(testURL);
-        } else {
-            Toast.makeText(context, R.string.ble_is_supported, Toast.LENGTH_SHORT).show();
+        if (networkInfo == null || !networkInfo.isConnected()) {
+            Toast.makeText(context, R.string.network_not_avaliable, Toast.LENGTH_SHORT).show();
         }
     }
 

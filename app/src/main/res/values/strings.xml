@@ -24,5 +24,10 @@
     <string name="pref_threshold_summary">75 means \"-75db\", and so on</string>
     <string name="pref_frequency_summary">Scanning Frequency</string>
     <string name="pref_frequency">Scanning frequency</string>
+    <string name="pref_network">NETWORK</string>
+    <string name="pref_link">Download Source</string>
+    <string name="pref_link_summary">Beacons database source url</string>
+    <string name="pref_link_default">http://meschup.hcilab.org/map/</string>
+    <string name="network_not_avaliable">Sorry, please check the network settings, database may not be loaded</string>
 
 </resources>

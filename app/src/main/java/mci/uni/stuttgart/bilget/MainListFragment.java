@@ -351,6 +351,9 @@ public class MainListFragment extends Fragment
         builder.append("\n Sync Frequency: "
                 + sharedPreferences.getString("prefFrequency", "default"));
 
+        builder.append("\n Sync Frequency: "
+                + sharedPreferences.getString("prefLink", "http://meschup.hcilab.org/map/"));
+
         return builder.toString();
     }
 	
@@ -404,7 +407,7 @@ public class MainListFragment extends Fragment
 	@Override
 	public void onStart() {
         if(mSpeech == null){
-            if(sharedPreferences.getBoolean(IS_TTS_ENABLE, true)) {  //TODO default value is true.
+            if(!sharedPreferences.getBoolean(IS_TTS_ENABLE, true)) {  //TODO default value is true.
                 enableTTS();
             }
         }
