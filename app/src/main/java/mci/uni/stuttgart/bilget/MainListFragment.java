@@ -104,7 +104,7 @@ public class MainListFragment extends Fragment
         calcList = CalcList.getInstance();// init algorithm module
 
         //create sounds
-        beapSounds = MediaPlayer.create(getActivity(), Settings.System.DEFAULT_NOTIFICATION_URI);
+        beapSounds = MediaPlayer.create(getActivity(), R.raw.Arcade_Action_04);
 		
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {

@@ -144,7 +144,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 mBeaconsViewHolder.vDescription.setText(NOTFOUND);
                 mBeaconsViewHolder.vLabel.setText(NOTFOUND);
                 mBeaconsViewHolder.vCategory.setText(NOTFOUND);
-                mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action
+                mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action, this UI action may be disabled
                 URL testURL = null;
                 try {
                     SharedPreferences sharedPreferences =
