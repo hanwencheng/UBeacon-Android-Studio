@@ -32,10 +32,10 @@ public class SoundPoolPlayer {
         // setup Soundpool
         if (Build.VERSION.SDK_INT >= 21) {
             SoundPool.Builder builder = new SoundPool.Builder();
-            builder.setMaxStreams(2);
+            builder.setMaxStreams(1);
             this.mShortPlayer = builder.build();
         }else{
-            this.mShortPlayer = new SoundPool(2, AudioManager.STREAM_MUSIC, 0);
+            this.mShortPlayer = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
         }
         mSoundsMap.put(R.raw.arcade_action_04, this.mShortPlayer.load(context, R.raw.arcade_action_04, 1));
     }

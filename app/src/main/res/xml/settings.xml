@@ -19,7 +19,9 @@
 
         <Preference android:title="@string/update_button"
             android:key="update_button"
-            android:summary="@string/update_button_summary"/>
+            android:summary="@string/update_button_summary"
+            />
+        <!--android:layout="@layout/preference_button_layout"-->
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_scan">

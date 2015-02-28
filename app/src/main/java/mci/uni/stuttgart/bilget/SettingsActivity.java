@@ -91,6 +91,7 @@ public class SettingsActivity extends PreferenceActivity {
 
         private void createButton(){
             Preference button = (Preference)findPreference("update_button");
+
 //            button.set(new ActionBar.LayoutParams(
 //                            ViewGroup.LayoutParams.WRAP_CONTENT,
 //                            ViewGroup.LayoutParams.WRAP_CONTENT)
