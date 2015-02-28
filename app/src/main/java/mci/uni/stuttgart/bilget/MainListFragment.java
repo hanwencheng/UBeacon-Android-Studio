@@ -313,11 +313,15 @@ public class MainListFragment extends Fragment
     @Override
     public void onLabelNameChange(String labelName, int position) {
         Log.i(TAG,"get label name is" + labelName);
-        String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
+        String audioHint = sharedPreferences.getString("prefAudio", "");
         if(position == 0 && labelName != null){
             if(currentLocation == null ||!currentLocation.equals(labelName)){
                 currentLocation = labelName;
-                speakOut(audioHint + currentLocation);
+                if(audioHint.equals("")){
+                    speakOut(currentLocation);
+                }else {
+                    speakOut(audioHint + currentLocation);
+                }
             }
         }
     }
