@@ -16,6 +16,10 @@
             android:defaultValue="@string/pref_link_default"
             android:key="prefLink">
         </EditTextPreference>
+
+        <Preference android:title="@string/update_button"
+            android:key="update_button"
+            android:summary="@string/update_button_summary"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_scan">

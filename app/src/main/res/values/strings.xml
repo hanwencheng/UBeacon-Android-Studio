@@ -29,5 +29,9 @@
     <string name="pref_link_summary">Beacons database source url</string>
     <string name="pref_link_default">http://meschup.hcilab.org/map/</string>
     <string name="network_not_avaliable">Sorry, please check the network settings, database may not be loaded</string>
+    <string name="update_button">update database now</string>
+    <string name="update_button_summary">Click the button to download the beacons information from the source url</string>
+    <string name="url_not_avaliable">The url address is not correct, please check again</string>
+    <string name="url_avaliable">downloading...</string>
 
 </resources>

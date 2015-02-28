@@ -34,18 +34,20 @@ import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import mci.uni.stuttgart.bilget.database.BeaconDataLoader;
 import mci.uni.stuttgart.bilget.database.DatabaseUtil;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
+import mci.uni.stuttgart.bilget.network.JSONLoader;
 import mci.uni.stuttgart.bilget.network.ParserUtil;
 
 public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
 	private List<BeaconsInfo> beaconsList;//need to be filled
-	private static final String TAG = "BeaconAdapter";
+	private static final String TAG = "BeaconsAdapter";
     private static final String NOTFOUND = "-";
 
 	//state variable;
 	private Context context;
 	Fragment contextFragment;
-	BeaconDBHelper beaconDBHelper;
+    BeaconDBHelper beaconDBHelper;
+    JSONLoader jsonLoader;
 
     private Map<String, BeaconsViewHolder> viewMap;
     int loaderID;
@@ -56,7 +58,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     OnListHeadChange mCallback;
 
     // Provide a suitable constructor (depends on the kind of dataSet)
-    public BeaconsAdapter(List<BeaconsInfo> beaconsMap, Fragment fragment, BeaconDBHelper beaconDBHelper) {
+    public BeaconsAdapter(List<BeaconsInfo> beaconsMap, Fragment fragment, mci.uni.stuttgart.bilget.database.BeaconDBHelper beaconDBHelper) {
     	this.beaconsList = beaconsMap;
     	this.contextFragment = fragment;
     	this.beaconDBHelper = beaconDBHelper;
@@ -64,6 +66,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         loaderID = 0;
         mCallback = (OnListHeadChange) contextFragment;
         checkNetwork();
+        jsonLoader = JSONLoader.getInstance(beaconDBHelper);
     }
 
     // Create new views (invoked by the layout manager)
@@ -154,7 +157,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                new downloadJSON().execute(testURL);
+
+                jsonLoader.download(testURL, true);
             }
 		}
 
@@ -167,73 +171,6 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 
 //============================================Network Callback==========================================
 //======================================================================================================
-
-    private class downloadJSON extends AsyncTask<URL, Integer, Boolean>{
-
-        @Override
-        protected Boolean doInBackground(URL... params) {
-            boolean result = false;
-            for (URL param : params) {
-                try {
-                    result = downloadURL(param);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(isCancelled()) break;
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean mBoolean) {
-            Log.d(TAG, "the download result is" + mBoolean);
-            super.onPostExecute(mBoolean);
-        }
-    }
-
-    private boolean downloadURL( URL url) throws IOException{
-        InputStream inputStream = null;
-        int len = 100;
-
-        //TODO
-        if(!DatabaseUtil.queryURL(beaconDBHelper , url.toString())) {
-            try {
-                Log.i(TAG, "has not visited , start download");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000 /* milliseconds */);
-                conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-                // Starts the query
-                conn.connect();
-                int response = conn.getResponseCode();
-                Log.d(TAG, "The response is: " + response);
-                inputStream = conn.getInputStream();
-
-                // Convert the InputStream into a string
-                if(inputStream != null) {
-                    List<LocationInfo> locationInfos = ParserUtil.parseLocation(inputStream);
-                    for (LocationInfo locationInfo : locationInfos) {
-                        long rowNum = DatabaseUtil.insertData(beaconDBHelper, locationInfo);
-                        Log.d(TAG, "insert a new row, row number is" + rowNum);
-                    }
-                }
-                long rowNumber = DatabaseUtil.insertURL(beaconDBHelper, url.toString());
-                Log.d(TAG, "inset new row in url table, now the size is" + rowNumber);
-                return true; //TODO
-
-                // Makes sure that the InputStream is closed after the app is
-                // finished using it.
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            }
-        }else{
-            Log.i(TAG, "url is already visited once");
-            return false;
-        }
-    }
 
     private void checkNetwork() {
         ConnectivityManager connMgr = (ConnectivityManager)
