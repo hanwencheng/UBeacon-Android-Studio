@@ -1,5 +1,6 @@
 package mci.uni.stuttgart.bilget.network;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import mci.uni.stuttgart.bilget.R;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import mci.uni.stuttgart.bilget.database.DatabaseUtil;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
@@ -22,6 +24,7 @@ public class JSONLoader {
     private static String TAG = "JSONLoader";
     private static JSONLoader jsonLoader;
     private BeaconDBHelper beaconDBHelper;
+    private Context context;
 
     public static JSONLoader getInstance(BeaconDBHelper beaconDBHelper){
         //if loader is already instantiated
@@ -43,7 +46,8 @@ public class JSONLoader {
         this.beaconDBHelper = beaconDBHelper;
     }
 
-    public void download(URL url, boolean shouldCheck){
+    public void download(URL url, boolean shouldCheck, Context context){
+        this.context = context;
         new jsonLoaderTask().execute(url, shouldCheck);
     }
 
@@ -73,7 +77,11 @@ public class JSONLoader {
         @Override
         protected void onPostExecute(Boolean mBoolean) {
             Log.d(TAG, "the download result is" + mBoolean);
+            if(mBoolean){
+                Toast.makeText(context.getApplicationContext(), R.string.url_avaliable, Toast.LENGTH_SHORT).show();
+            }
             super.onPostExecute(mBoolean);
+
         }
     }
 

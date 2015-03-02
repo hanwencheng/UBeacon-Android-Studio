@@ -158,7 +158,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                     e.printStackTrace();
                 }
 
-                jsonLoader.download(testURL, true);
+                jsonLoader.download(testURL, true, contextFragment.getActivity());
             }
 		}
 

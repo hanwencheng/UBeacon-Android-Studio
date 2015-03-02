@@ -1,27 +1,19 @@
 package mci.uni.stuttgart.bilget;
 
-import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.DialogPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.text.Layout;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.security.Key;
-import java.util.List;
 
 import mci.uni.stuttgart.bilget.network.JSONLoader;
 
@@ -101,12 +93,11 @@ public class SettingsActivity extends PreferenceActivity {
                 public boolean onPreferenceClick(Preference arg0) {
                     try {
                         URL sourceUrl = new URL(linkPref.getText());
-                        JSONLoader.getInstance(null).download(sourceUrl, false);
+                        JSONLoader.getInstance(null).download(sourceUrl, false, getActivity());
                     } catch (MalformedURLException e) {
                         Toast.makeText(getActivity(), R.string.url_not_avaliable, Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
-                    Toast.makeText(getActivity(), R.string.url_avaliable, Toast.LENGTH_SHORT).show();
                     return true;
                 }
             });

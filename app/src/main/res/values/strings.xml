@@ -32,6 +32,6 @@
     <string name="update_button">update database now</string>
     <string name="update_button_summary">Click the button to download the beacons information from the source url</string>
     <string name="url_not_avaliable">The url address is not correct, please check again</string>
-    <string name="url_avaliable">downloading...</string>
+    <string name="url_avaliable">download completed</string>
 
 </resources>
