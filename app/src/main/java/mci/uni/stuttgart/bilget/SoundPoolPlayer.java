@@ -37,7 +37,8 @@ public class SoundPoolPlayer {
         }else{
             this.mShortPlayer = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
         }
-        mSoundsMap.put(R.raw.arcade_action_04, this.mShortPlayer.load(context, R.raw.arcade_action_04, 1));
+        mSoundsMap.put(R.raw.scanning, this.mShortPlayer.load(context, R.raw.scanning, 1));
+        mSoundsMap.put(R.raw.new_direction, this.mShortPlayer.load(context, R.raw.scanning, 2));
     }
 
     public void load(int resourceID){

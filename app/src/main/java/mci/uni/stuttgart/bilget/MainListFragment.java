@@ -110,7 +110,7 @@ public class MainListFragment extends Fragment
 
         //create sounds
         beapSounds = MediaPlayer.create(getActivity(), Settings.System.DEFAULT_NOTIFICATION_URI);
-        soundPoolPlayer = SoundPoolPlayer.getInstance(getActivity());
+//        soundPoolPlayer = SoundPoolPlayer.getInstance(getActivity());
 
 
 
@@ -299,7 +299,7 @@ public class MainListFragment extends Fragment
             if(!resultList.isEmpty()){
                 //beapSounds.start();
                 //this default sound is disabled because it is annoying in sumsung device
-                soundPoolPlayer.play(R.raw.arcade_action_04);
+//                soundPoolPlayer.play(R.raw.scanning);
 
                 //TODO
                 if (mSpeech!=null && !resultList.get(0).MACaddress.equals(currentLocation)) {
