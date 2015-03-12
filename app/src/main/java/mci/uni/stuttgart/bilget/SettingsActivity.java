@@ -1,24 +1,21 @@
 package mci.uni.stuttgart.bilget;
 
-import android.app.ActionBar;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.DialogPreference;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
-import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.text.Layout;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
-import java.security.Key;
-import java.util.List;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import mci.uni.stuttgart.bilget.network.JSONLoader;
 
 /**
  * Created by Hanwen on 1/20/2015.
@@ -47,6 +44,7 @@ public class SettingsActivity extends PreferenceActivity {
     public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
         private ListPreference frequencyPref;
         private EditTextPreference thresholdPref;
+        private EditTextPreference linkPref;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +61,8 @@ public class SettingsActivity extends PreferenceActivity {
             thresholdPref = (EditTextPreference) findPreference("prefThreshold");
             thresholdPref.setTitle(getResources().getString(R.string.pref_frequency_summary) + " : " + thresholdPref.getText());
 
-//            createButton();
+            linkPref = (EditTextPreference)findPreference("prefLink");
+            createButton();
 
         }
 
@@ -83,7 +82,8 @@ public class SettingsActivity extends PreferenceActivity {
         }
 
         private void createButton(){
-            Preference button = (Preference)findPreference("button");
+            Preference button = (Preference)findPreference("update_button");
+
 //            button.set(new ActionBar.LayoutParams(
 //                            ViewGroup.LayoutParams.WRAP_CONTENT,
 //                            ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -91,8 +91,13 @@ public class SettingsActivity extends PreferenceActivity {
             button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                 @Override
                 public boolean onPreferenceClick(Preference arg0) {
-                    getActivity().setResult(RESULT_OK);
-                    getActivity().finish();
+                    try {
+                        URL sourceUrl = new URL(linkPref.getText());
+                        JSONLoader.getInstance(null).download(sourceUrl, false, getActivity());
+                    } catch (MalformedURLException e) {
+                        Toast.makeText(getActivity(), R.string.url_not_avaliable, Toast.LENGTH_SHORT).show();
+                        e.printStackTrace();
+                    }
                     return true;
                 }
             });

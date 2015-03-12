@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Bilget</string>
+    <string name="app_name">Ubeacon</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="ble_not_supported">Oh! BLE is not supported!</string>
@@ -17,12 +17,21 @@
     <string name="pref_approaching">Audio notice</string>
     <string name="pref_audio_summary">when you get approach a beacon it will send the notice \"your text\" + beaconsName</string>
     <string name="pref_scan">Scan</string>
-    <string name="pref_approaching_default">you are approaching</string>
+    <string name="pref_approaching_default"></string>
     <string name="pref_guide_switch_summary">using audio guide to indicate the nearest beacon</string>
     <string name="pref_guide_switch">Audio guide swtich</string>
     <string name="pref_threshold">RSSI threshold</string>
     <string name="pref_threshold_summary">75 means \"-75db\", and so on</string>
     <string name="pref_frequency_summary">Scanning Frequency</string>
     <string name="pref_frequency">Scanning frequency</string>
+    <string name="pref_network">NETWORK</string>
+    <string name="pref_link">Download Source</string>
+    <string name="pref_link_summary">Beacons database source url</string>
+    <string name="pref_link_default">http://meschup.hcilab.org/map/</string>
+    <string name="network_not_avaliable">Sorry, please check the network settings, database may not be loaded</string>
+    <string name="update_button">update database now</string>
+    <string name="update_button_summary">Click the button to download the beacons information from the source url</string>
+    <string name="url_not_avaliable">The url address is not correct, please check again</string>
+    <string name="url_avaliable">download completed</string>
 
 </resources>

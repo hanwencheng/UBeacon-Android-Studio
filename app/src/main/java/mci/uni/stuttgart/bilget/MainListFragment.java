@@ -2,6 +2,8 @@ package mci.uni.stuttgart.bilget;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -21,6 +23,8 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
@@ -83,6 +87,7 @@ public class MainListFragment extends Fragment
     private CalcList calcList;
 
     MediaPlayer beapSounds;
+    SoundPoolPlayer soundPoolPlayer;
 	
 //	========================================Initialization==========================================
 //	================================================================================================
@@ -105,7 +110,10 @@ public class MainListFragment extends Fragment
 
         //create sounds
         beapSounds = MediaPlayer.create(getActivity(), Settings.System.DEFAULT_NOTIFICATION_URI);
-		
+//        soundPoolPlayer = SoundPoolPlayer.getInstance(getActivity());
+
+
+
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
@@ -289,7 +297,10 @@ public class MainListFragment extends Fragment
 			resultList.addAll(newList);
 
             if(!resultList.isEmpty()){
-                beapSounds.start();
+                //beapSounds.start();
+                //this default sound is disabled because it is annoying in sumsung device
+//                soundPoolPlayer.play(R.raw.scanning);
+
                 //TODO
                 if (mSpeech!=null && !resultList.get(0).MACaddress.equals(currentLocation)) {
 //                    currentLocation = resultList.get(0).MACaddress;
@@ -308,11 +319,15 @@ public class MainListFragment extends Fragment
     @Override
     public void onLabelNameChange(String labelName, int position) {
         Log.i(TAG,"get label name is" + labelName);
-        String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
+        String audioHint = sharedPreferences.getString("prefAudio", "");
         if(position == 0 && labelName != null){
             if(currentLocation == null ||!currentLocation.equals(labelName)){
                 currentLocation = labelName;
-                speakOut(audioHint + currentLocation);
+                if(audioHint.equals("")){
+                    speakOut(currentLocation);
+                }else {
+                    speakOut(audioHint + currentLocation);
+                }
             }
         }
     }
@@ -350,6 +365,9 @@ public class MainListFragment extends Fragment
 
         builder.append("\n Sync Frequency: "
                 + sharedPreferences.getString("prefFrequency", "default"));
+
+        builder.append("\n Sync Frequency: "
+                + sharedPreferences.getString("prefLink", "http://meschup.hcilab.org/map/"));
 
         return builder.toString();
     }
@@ -404,7 +422,7 @@ public class MainListFragment extends Fragment
 	@Override
 	public void onStart() {
         if(mSpeech == null){
-            if(sharedPreferences.getBoolean(IS_TTS_ENABLE, true)) {  //TODO default value is true.
+            if(!sharedPreferences.getBoolean(IS_TTS_ENABLE, true)) {  //TODO default value is true.
                 enableTTS();
             }
         }
@@ -441,6 +459,41 @@ public class MainListFragment extends Fragment
 			mHandler.removeCallbacks(updateUI);
 		}
 	}
+
+
+//	=======================================Notification====================================
+//	==========================================================================================
+
+    public void createNotification(){
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(getActivity())
+                        .setSmallIcon(R.drawable.ic_launcher)
+                        .setContentTitle("My notification")
+                        .setContentText("Hello World!");
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this.getActivity(), MainActivity.class);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//
+//        // The stack builder object will contain an artificial back stack for the
+//        // started Activity.
+//        // This ensures that navigating backward from the Activity leads out of
+//        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.getActivity());
+//        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager mNotificationManager =
+                (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+// mId allows you to update the notification later on.
+        mNotificationManager.notify(0, mBuilder.build());
+    }
 	
 //	=======================================Intent Callback====================================
 //	==========================================================================================

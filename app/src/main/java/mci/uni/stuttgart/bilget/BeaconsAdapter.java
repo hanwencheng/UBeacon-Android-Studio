@@ -4,10 +4,12 @@ import android.app.Fragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,18 +34,20 @@ import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import mci.uni.stuttgart.bilget.database.BeaconDataLoader;
 import mci.uni.stuttgart.bilget.database.DatabaseUtil;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
+import mci.uni.stuttgart.bilget.network.JSONLoader;
 import mci.uni.stuttgart.bilget.network.ParserUtil;
 
 public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
 	private List<BeaconsInfo> beaconsList;//need to be filled
-	private static final String TAG = "BeaconAdapter";
+	private static final String TAG = "BeaconsAdapter";
     private static final String NOTFOUND = "-";
 
 	//state variable;
 	private Context context;
 	Fragment contextFragment;
-	BeaconDBHelper beaconDBHelper;
+    BeaconDBHelper beaconDBHelper;
+    JSONLoader jsonLoader;
 
     private Map<String, BeaconsViewHolder> viewMap;
     int loaderID;
@@ -54,13 +58,15 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     OnListHeadChange mCallback;
 
     // Provide a suitable constructor (depends on the kind of dataSet)
-    public BeaconsAdapter(List<BeaconsInfo> beaconsMap, Fragment fragment, BeaconDBHelper beaconDBHelper) {
+    public BeaconsAdapter(List<BeaconsInfo> beaconsMap, Fragment fragment, mci.uni.stuttgart.bilget.database.BeaconDBHelper beaconDBHelper) {
     	this.beaconsList = beaconsMap;
     	this.contextFragment = fragment;
     	this.beaconDBHelper = beaconDBHelper;
         this.viewMap = new HashMap<>();
         loaderID = 0;
         mCallback = (OnListHeadChange) contextFragment;
+        checkNetwork();
+        jsonLoader = JSONLoader.getInstance(beaconDBHelper);
     }
 
     // Create new views (invoked by the layout manager)
@@ -134,22 +140,25 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 mBeaconsViewHolder.vDescription.setText(data.description);
                 mBeaconsViewHolder.vLabel.setText(data.subcategory);
                 mBeaconsViewHolder.vCategory.setText(data.category);
-                Log.i(TAG, "inteface is" + mCallback);
+                Log.i(TAG, "interface is" + mCallback);
                 mCallback.onLabelNameChange(data.label, position);
 			}else{
                 Log.d(TAG, "3:the data itself or the category is null" + data);
                 mBeaconsViewHolder.vDescription.setText(NOTFOUND);
                 mBeaconsViewHolder.vLabel.setText(NOTFOUND);
                 mBeaconsViewHolder.vCategory.setText(NOTFOUND);
-
-                mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action
+                mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action, this UI action may be disabled
                 URL testURL = null;
                 try {
-                    testURL = new URL("http://meschup.hcilab.org/map/");
+                    SharedPreferences sharedPreferences =
+                            PreferenceManager.getDefaultSharedPreferences(contextFragment.getActivity());
+                    testURL = new URL(sharedPreferences.getString("prefLink", "http://meschup.hcilab.org/map/"));
+                    Log.i(TAG, "our database comes from" + testURL);
                 } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
-                new downloadJSON().execute(testURL);
+
+                jsonLoader.download(testURL, true, contextFragment.getActivity());
             }
 		}
 
@@ -163,80 +172,12 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 //============================================Network Callback==========================================
 //======================================================================================================
 
-    private class downloadJSON extends AsyncTask<URL, Integer, Boolean>{
-
-        @Override
-        protected Boolean doInBackground(URL... params) {
-            boolean result = false;
-            for (URL param : params) {
-                try {
-                    result = downloadURL(param);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if(isCancelled()) break;
-            }
-            return result;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            Log.d(TAG, "the download result is" + aBoolean);
-            super.onPostExecute(aBoolean);
-        }
-    }
-
-    private boolean downloadURL( URL url) throws IOException{
-        InputStream inputStream = null;
-        int len = 100;
-
-        url =  new URL("http://meschup.hcilab.org/map/");//TODO
-
-        //TODO
-        if(!DatabaseUtil.queryURL(beaconDBHelper , url.toString())) {
-            try {
-                Log.i(TAG, "has not visited , start download");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setReadTimeout(10000 /* milliseconds */);
-                conn.setConnectTimeout(15000 /* milliseconds */);
-                conn.setRequestMethod("GET");
-                conn.setDoInput(true);
-                // Starts the query
-                conn.connect();
-                int response = conn.getResponseCode();
-                Log.d(TAG, "The response is: " + response);
-                inputStream = conn.getInputStream();
-
-                // Convert the InputStream into a string
-                List<LocationInfo> locationInfos = ParserUtil.parseLocation(inputStream);
-                for (LocationInfo locationInfo : locationInfos) {
-                    long rowNum = DatabaseUtil.insertData(beaconDBHelper, locationInfo);
-                    Log.d(TAG, "insert a new row, row number is" + rowNum);
-                }
-                return true; //TODO
-
-                // Makes sure that the InputStream is closed after the app is
-                // finished using it.
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-            }
-        }else{
-            Log.i(TAG, "url is already visited once");
-            return false;
-        }
-    }
-
-    private void checkNetwork() throws MalformedURLException {
+    private void checkNetwork() {
         ConnectivityManager connMgr = (ConnectivityManager)
-                context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                contextFragment.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-            URL testURL = new URL("http://meschup.hcilab.org/map/");
-            new downloadJSON().execute(testURL);
-        } else {
-            Toast.makeText(context, R.string.ble_is_supported, Toast.LENGTH_SHORT).show();
+        if (networkInfo == null || !networkInfo.isConnected()) {
+            Toast.makeText(context, R.string.network_not_avaliable, Toast.LENGTH_SHORT).show();
         }
     }
 

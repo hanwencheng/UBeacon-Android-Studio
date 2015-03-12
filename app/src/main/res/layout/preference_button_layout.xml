@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:background="#ffbbb798"
+    android:clickable="true"
+    android:title="@string/update_button"
+    android:key="update_button"
+    android:summary="@string/update_button_summary">
+
+</LinearLayout>

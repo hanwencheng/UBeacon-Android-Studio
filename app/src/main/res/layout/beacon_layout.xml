@@ -66,10 +66,4 @@
         android:layout_marginTop="25dp" />
 
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:background="@android:color/darker_gray" />
-
-
 </RelativeLayout>
