@@ -19,9 +19,9 @@ public class BeaconsViewHolder extends RecyclerView.ViewHolder {
 		vName = (TextView) view.findViewById(R.id.beacon_item_name);
 		vRSSI = (TextView) view.findViewById(R.id.beacon_item_RSSI);
 		vLabel = (TextView) view.findViewById(R.id.beacon_item_label);
-        vCategory = (TextView) view.findViewById(R.id.beacon_item_category);
+//        vCategory = (TextView) view.findViewById(R.id.beacon_item_category);
         vDescription = (TextView) view.findViewById(R.id.beacon_item_description);
-		vMACaddress = (TextView) view.findViewById(R.id.beacon_item_MACaddress);
+//		vMACaddress = (TextView) view.findViewById(R.id.beacon_item_MACaddress);
 	}
 
 }

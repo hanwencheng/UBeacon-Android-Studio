@@ -38,6 +38,17 @@
 
     <TextView
         style="@style/myText"
+        android:id="@+id/beacon_item_category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="category"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:layout_below="@+id/beacon_item_label"
+        android:layout_alignStart="@+id/beacon_item_label" />
+
+
+    <TextView
+        style="@style/myText"
         android:id="@+id/beacon_item_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +56,15 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:layout_below="@+id/beacon_item_label"
         android:layout_alignStart="@+id/beacon_item_RSSI" />
+
+    <TextView
+        android:id="@+id/beacon_item_MACaddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="macAddress"
+        android:layout_below="@+id/beacon_item_label"
+        android:layout_alignStart="@+id/beacon_item_label"
+        android:layout_marginTop="25dp" />
 
 
 </RelativeLayout>

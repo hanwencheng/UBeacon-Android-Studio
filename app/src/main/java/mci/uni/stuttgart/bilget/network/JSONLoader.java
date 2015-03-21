@@ -85,6 +85,8 @@ public class JSONLoader {
         }
     }
 
+    //if the second parameter is set for false, then it is false,
+    // then it is compulsory downloading without any conditions.
     private boolean downloadURL(URL url, boolean shouldCheck) throws IOException{
         InputStream inputStream = null;
         int len = 100;
