@@ -169,6 +169,8 @@ public class MainListFragment extends Fragment
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         
         // use a linear layout manager
         LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -302,11 +304,11 @@ public class MainListFragment extends Fragment
 //                soundPoolPlayer.play(R.raw.scanning);
 
                 //TODO
-                if (mSpeech!=null && !resultList.get(0).MACaddress.equals(currentLocation)) {
+//                if (mSpeech!=null && !resultList.get(0).MACaddress.equals(currentLocation)) {
 //                    currentLocation = resultList.get(0).MACaddress;
 //                    String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
 //                    speakOut(audioHint + currentLocation);
-                }
+//                }
             }
 
 			mAdapter.notifyDataSetChanged();

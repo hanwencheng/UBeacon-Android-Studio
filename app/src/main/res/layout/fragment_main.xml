@@ -8,7 +8,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="mci.uni.stuttgart.bilget.MainActivity$PlaceholderFragment" >
-    
+
      <LinearLayout android:id="@+id/tableRow1"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -38,14 +38,14 @@
        	    
 	    </TableRow>
 
-         
+
     
 	    <android.support.v7.widget.RecyclerView
 	        android:id="@+id/my_recycler_view"
 	        android:layout_width="match_parent"
 	        android:layout_height="fill_parent"
 	        android:scrollbars="vertical" >
-	       
+
 	    </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 

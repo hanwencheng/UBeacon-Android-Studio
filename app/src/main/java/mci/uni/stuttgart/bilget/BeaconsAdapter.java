@@ -140,6 +140,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 mBeaconsViewHolder.vDescription.setText(data.description);
                 mBeaconsViewHolder.vLabel.setText(data.subcategory);
                 mBeaconsViewHolder.vCategory.setText(data.category);
+
                 Log.i(TAG, "interface is" + mCallback);
                 mCallback.onLabelNameChange(data.label, position);
 			}else{
