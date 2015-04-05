@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class BeaconService extends Service {
 	private static String TAG = "beacon service";
-	protected static final long SCAN_PERIOD = 3000;//TODO
+	protected static final long SCAN_PERIOD = 5000;//TODO
 	protected static String SERVICE_IS_RUNNING = "bildgetScanService";
 	
 	protected boolean mScanning = false;
