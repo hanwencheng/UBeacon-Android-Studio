@@ -100,7 +100,7 @@ public class MainListFragment extends Fragment
 				false);
 		swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
-		registerForContextMenu(mRecyclerView);//TODO to be checked
+		registerForContextMenu(mRecyclerView);
 
 		startServiceButton = (Button) rootView.findViewById(R.id.service_start);
 		stopServiceButton = (Button) rootView.findViewById(R.id.service_stop);
@@ -110,16 +110,12 @@ public class MainListFragment extends Fragment
 
         //create sounds
         beapSounds = MediaPlayer.create(getActivity(), Settings.System.DEFAULT_NOTIFICATION_URI);
-//        soundPoolPlayer = SoundPoolPlayer.getInstance(getActivity());
-
-
 
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				swipeLayout.setRefreshing(true);
-//				scanBLE(true); TODO
 				mHandler.postDelayed(new Runnable() {
 	                @Override
 	                public void run() {
@@ -139,7 +135,7 @@ public class MainListFragment extends Fragment
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 boolean enable = false;
                 if(mRecyclerView != null && mRecyclerView.getChildCount() > 0){
-                    enable = mRecyclerView.getChildAt(0).getTop() == 0 ;//TODO
+                    enable = mRecyclerView.getChildAt(0).getTop() == 0 ;
                 }
                 swipeLayout.setEnabled(enable);
             }
@@ -290,26 +286,11 @@ public class MainListFragment extends Fragment
     private void updateList(){
     	try {
 			Log.i(TAG, "get List" + beaconInteface.getList());
-//			@SuppressWarnings("unchecked")
-//			List<BeaconsInfo> beaconsInfo = Collections.checkedList( beaconInteface.getList(), BeaconsInfo.class);
 			@SuppressWarnings("unchecked")
 			List<BeaconsInfo> beaconsInfo = beaconInteface.getList();
             List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);//TODO
 			resultList.clear();
 			resultList.addAll(newList);
-
-            if(!resultList.isEmpty()){
-                //beapSounds.start();
-                //this default sound is disabled because it is annoying in sumsung device
-//                soundPoolPlayer.play(R.raw.scanning);
-
-                //TODO
-//                if (mSpeech!=null && !resultList.get(0).MACaddress.equals(currentLocation)) {
-//                    currentLocation = resultList.get(0).MACaddress;
-//                    String audioHint = sharedPreferences.getString("prefAudio", "you are now approaching");
-//                    speakOut(audioHint + currentLocation);
-//                }
-            }
 
 			mAdapter.notifyDataSetChanged();
 		} catch (RemoteException e) {
@@ -355,9 +336,6 @@ public class MainListFragment extends Fragment
     private String getPreference(){
 
         StringBuilder builder = new StringBuilder();
-
-        builder.append("\n audio: "
-                + sharedPreferences.getString("prefAudio", "default"));
 
         builder.append("\n Send report:"
                 + sharedPreferences.getBoolean("prefGuideSwitch", false));
@@ -424,7 +402,7 @@ public class MainListFragment extends Fragment
 	@Override
 	public void onStart() {
         if(mSpeech == null){
-            if(!sharedPreferences.getBoolean(IS_TTS_ENABLE, true)) {  //TODO default value is true.
+            if(!sharedPreferences.getBoolean(IS_TTS_ENABLE, false)) {
                 enableTTS();
             }
         }
@@ -433,8 +411,7 @@ public class MainListFragment extends Fragment
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-//		scanBLE(false);
-	};
+	}
 	
 	@Override
 	public void onResume() {
@@ -514,8 +491,7 @@ public class MainListFragment extends Fragment
         if (requestCode ==REQUEST_SETTINGS){
                 Toast.makeText(getActivity(), "let's change the settings" + getPreference(), Toast.LENGTH_SHORT).show();
             if(resultCode == Activity.RESULT_OK){
-                //TODO
-            }else{
+                Log.d(TAG, "change finished with setting:" + getPreference());
             }
         }
         

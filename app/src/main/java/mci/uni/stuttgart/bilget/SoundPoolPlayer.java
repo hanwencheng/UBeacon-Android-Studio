@@ -12,6 +12,16 @@ import java.util.HashMap;
  * Created by Hanwen Cheng on 2/26/15.
  */
 
+/**
+ * Sound Play API
+ * include three functions
+ *
+ * load: load resource to sounds library
+ *
+ * play: play the sound now
+ *
+ * release: delete resource in sounds library
+ */
 public class SoundPoolPlayer {
 
     private static SoundPoolPlayer instance = null;
@@ -37,6 +47,8 @@ public class SoundPoolPlayer {
         }else{
             this.mShortPlayer = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
         }
+
+        //intitial loading
         mSoundsMap.put(R.raw.scanning, this.mShortPlayer.load(context, R.raw.scanning, 1));
         mSoundsMap.put(R.raw.new_direction, this.mShortPlayer.load(context, R.raw.scanning, 2));
     }
