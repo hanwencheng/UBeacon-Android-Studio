@@ -89,8 +89,9 @@ public class BeaconService extends Service {
 	public void onCreate() {
 		scanHandler = new Handler();
 		count = 0;
-		setRunning(true);
-		
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        setRunning(true);
+
 		final BluetoothManager bluetoothManager =
 				(BluetoothManager) getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
         mBluetoothAdapter = bluetoothManager.getAdapter();
@@ -103,7 +104,7 @@ public class BeaconService extends Service {
         player = SoundPoolPlayer.getInstance(this);
         createNotification();
         vibrator = VibratorBuilder.getInstance(this);
-        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
 	}
 	
 	@Override
