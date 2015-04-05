@@ -55,7 +55,7 @@ public class SoundPoolPlayer {
         }else{
             this.mShortPlayer = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
-//        mShortPlayer.setVolume(1,1,1); TODO
+
         //intitial loading
         mSoundsMap.put(R.raw.scanning, this.mShortPlayer.load(context, R.raw.scanning, 1));
         mSoundsMap.put(R.raw.new_direction, this.mShortPlayer.load(context, R.raw.scanning, 2));
@@ -68,7 +68,7 @@ public class SoundPoolPlayer {
     public void play(int piResource) {
         //get the sound ID returned by the load function
         int iSoundId = (Integer) mSoundsMap.get(piResource);
-        this.mShortPlayer.play(iSoundId, 0.99f, 0.99f, 0, 0, 1);
+        this.mShortPlayer.play(iSoundId, 1.0f, 1.0f, 0, 0, 1);
     }
 
     // Cleanup
