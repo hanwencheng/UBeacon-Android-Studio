@@ -20,7 +20,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.os.RemoteException;
-import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
@@ -57,6 +56,8 @@ public class BeaconService extends Service {
     private NotificationManager mNotificationManager;
     private SoundPoolPlayer player;
     private VibratorBuilder vibrator;
+
+    private SharedPreferences preferences;
 
     private final IBeacon.Stub mBinder = new IBeacon.Stub() {
 	    public int getCount(){
@@ -102,6 +103,7 @@ public class BeaconService extends Service {
         player = SoundPoolPlayer.getInstance(this);
         createNotification();
         vibrator = VibratorBuilder.getInstance(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 	}
 	
 	@Override
@@ -175,13 +177,21 @@ public class BeaconService extends Service {
 		if(!list.isEmpty()){
 			Collections.sort(list);
 //			mSpeech.speak(list.get(0).name, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME); //TODO should be set when transfer list
-            vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
-            player.play(R.raw.scanning);
+            if(preferences.getBoolean("prefGuideSwitch", true)){
+                player.play(R.raw.scanning);
+            }
+            if(preferences.getBoolean("prefVibrationSwitch", true)) {
+                vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
+            }
             if(closestMAC==null){
                 closestMAC = list.get(0).MACaddress;
                 if(!closestMAC.equals(list.get(0).MACaddress)){
-                    player.play(R.raw.new_direction);
-                    vibrator.vibrate(VibratorBuilder.LONG1PATTERN);
+                    if(preferences.getBoolean("prefGuideSwitch", true)){
+                        player.play(R.raw.new_direction);
+                    }
+                    if(preferences.getBoolean("prefVibrationSwitch", true)) {
+                        vibrator.vibrate(VibratorBuilder.LONG1PATTERN);
+                    }
                 }
                 updateNotification();
             }
@@ -189,8 +199,7 @@ public class BeaconService extends Service {
 	}
 	
 	private void setRunning(boolean running) {
-	    SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-	    SharedPreferences.Editor editor = pref.edit();
+	    SharedPreferences.Editor editor = preferences.edit();
 
 	    editor.putBoolean(SERVICE_IS_RUNNING, running);
 	    editor.apply();

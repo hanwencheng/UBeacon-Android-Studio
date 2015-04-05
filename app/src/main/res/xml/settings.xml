@@ -32,6 +32,13 @@
             android:title="@string/pref_guide_switch">
         </SwitchPreference>
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="prefVibrationSwitch"
+            android:summary="@string/pref_vibration_switch_summary"
+            android:title="@string/pref_vibration_switch">
+        </SwitchPreference>
+
         <EditTextPreference
             android:title="@string/pref_threshold"
             android:summary="@string/pref_threshold_summary"
