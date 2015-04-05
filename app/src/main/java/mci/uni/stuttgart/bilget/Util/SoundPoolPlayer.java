@@ -1,6 +1,7 @@
 package mci.uni.stuttgart.bilget.Util;
 
 import android.content.Context;
+import android.media.AudioAttributes;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Build;
@@ -43,13 +44,18 @@ public class SoundPoolPlayer {
         this.context = context;
         // setup Soundpool
         if (Build.VERSION.SDK_INT >= 21) {
-            SoundPool.Builder builder = new SoundPool.Builder();
-            builder.setMaxStreams(1);
-            this.mShortPlayer = builder.build();
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                    .build();
+            mShortPlayer = new SoundPool.Builder()
+                    .setAudioAttributes(audioAttributes)
+                    .setMaxStreams(1)
+                    .build();
         }else{
-            this.mShortPlayer = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
+            this.mShortPlayer = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         }
-
+//        mShortPlayer.setVolume(1,1,1); TODO
         //intitial loading
         mSoundsMap.put(R.raw.scanning, this.mShortPlayer.load(context, R.raw.scanning, 1));
         mSoundsMap.put(R.raw.new_direction, this.mShortPlayer.load(context, R.raw.scanning, 2));
