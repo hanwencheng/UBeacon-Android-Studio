@@ -20,10 +20,12 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.ParcelUuid;
 import android.os.RemoteException;
+import android.os.Vibrator;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,6 +54,7 @@ public class BeaconService extends Service {
     private String closestMAC;
     private NotificationManager mNotificationManager;
     private SoundPoolPlayer player;
+    private Vibrator vibrator;
 
     private final IBeacon.Stub mBinder = new IBeacon.Stub() {
 	    public int getCount(){
@@ -96,18 +99,17 @@ public class BeaconService extends Service {
 
         player = SoundPoolPlayer.getInstance(this);
         createNotification();
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		// TODO Auto-generated method stub
 		Log.d(TAG, "service is started");
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		scanHandler.removeCallbacks(scanRunnable);
 		setRunning(false);
@@ -126,7 +128,6 @@ public class BeaconService extends Service {
 	};
 	
 	public void scanBLE(boolean enable) {
-//		final List<BeaconsInfo> mList = new ArrayList<BeaconsInfo>();
 
         if (Build.VERSION.SDK_INT >= 21) {
 		    mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
