@@ -175,12 +175,13 @@ public class BeaconService extends Service {
 		if(!list.isEmpty()){
 			Collections.sort(list);
 //			mSpeech.speak(list.get(0).name, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME); //TODO should be set when transfer list
-
+            vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
             player.play(R.raw.scanning);
             if(closestMAC==null){
                 closestMAC = list.get(0).MACaddress;
                 if(!closestMAC.equals(list.get(0).MACaddress)){
                     player.play(R.raw.new_direction);
+                    vibrator.vibrate(VibratorBuilder.LONG1PATTERN);
                 }
                 updateNotification();
             }
