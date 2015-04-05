@@ -25,13 +25,15 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import mci.uni.stuttgart.bilget.Util.SoundPoolPlayer;
+import mci.uni.stuttgart.bilget.Util.VibratorBuilder;
 
 public class BeaconService extends Service {
 	private static String TAG = "beacon service";
@@ -54,7 +56,7 @@ public class BeaconService extends Service {
     private String closestMAC;
     private NotificationManager mNotificationManager;
     private SoundPoolPlayer player;
-    private Vibrator vibrator;
+    private VibratorBuilder vibrator;
 
     private final IBeacon.Stub mBinder = new IBeacon.Stub() {
 	    public int getCount(){
@@ -99,7 +101,7 @@ public class BeaconService extends Service {
 
         player = SoundPoolPlayer.getInstance(this);
         createNotification();
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        vibrator = VibratorBuilder.getInstance(this);
 	}
 	
 	@Override
@@ -302,7 +304,7 @@ public class BeaconService extends Service {
     }
 
 
-//	=======================================Notification====================================
+//	=======================================Notification=======================================
 //	==========================================================================================
 
     public void createNotification(){

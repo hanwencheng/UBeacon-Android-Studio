@@ -1,4 +1,4 @@
-package mci.uni.stuttgart.bilget;
+package mci.uni.stuttgart.bilget.Util;
 
 import android.content.Context;
 import android.media.AudioManager;
@@ -6,6 +6,8 @@ import android.media.SoundPool;
 import android.os.Build;
 
 import java.util.HashMap;
+
+import mci.uni.stuttgart.bilget.R;
 
 /**
  * a singleton Class
