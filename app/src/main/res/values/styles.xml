@@ -27,4 +27,9 @@
         <item name="android:layout_margin">3dp</item>
     </style>
 
+    <style name="button">
+        <item name="android:radius">5dp</item>
+        <item name="android:color">#ff5594bb</item>
+    </style>
+
 </resources>

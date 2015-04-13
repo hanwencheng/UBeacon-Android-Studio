@@ -41,7 +41,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
 	private List<BeaconsInfo> beaconsList;//need to be filled
 	private static final String TAG = "BeaconsAdapter";
-    private static final String NOTFOUND = "-";
+    private static final String NOTFOUND = "";
 
 	//state variable;
 	private Context context;
@@ -56,6 +56,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         public void onLabelNameChange(String labelName, int position);
     }
     OnListHeadChange mCallback;
+
+    private int expandedPosition = -1;
 
     // Provide a suitable constructor (depends on the kind of dataSet)
     public BeaconsAdapter(List<BeaconsInfo> beaconsMap, Fragment fragment, mci.uni.stuttgart.bilget.database.BeaconDBHelper beaconDBHelper) {
@@ -89,7 +91,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	beaconsViewHolder.vName.setText(beaconInfo.name);
         String rangeHint = readRssi(beaconInfo.RSSI);
     	beaconsViewHolder.vRSSI.setText(rangeHint);
-    	beaconsViewHolder.vLabel.setText(beaconInfo.UUID);
+//    	beaconsViewHolder.vLabel.setText(beaconInfo.UUID);
 //    	beaconsViewHolder.vMACaddress.setText(beaconInfo.MACaddress);
     	//call the background database query function
         Bundle bundle = new Bundle();
@@ -98,6 +100,13 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         viewMap.put(beaconInfo.MACaddress, beaconsViewHolder);
     	contextFragment.getLoaderManager().initLoader(loaderID, bundle, new BeaconDataLoaderCallbacks());
         loaderID++;
+
+        if (position == expandedPosition) {
+            beaconsViewHolder.vExpandArea.setVisibility(View.VISIBLE);
+        } else {
+            beaconsViewHolder.vExpandArea.setVisibility(View.GONE);
+        }
+
     }
 
     // Return the size of your data set (invoked by the layout manager)
@@ -178,7 +187,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 contextFragment.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo == null || !networkInfo.isConnected()) {
-            Toast.makeText(context, R.string.network_not_avaliable, Toast.LENGTH_SHORT).show();
+            Toast.makeText(contextFragment.getActivity(), R.string.network_not_avaliable, Toast.LENGTH_SHORT).show();
         }
     }
 
