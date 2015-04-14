@@ -64,13 +64,14 @@ public class MainListFragment extends Fragment
 	private boolean mScanning;
 	private Handler mHandler;
 	private String currentLocation = null;
+    private BeaconService mService;
 	
 	private final static int REQUEST_ENABLE_BT = 1;
 	private final static int MY_DATA_CHECK_CODE = 2;
     private final static int REQUEST_SETTINGS =3;
 	
 	private TextToSpeech mSpeech;
-	private final static long UPDATE_PERIOD = BeaconService.SCAN_PERIOD ; 
+	private final static long UPDATE_PERIOD = 5000 ;
 	private final static String SPEAK_NAME = "name";//text to speech utteranceId
 	private final static String TAG = "Ubeacon";
     private final static String IS_TTS_ENABLE = "isTTSEnabled";
@@ -365,6 +366,8 @@ public class MainListFragment extends Fragment
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.d(TAG, "Service has connected");
+            BeaconService.BeaconServiceBinder binder = (BeaconService.BeaconServiceBinder) service;
+            mService = ((BeaconService.BeaconServiceBinder) service).getService();
 			beaconInteface = IBeacon.Stub.asInterface(service);//IBeacon
 			mHandler.postDelayed(new Runnable() {
 				@Override
@@ -541,7 +544,9 @@ public class MainListFragment extends Fragment
         }
         if( key.equals("prefFrequency")) {
             Log.i(TAG,"preference frequency changed!");
-            //TODO callback in service
+            if(mService != null){
+                mService.setScanPeriod(sharedPreferences);
+            }
         }
         if( key.equals("prefAudio")) {
             Log.i(TAG,"preference audioHint changed!");

@@ -15,6 +15,7 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -36,7 +37,9 @@ import mci.uni.stuttgart.bilget.Util.VibratorBuilder;
 
 public class BeaconService extends Service {
 	private static String TAG = "beacon service";
-	protected static final long SCAN_PERIOD = 5000;//TODO
+	protected static final long LONG_SCAN_PERIOD = 8000;
+    protected static final long SHORT_SCAN_PERIOD = 2000;
+    protected static final long MIDDLE_SCAN_PERIOD = 5000;
 	protected static String SERVICE_IS_RUNNING = "bildgetScanService";
 	
 	protected boolean mScanning = false;
@@ -58,6 +61,7 @@ public class BeaconService extends Service {
     private VibratorBuilder vibrator;
 
     private SharedPreferences preferences;
+    private long scanPeriod;
 
     private final IBeacon.Stub mBinder = new IBeacon.Stub() {
 	    public int getCount(){
@@ -84,12 +88,19 @@ public class BeaconService extends Service {
 		Log.d(TAG, "a client is unbound");
 		return super.onUnbind(intent);
 	}
+
+    public class BeaconServiceBinder extends Binder {
+        BeaconService getService(){
+            return BeaconService.this;
+        }
+    }
 	
 	@Override
 	public void onCreate() {
 		scanHandler = new Handler();
 		count = 0;
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        setScanPeriod(preferences);
         setRunning(true);
 
 		final BluetoothManager bluetoothManager =
@@ -106,6 +117,18 @@ public class BeaconService extends Service {
         vibrator = VibratorBuilder.getInstance(this);
 
 	}
+
+    public void setScanPeriod(SharedPreferences preferences){
+        int scanFrequecy = preferences.getInt("prefFrequency",1);
+        switch (scanFrequecy){
+            case 0: scanPeriod = LONG_SCAN_PERIOD;
+                break;
+            case 1: scanPeriod = MIDDLE_SCAN_PERIOD;
+                break;
+            case 2: scanPeriod = SHORT_SCAN_PERIOD;
+                break;
+        }
+    }
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -128,7 +151,7 @@ public class BeaconService extends Service {
 		@Override
 		public void run() {
 			scanBLE(true);
-			scanHandler.postDelayed(scanRunnable, SCAN_PERIOD);
+			scanHandler.postDelayed(scanRunnable, scanPeriod);
 		}
 	};
 	
@@ -159,7 +182,7 @@ public class BeaconService extends Service {
                     mapToList(resultsMap, resultList);
                     Log.d(TAG, "now the list is" + resultList);
                 }
-            }, SCAN_PERIOD);
+            }, scanPeriod);
         } else {
         	if (mScanning) {
         		mScanning = false;
