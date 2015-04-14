@@ -19,6 +19,7 @@ public class CalcList {
     private static CalcList instance = null;
 
     List<BeaconsInfo> outputList;
+    //store Beacons info here in the database
     Map<String, BeaconsInfo> beaconStorageMap;
     //a map to store the rssi information for the current outputList.
     Map<String, int[]> map;
@@ -71,10 +72,14 @@ public class CalcList {
                     initArray[i] = -1;
                 }
                 map.put(macAddress, initArray);
+                if(rssiReversed > RangeThreshold.THRESHOLD) {
+                    return true;
+                }else{
+                    return false;
+                }
             }else{
                 return false; // it is so far away so we don't calculate it.
             }
-            return true;
         }else{
             //every element sequentially backward, push rssi into it
             popInArray(rssiReversed, rssiArray);
@@ -130,6 +135,7 @@ public class CalcList {
                 popInArray(0, rssiArray);
 
                 if (!calculateArray(rssiArray, address)) {
+                    map.remove(address);
                     beaconStorageMap.remove(address);//delete if not exist here, until next time it be discovered again.
                 } else {
                     outputList.add(beaconStorageMap.get(address));//else add it into outputList
