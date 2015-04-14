@@ -15,7 +15,6 @@ import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
@@ -40,7 +39,7 @@ public class BeaconService extends Service {
 	protected static final long LONG_SCAN_PERIOD = 8000;
     protected static final long SHORT_SCAN_PERIOD = 2000;
     protected static final long MIDDLE_SCAN_PERIOD = 5000;
-	protected static String SERVICE_IS_RUNNING = "bildgetScanService";
+	protected static String SERVICE_IS_RUNNING = "BeaconService.bildgetScanService";
 	
 	protected boolean mScanning = false;
 	
@@ -57,8 +56,7 @@ public class BeaconService extends Service {
 
     private String closestMAC;
     private NotificationManager mNotificationManager;
-    private SoundPoolPlayer player;
-    private VibratorBuilder vibrator;
+
 
     private SharedPreferences preferences;
     private long scanPeriod;
@@ -67,10 +65,13 @@ public class BeaconService extends Service {
 	    public int getCount(){
 			return count;
 	    }
-	    public String getName() {
+        public void setPeriod(){
+            setScanPeriod();
+        }
+        public String getName() {
 			return null;
 	    }
-		@Override
+        @Override
 		public List<BeaconsInfo> getList() throws RemoteException {
 			return resultList;
 		}
@@ -88,19 +89,13 @@ public class BeaconService extends Service {
 		Log.d(TAG, "a client is unbound");
 		return super.onUnbind(intent);
 	}
-
-    public class BeaconServiceBinder extends Binder {
-        BeaconService getService(){
-            return BeaconService.this;
-        }
-    }
 	
 	@Override
 	public void onCreate() {
 		scanHandler = new Handler();
 		count = 0;
         preferences = PreferenceManager.getDefaultSharedPreferences(getApplication());
-        setScanPeriod(preferences);
+        setScanPeriod();
         setRunning(true);
 
 		final BluetoothManager bluetoothManager =
@@ -112,21 +107,21 @@ public class BeaconService extends Service {
         scanRunnable.run();
 		super.onCreate();
 
-        player = SoundPoolPlayer.getInstance(this);
         createNotification();
-        vibrator = VibratorBuilder.getInstance(this);
 
 	}
 
-    public void setScanPeriod(SharedPreferences preferences){
-        int scanFrequecy = preferences.getInt("prefFrequency",1);
-        switch (scanFrequecy){
+    public void setScanPeriod(){
+        String scanFrequecy = preferences.getString("prefFrequency","1");
+        int frequency = Integer.parseInt(scanFrequecy);
+        switch (frequency){
             case 0: scanPeriod = LONG_SCAN_PERIOD;
                 break;
             case 1: scanPeriod = MIDDLE_SCAN_PERIOD;
                 break;
             case 2: scanPeriod = SHORT_SCAN_PERIOD;
                 break;
+            default: scanPeriod = SHORT_SCAN_PERIOD;
         }
     }
 	
@@ -200,25 +195,7 @@ public class BeaconService extends Service {
 		// speak out the most close place.
 		if(!list.isEmpty()){
 			Collections.sort(list);
-//			mSpeech.speak(list.get(0).name, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME); //TODO should be set when transfer list
-            if(preferences.getBoolean("prefGuideSwitch", true)){
-                player.play(R.raw.scanning);
-            }
-            if(preferences.getBoolean("prefVibrationSwitch", true)) {
-                vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
-            }
-            if(closestMAC==null){
-                closestMAC = list.get(0).MACaddress;
-                if(!closestMAC.equals(list.get(0).MACaddress)){
-                    if(preferences.getBoolean("prefGuideSwitch", true)){
-                        player.play(R.raw.new_direction);
-                    }
-                    if(preferences.getBoolean("prefVibrationSwitch", true)) {
-                        vibrator.vibrate(VibratorBuilder.LONG1PATTERN);
-                    }
-                }
-                updateNotification();
-            }
+            updateNotification();
         }
 	}
 	

@@ -4,4 +4,5 @@ interface IBeacon {
 	int getCount();
 	String getName();
 	List getList();
+	void setPeriod();
 }

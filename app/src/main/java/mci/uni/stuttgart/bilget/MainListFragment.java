@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import mci.uni.stuttgart.bilget.Util.SoundPoolPlayer;
+import mci.uni.stuttgart.bilget.Util.VibratorBuilder;
 import mci.uni.stuttgart.bilget.algorithm.CalcList;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 
@@ -64,7 +65,6 @@ public class MainListFragment extends Fragment
 	private boolean mScanning;
 	private Handler mHandler;
 	private String currentLocation = null;
-    private BeaconService mService;
 	
 	private final static int REQUEST_ENABLE_BT = 1;
 	private final static int MY_DATA_CHECK_CODE = 2;
@@ -80,6 +80,9 @@ public class MainListFragment extends Fragment
     private int thresholdPref;
     private String frequencyPref;
     private String audioHintPref;
+
+    private SoundPoolPlayer player;
+    private VibratorBuilder vibrator;
 
 	private Button startServiceButton;
 	private Button stopServiceButton;
@@ -107,7 +110,7 @@ public class MainListFragment extends Fragment
 		startServiceButton = (Button) rootView.findViewById(R.id.service_start);
 		stopServiceButton = (Button) rootView.findViewById(R.id.service_stop);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         calcList = CalcList.getInstance();// init algorithm module
 
         //create sounds
@@ -181,12 +184,13 @@ public class MainListFragment extends Fragment
         mRecyclerView.setAdapter(mAdapter);
         
         mHandler = new Handler();
-//        mSpeech = new TextToSpeech(getActivity(), null);
-//        enableTTS();
 
         checkBLE(getActivity());
         
         checkBluetooth(getActivity());
+
+        player = SoundPoolPlayer.getInstance(getActivity());
+        vibrator = VibratorBuilder.getInstance(getActivity());
         
 		return rootView;
 	}
@@ -292,6 +296,14 @@ public class MainListFragment extends Fragment
 			List<BeaconsInfo> beaconsInfo = beaconInteface.getList();
             List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);//TODO
 			resultList.clear();
+            if(!newList.isEmpty()){
+                if(sharedPreferences.getBoolean("prefGuideSwitch", true)){
+                    player.play(R.raw.scanning);
+                }
+                if(sharedPreferences.getBoolean("prefVibrationSwitch", true)) {
+                    vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
+                }
+            }
 			resultList.addAll(newList);
 
 			mAdapter.notifyDataSetChanged();
@@ -312,6 +324,12 @@ public class MainListFragment extends Fragment
                     speakOut(currentLocation);
                 }else {
                     speakOut(audioHint + currentLocation);
+                }
+                if(sharedPreferences.getBoolean("prefGuideSwitch", true)){
+                    player.play(R.raw.new_direction);
+                }
+                if(sharedPreferences.getBoolean("prefVibrationSwitch", true)) {
+//                    vibrator.vibrate(VibratorBuilder.LONG1PATTERN);
                 }
             }
         }
@@ -366,8 +384,6 @@ public class MainListFragment extends Fragment
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.d(TAG, "Service has connected");
-            BeaconService.BeaconServiceBinder binder = (BeaconService.BeaconServiceBinder) service;
-            mService = ((BeaconService.BeaconServiceBinder) service).getService();
 			beaconInteface = IBeacon.Stub.asInterface(service);//IBeacon
 			mHandler.postDelayed(new Runnable() {
 				@Override
@@ -420,6 +436,7 @@ public class MainListFragment extends Fragment
 	@Override
 	public void onResume() {
 		super.onResume();
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 		if(!isRunning(getActivity())){
 			setStartButtonEnable(true);
 		}else{
@@ -441,6 +458,7 @@ public class MainListFragment extends Fragment
 		if (beaconInteface != null) {
 			mHandler.removeCallbacks(updateUI);
 		}
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
 
@@ -535,6 +553,7 @@ public class MainListFragment extends Fragment
         }
     }
 
+    //this listener is override by the listener in setting activity.
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         Log.i(TAG,"preference !" + key);
@@ -544,8 +563,14 @@ public class MainListFragment extends Fragment
         }
         if( key.equals("prefFrequency")) {
             Log.i(TAG,"preference frequency changed!");
-            if(mService != null){
-                mService.setScanPeriod(sharedPreferences);
+            if(beaconInteface != null){
+                try {
+                    //user MUST restart to see the effect
+                    beaconInteface.setPeriod();
+                } catch (RemoteException e) {
+                    Log.e(TAG, "error in set the scanning period");
+                    e.printStackTrace();
+                }
             }
         }
         if( key.equals("prefAudio")) {
