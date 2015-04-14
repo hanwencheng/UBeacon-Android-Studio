@@ -1,5 +1,7 @@
 package mci.uni.stuttgart.bilget.algorithm;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,6 +65,7 @@ public class CalcList {
     private boolean updateMap(String macAddress, int rssi){
         int[] rssiArray= map.get(macAddress);
         int rssiReversed = RangeThreshold.FAR - rssi;
+        Log.i("=====", "calculate rssi = " + rssi);
         if(rssiArray == null){
             int[] initArray = new int[RangeThreshold.TOTAL];
             //if the beacon is in our range threshold.
@@ -128,6 +131,14 @@ public class CalcList {
         return isFull;
     }
 
+    private int calcAverage(int[] array){
+        int sum = 0;
+        for (int i = 0; i < RangeThreshold.TOTAL ; i ++ ){
+            sum = sum + array[i];
+        }
+        return sum/RangeThreshold.TOTAL;
+    }
+
     private void calculateOthers(Set<String> addressSet){
         for(String address : addressSet){
             //if it is not in our input list
@@ -138,6 +149,8 @@ public class CalcList {
                     map.remove(address);
                     beaconStorageMap.remove(address);//delete if not exist here, until next time it be discovered again.
                 } else {
+                    BeaconsInfo reserved = beaconStorageMap.get(address);
+                    reserved.RSSI = calcAverage(rssiArray);
                     outputList.add(beaconStorageMap.get(address));//else add it into outputList
                 }
         }

@@ -1,6 +1,5 @@
 package mci.uni.stuttgart.bilget.Util;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.media.AudioAttributes;
 import android.os.Build;

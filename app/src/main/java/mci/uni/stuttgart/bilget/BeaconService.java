@@ -31,9 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import mci.uni.stuttgart.bilget.Util.SoundPoolPlayer;
-import mci.uni.stuttgart.bilget.Util.VibratorBuilder;
-
 public class BeaconService extends Service {
 	private static String TAG = "beacon service";
 	protected static final long LONG_SCAN_PERIOD = 8000;
@@ -194,7 +191,7 @@ public class BeaconService extends Service {
         }
 		// speak out the most close place.
 		if(!list.isEmpty()){
-			Collections.sort(list);
+//			Collections.sort(list);
             updateNotification();
         }
 	}

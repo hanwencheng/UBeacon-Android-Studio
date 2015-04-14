@@ -44,6 +44,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import mci.uni.stuttgart.bilget.Util.SoundPoolPlayer;
@@ -295,6 +296,7 @@ public class MainListFragment extends Fragment
 			@SuppressWarnings("unchecked")
 			List<BeaconsInfo> beaconsInfo = beaconInteface.getList();
             List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);//TODO
+            Collections.sort(newList);
 			resultList.clear();
             if(!newList.isEmpty()){
                 if(sharedPreferences.getBoolean("prefGuideSwitch", true)){

@@ -7,7 +7,6 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.RecyclerView.Adapter;
@@ -22,7 +21,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -32,10 +30,8 @@ import java.util.Map;
 import mci.uni.stuttgart.bilget.algorithm.RangeThreshold;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import mci.uni.stuttgart.bilget.database.BeaconDataLoader;
-import mci.uni.stuttgart.bilget.database.DatabaseUtil;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
 import mci.uni.stuttgart.bilget.network.JSONLoader;
-import mci.uni.stuttgart.bilget.network.ParserUtil;
 
 public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
