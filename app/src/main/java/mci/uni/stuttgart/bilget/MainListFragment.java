@@ -1,5 +1,6 @@
 package mci.uni.stuttgart.bilget;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.NotificationManager;
@@ -39,6 +40,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import mci.uni.stuttgart.bilget.Util.RecyclerItemClickListener;
 import mci.uni.stuttgart.bilget.Util.SoundPoolPlayer;
 import mci.uni.stuttgart.bilget.Util.VibratorBuilder;
 import mci.uni.stuttgart.bilget.algorithm.CalcList;
@@ -94,13 +97,17 @@ public class MainListFragment extends Fragment
 
     MediaPlayer beapSounds;
     SoundPoolPlayer soundPoolPlayer;
-	
+    private List<BeaconsInfo> savedListInstance;
+
 //	========================================Initialization==========================================
 //	================================================================================================
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+
+        super.onCreate(savedInstanceState);//TODO
+
         setHasOptionsMenu(true);//default is false;
 		View rootView = inflater.inflate(R.layout.fragment_main, container,
 				false);
@@ -146,6 +153,42 @@ public class MainListFragment extends Fragment
                 swipeLayout.setEnabled(enable);
             }
         });
+
+        mRecyclerView.addOnItemTouchListener(
+                new RecyclerItemClickListener(
+                        getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                    private int mOriginalHeight = 0;
+                    private boolean mIsViewExpanded = false;
+                    private LinearLayout vExpandArea;
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        Log.d(TAG, "now touched on the view");
+                        if (mOriginalHeight == 0) {
+                            mOriginalHeight = view.getHeight();
+                        }
+                        ValueAnimator valueAnimator;
+                        if (!mIsViewExpanded) {
+                            mIsViewExpanded = true;
+                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight, mOriginalHeight + (int) (mOriginalHeight * 1.5));
+                            view.findViewById(R.id.expandArea).setVisibility(View.VISIBLE);
+                        } else {
+                            mIsViewExpanded = false;
+                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight + (int) (mOriginalHeight * 1.5), mOriginalHeight);
+                            view.findViewById(R.id.expandArea).setVisibility(View.GONE);
+                        }
+                        valueAnimator.setDuration(200);
+                        valueAnimator.setInterpolator(new LinearInterpolator());
+                        final View theView = view;
+                        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                            public void onAnimationUpdate(ValueAnimator animation) {
+                                theView.getLayoutParams().height = (Integer) animation.getAnimatedValue();
+                                theView.requestLayout();
+                            }
+                        });
+                        valueAnimator.start();
+                    }
+                })
+        );
 		
 		startServiceButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -192,6 +235,11 @@ public class MainListFragment extends Fragment
 
         player = SoundPoolPlayer.getInstance(getActivity());
         vibrator = VibratorBuilder.getInstance(getActivity());
+
+        if(savedInstanceState!=null){
+//            resultList = savedInstanceState.getParcelableArrayList("list");
+//            mAdapter.notifyDataSetChanged();
+        }
         
 		return rootView;
 	}
@@ -296,14 +344,15 @@ public class MainListFragment extends Fragment
 			@SuppressWarnings("unchecked")
 			List<BeaconsInfo> beaconsInfo = beaconInteface.getList();
             List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);//TODO
+            savedListInstance = newList;
             Collections.sort(newList);
 			resultList.clear();
             if(!newList.isEmpty()){
                 if(sharedPreferences.getBoolean("prefGuideSwitch", true)){
-                    player.play(R.raw.scanning);
+//                    player.play(R.raw.scanning);
                 }
                 if(sharedPreferences.getBoolean("prefVibrationSwitch", true)) {
-                    vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
+//                    vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
                 }
             }
 			resultList.addAll(newList);
@@ -322,6 +371,7 @@ public class MainListFragment extends Fragment
         if(position == 0 && labelName != null){
             if(currentLocation == null ||!currentLocation.equals(labelName)){
                 currentLocation = labelName;
+
                 if(audioHint.equals("")){
                     speakOut(currentLocation);
                 }else {
@@ -331,7 +381,7 @@ public class MainListFragment extends Fragment
                     player.play(R.raw.new_direction);
                 }
                 if(sharedPreferences.getBoolean("prefVibrationSwitch", true)) {
-//                    vibrator.vibrate(VibratorBuilder.LONG1PATTERN);
+                    vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
                 }
             }
         }
@@ -580,4 +630,11 @@ public class MainListFragment extends Fragment
         }
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+//        if(!resultList.isEmpty()){
+//            outState.putParcelableArrayList("list", (ArrayList<? extends android.os.Parcelable>) savedListInstance);
+//        }
+    }
 }

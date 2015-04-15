@@ -9,9 +9,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -75,7 +77,6 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                                .inflate(R.layout.beacon_layout, parent, false);
         // set the view's size, margins, paddings and layout parameters
         BeaconsViewHolder beaconViewHolder = new BeaconsViewHolder(v);
-
         return beaconViewHolder;
     }
 
@@ -149,7 +150,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 Log.i(TAG, "interface is" + mCallback);
                 mCallback.onLabelNameChange(data.label, position);
 			}else{
-                Log.d(TAG, "3:the data itself or the category is null" + data);
+                Log.d(TAG, "3:the data itself or the category is null, data: " + data);
                 mBeaconsViewHolder.vDescription.setText(NOTFOUND);
                 mBeaconsViewHolder.vLabel.setText(NOTFOUND);
 //                mBeaconsViewHolder.vCategory.setText(NOTFOUND);

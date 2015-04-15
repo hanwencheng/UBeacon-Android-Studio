@@ -1,0 +1,64 @@
+package mci.uni.stuttgart.bilget;
+
+
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.NonNull;
+
+public class BeaconsInfo implements Comparable<BeaconsInfo>, Parcelable{
+    public String name;
+    public int RSSI;//default value is a negative value.
+    public String UUID;
+	public String MACaddress;
+
+	public String toString() {
+		return "name:" + name + ";RSSI:" + RSSI + ";category:" +UUID;
+	}
+
+	public int compareTo(@NonNull BeaconsInfo another) {
+
+		int thisRSSI = this.RSSI;
+		int anotherRSSI = another.RSSI;
+		if(thisRSSI < anotherRSSI){
+			return 1;
+		}else if(thisRSSI > anotherRSSI){
+			return -1;
+		}else{
+			return 0;
+		}
+	}
+
+    public BeaconsInfo(){
+
+    }
+
+    public BeaconsInfo(Parcel in){
+        name = in.readString();
+        RSSI = in.readInt();
+        UUID = in.readString();
+        MACaddress = in.readString();
+    }
+
+    public static final Creator<BeaconsInfo> CREATOR = new Creator<BeaconsInfo>(){
+        public BeaconsInfo createFromParcel(Parcel in) {
+            return new BeaconsInfo(in);
+        }
+
+        public BeaconsInfo[] newArray(int size) {
+            return new BeaconsInfo[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeInt(RSSI);
+        dest.writeString(UUID);
+        dest.writeString(MACaddress);
+    }
+}

@@ -65,7 +65,6 @@ public class CalcList {
     private boolean updateMap(String macAddress, int rssi){
         int[] rssiArray= map.get(macAddress);
         int rssiReversed = RangeThreshold.FAR - rssi;
-        Log.i("=====", "calculate rssi = " + rssi);
         if(rssiArray == null){
             int[] initArray = new int[RangeThreshold.TOTAL];
             //if the beacon is in our range threshold.
