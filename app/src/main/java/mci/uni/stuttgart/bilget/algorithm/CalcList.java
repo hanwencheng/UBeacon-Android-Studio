@@ -46,7 +46,7 @@ public class CalcList {
 
         //iterate all the beacons in the list
         for(BeaconsInfo beaconInfo : inputList){
-            String macAddress = beaconInfo.MACaddress;
+            String macAddress = beaconInfo.macAddress;
             //update our data
             beaconStorageMap.put(macAddress, beaconInfo);
             int rssi = Math.abs(beaconInfo.RSSI);

@@ -26,12 +26,8 @@ public class BeaconDBHelper extends SQLiteOpenHelper {
 
 	private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " 
 				+ LocationEntry.TABLE_NAME
-//				+ " (" + LocationEntry._ID + " INTEGER PRIMARY KEY" + COMMA_SEP 
-//				+ LocationEntry.COLUMN_NAME_ENTRY_ID + TEXT_TYPE + COMMA_SEP
 				+ " ("  + LocationEntry.COLUMN_NAME_MACADDRESS + TEXT_TYPE + IS_PRIMARY +  COMMA_SEP
-//				+ LocationEntry.COLUNM_NAME_DEVICE_TITLE + TEXT_TYPE + COMMA_SEP 
-				+ LocationEntry.COLUMN_NAME_CATEGORY + TEXT_TYPE + COMMA_SEP 
-//				+ LocationEntry.COLUMN_NAME_UUID + TEXT_TYPE + COMMA_SEP 
+				+ LocationEntry.COLUMN_NAME_CATEGORY + TEXT_TYPE + COMMA_SEP
 				+ LocationEntry.COLUMN_NAME_SUBCATEGORY + TEXT_TYPE + COMMA_SEP
 				+ LocationEntry.COLUNM_NAME_DESCRIPTION + TEXT_TYPE + COMMA_SEP
 				+ LocationEntry.COLUMN_NAME_LABEL + TEXT_TYPE
@@ -64,13 +60,6 @@ public class BeaconDBHelper extends SQLiteOpenHelper {
 				+LocationEntry.COLUMN_NAME_LABEL + COMMA_SEP
 				+ LocationEntry.COLUNM_NAME_DESCRIPTION  + ") "
 				+ " VALUES ( 'E7D38F1CF82E', 'indoor','desk','hanwen''s desk','my beautiful desk!')");
-
-//        db.execSQL("INSERT INTO " + DownloadUrlTable.URLEntry.TABLE_NAME
-//                + " ( " + DownloadUrlTable.URLEntry.COLUNM_NAME_URL
-//                + ")"
-//                + " VALUES ( 'http://meschup.hcilab.org/map/' )");
-//		long firstRowId = DatabaseUtil.insertData(this, hanwensHome);
-//		Log.d(TAG, firstRowId + " is inserted and the table is initialed");
 	} 
 
 	@Override

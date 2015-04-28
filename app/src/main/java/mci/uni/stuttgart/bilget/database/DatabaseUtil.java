@@ -10,16 +10,28 @@ import android.util.Log;
 import mci.uni.stuttgart.bilget.database.BeaconLocationTable.LocationEntry;
 import mci.uni.stuttgart.bilget.network.DownloadUrlTable;
 
+/**
+ * Database util class:
+ * <h3>Beacon Location Table (LocationData)</h3>
+ * <p>insertData, queryData, updateData, deleteData</p>
+ * <h3>Url Table (LocationData)</h3>
+ * <p>insertUrl, queryUrl</p>
+ */
 public class DatabaseUtil {
 	private static final String SPACE = " ";
 	private static final String SINGLE_QUOTE = "'";
 	private static final String TAG = "Database Util";
-	
+
+    /**
+     * Insert location data into beacon location table
+     * @param mDbHelper
+     * @param locationInfo
+     * @return
+     */
 	public static long insertData(BeaconDBHelper mDbHelper, LocationInfo locationInfo){
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
 		
 		ContentValues values = new ContentValues();
-//		values.put(LocationEntry.COLUMN_NAME_CATEGORY, 1);
 		values.put(LocationEntry.COLUMN_NAME_MACADDRESS, locationInfo.MACAddress);
 		values.put(LocationEntry.COLUMN_NAME_CATEGORY, locationInfo.category);
 		values.put(LocationEntry.COLUMN_NAME_SUBCATEGORY, locationInfo.subcategory);
@@ -174,6 +186,11 @@ public class DatabaseUtil {
 		return count;
 	}
 
+    /**
+     * A help function to add single quote.
+     * @param original original string
+     * @return new string
+     */
     private static String addSingleQuote(String original){
         if (original.indexOf("'") > 0) {
             Log.d(TAG,"original string has single quote : " + original);
@@ -189,7 +206,6 @@ public class DatabaseUtil {
 
 		public LocationCursor(Cursor cursor) {
 			super(cursor);
-			// TODO Auto-generated constructor stub
 		}
 		
 		public LocationInfo getLocationInfo(){
@@ -200,8 +216,8 @@ public class DatabaseUtil {
 			String subcategory = getString(getColumnIndex(LocationEntry.COLUMN_NAME_SUBCATEGORY));
 			String label = getString(getColumnIndex(LocationEntry.COLUMN_NAME_LABEL));
 			String description = getString(getColumnIndex(LocationEntry.COLUNM_NAME_DESCRIPTION));
-			String macAddres = getString(getColumnIndex(LocationEntry.COLUMN_NAME_MACADDRESS));
-			LocationInfo locationInfo = new LocationInfo(macAddres, category, subcategory, label, description);
+			String macAddress = getString(getColumnIndex(LocationEntry.COLUMN_NAME_MACADDRESS));
+			LocationInfo locationInfo = new LocationInfo(macAddress, category, subcategory, label, description);
 			Log.d(TAG,"query result is" + locationInfo);
 			return locationInfo;
 		}

@@ -295,7 +295,7 @@ public class BeaconService extends Service {
         BeaconsInfo beaconInfo = new BeaconsInfo();
         beaconInfo.name = deviceName;
         beaconInfo.RSSI = receiveRSSI;
-        beaconInfo.MACaddress = deviceMAC;
+        beaconInfo.macAddress = deviceMAC;
         beaconInfo.UUID = bleUUID;
 
         map.put(deviceMAC, beaconInfo);
@@ -305,7 +305,7 @@ public class BeaconService extends Service {
     private void addBeaconToMap(BluetoothDevice device, int rssi, byte[] scanRecord, Map<String,BeaconsInfo> map ){
         BeaconsInfo beaconInfo = new BeaconsInfo();
         beaconInfo.RSSI = rssi;
-        beaconInfo.MACaddress = device.getAddress();
+        beaconInfo.macAddress = device.getAddress();
 
         String recordInfo = new String(scanRecord);
         String recordUUID ="NULL UUID";
@@ -321,7 +321,7 @@ public class BeaconService extends Service {
             deviceName = mServiceName;
         }
         beaconInfo.name = deviceName;
-        map.put(beaconInfo.MACaddress, beaconInfo);
+        map.put(beaconInfo.macAddress, beaconInfo);
     }
 
 

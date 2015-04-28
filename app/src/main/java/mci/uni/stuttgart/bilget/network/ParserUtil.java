@@ -13,7 +13,7 @@ import java.util.List;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
 
 /**
- * Json parser for the location data
+ * Json parser for the location data, called in JSONLoader to parse the downloaded file
  * Created by Hanwen on 1/2/2015.
  */
 public class ParserUtil {

@@ -3,11 +3,12 @@ package mci.uni.stuttgart.bilget.network;
 import android.provider.BaseColumns;
 
 /**
+ * This url table is mainly reserved for further extend function.
  * Created by Hanwen on 1/17/2015.
  */
 public class DownloadUrlTable {
-    public DownloadUrlTable(){
 
+    public DownloadUrlTable(){
     }
 
     //base column include the _count and _id property.

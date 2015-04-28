@@ -16,11 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -33,21 +28,25 @@ import mci.uni.stuttgart.bilget.database.BeaconDataLoader;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
 import mci.uni.stuttgart.bilget.network.JSONLoader;
 
+/**
+ * beacon's adapter class, when get the list, first query the macAddress in our database,
+ * if not exist, then query it through internet.
+ */
 public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
 	private List<BeaconsInfo> beaconsList;//need to be filled
 	private static final String TAG = "BeaconsAdapter";
-    private static final String NOTFOUND = "";
+    private static final String NOT_FOUND = "";
 
 	//state variable;
 	private Context context;
 	Fragment contextFragment;
     BeaconDBHelper beaconDBHelper;
-    JSONLoader jsonLoader;
-
     private Map<String, BeaconsViewHolder> viewMap;
     int loaderID;
+    JSONLoader jsonLoader;
 
+    //callback declared in mainListFragment
     public interface OnListHeadChange{
         public void onLabelNameChange(String labelName, int position);
     }
@@ -73,9 +72,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	context = parent.getContext();
         View v = LayoutInflater.from(context)
                                .inflate(R.layout.beacon_layout, parent, false);
-        // set the view's size, margins, paddings and layout parameters
-        BeaconsViewHolder beaconViewHolder = new BeaconsViewHolder(v);
-        return beaconViewHolder;
+        // set the view's size, margins, padding and layout parameters
+        return new BeaconsViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
@@ -87,12 +85,13 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         String rangeHint = readRssi(beaconInfo.RSSI);
     	beaconsViewHolder.vRSSI.setText(rangeHint);
 //    	beaconsViewHolder.vLabel.setText(beaconInfo.UUID);
-//    	beaconsViewHolder.vMACaddress.setText(beaconInfo.MACaddress);
-    	//call the background database query function
+//    	beaconsViewHolder.vMACaddress.setText(beaconInfo.macAddress);
+
+    	//call the background database query function, get the macAddress from the bundle
         Bundle bundle = new Bundle();
-        bundle.putString("mac", beaconInfo.MACaddress);
+        bundle.putString("mac", beaconInfo.macAddress);
         bundle.putInt("position", position);
-        viewMap.put(beaconInfo.MACaddress, beaconsViewHolder);
+        viewMap.put(beaconInfo.macAddress, beaconsViewHolder);
     	contextFragment.getLoaderManager().initLoader(loaderID, bundle, new BeaconDataLoaderCallbacks());
         loaderID++;
 
@@ -149,9 +148,9 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
                 mCallback.onLabelNameChange(data.label, position);
 			}else{
                 Log.d(TAG, "3:the data itself or the category is null, data: " + data);
-                mBeaconsViewHolder.vDescription.setText(NOTFOUND);
-                mBeaconsViewHolder.vLabel.setText(NOTFOUND);
-//                mBeaconsViewHolder.vCategory.setText(NOTFOUND);
+                mBeaconsViewHolder.vDescription.setText(NOT_FOUND);
+                mBeaconsViewHolder.vLabel.setText(NOT_FOUND);
+//                mBeaconsViewHolder.vCategory.setText(NOT_FOUND);
 //                mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action, this UI action may be disabled
                 URL testURL = null;
                 try {
@@ -184,15 +183,6 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
         if (networkInfo == null || !networkInfo.isConnected()) {
             Toast.makeText(contextFragment.getActivity(), R.string.network_not_avaliable, Toast.LENGTH_SHORT).show();
         }
-    }
-
-    // Reads an InputStream and converts it to a String.
-    public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
     }
 
 //=============================================RSSI INDICATOR===========================================

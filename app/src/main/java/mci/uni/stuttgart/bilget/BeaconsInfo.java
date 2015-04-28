@@ -7,7 +7,7 @@ public class BeaconsInfo implements Comparable<BeaconsInfo>{
     public String name;
     public int RSSI;//default value is a negative value.
     public String UUID;
-	public String MACaddress;
+	public String macAddress;
 
 	public String toString() {
 		return "name:" + name + ";RSSI:" + RSSI + ";category:" +UUID;

@@ -4,6 +4,9 @@ import android.content.AsyncTaskLoader;
 import android.content.Context;
 import android.util.Log;
 
+/**
+ * background loader used in adpater
+ */
 public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 
 	private LocationInfo entryData;

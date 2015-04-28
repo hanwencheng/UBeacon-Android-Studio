@@ -17,6 +17,7 @@ import mci.uni.stuttgart.bilget.database.DatabaseUtil;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
 
 /**
+ * A helper singleton to download the json file
  * Created by hanwencheng on 2/27/15.
  */
 public class JSONLoader {
@@ -57,7 +58,7 @@ public class JSONLoader {
          * the background task
          * @param params params[0]-url params[1]-whether to check the url database
          *               true : check ; false : not check
-         * @return
+         * @return if the download is performed, return true
          */
         @Override
         protected Boolean doInBackground(Object... params) {
@@ -89,7 +90,6 @@ public class JSONLoader {
     // then it is compulsory downloading without any conditions.
     private boolean downloadURL(URL url, boolean shouldCheck) throws IOException{
         InputStream inputStream = null;
-        int len = 100;
 
         //
         if( !shouldCheck || !DatabaseUtil.queryURL(this.beaconDBHelper, url.toString())) {
