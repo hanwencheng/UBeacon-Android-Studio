@@ -6,11 +6,12 @@ package mci.uni.stuttgart.bilget.algorithm;
  */
 public class RangeThreshold {
 
+    //TOTAL slot number for our algorithm
     public static int TOTAL = 4;
 
     public static int NEAR = 45;
-    public static int MIDDLE = 60;
-    public static int FAR = 75;
+    public static int MIDDLE = 65;
+    public static int FAR = 85;
 
-    public static int THRESHOLD = 20;
+    public static int THRESHOLD = 15;
 }

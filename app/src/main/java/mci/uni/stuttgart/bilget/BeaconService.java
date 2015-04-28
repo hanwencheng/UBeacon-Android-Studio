@@ -26,20 +26,18 @@ import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class BeaconService extends Service {
-	private static String TAG = "beacon service";
 	protected static final long LONG_SCAN_PERIOD = 8000;
     protected static final long SHORT_SCAN_PERIOD = 2000;
     protected static final long MIDDLE_SCAN_PERIOD = 5000;
-	protected static String SERVICE_IS_RUNNING = "BeaconService.bildgetScanService";
-	
-	protected boolean mScanning = false;
-	
+    protected static String SERVICE_IS_RUNNING = "BeaconService.bildgetScanService";
+    protected boolean mScanning = false;
+    private static String TAG = "beacon service";
+
 	private Handler scanHandler;
 	private Map<String, BeaconsInfo> resultsMap;
 	private List<BeaconsInfo> resultList;
@@ -51,13 +49,13 @@ public class BeaconService extends Service {
     private ScanSettings scanSettings;
     private Object scanCallback;
 
-    private String closestMAC;
     private NotificationManager mNotificationManager;
 
 
     private SharedPreferences preferences;
     private long scanPeriod;
 
+    //AIDL functions
     private final IBeacon.Stub mBinder = new IBeacon.Stub() {
 	    public int getCount(){
 			return count;
@@ -133,7 +131,6 @@ public class BeaconService extends Service {
 		super.onDestroy();
 		scanHandler.removeCallbacks(scanRunnable);
 		setRunning(false);
-//		scanHandler.removeCallbacks(updateUI);
 		Log.d(TAG, "service is destoryed");
 
         destroyNotification();
@@ -146,17 +143,22 @@ public class BeaconService extends Service {
 			scanHandler.postDelayed(scanRunnable, scanPeriod);
 		}
 	};
-	
+
+    /**
+     * start or stop the bluetooth scanning.
+     * @param enable true to start, false to stop
+     */
 	public void scanBLE(boolean enable) {
 
         if (Build.VERSION.SDK_INT >= 21) {
 		    mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+            //more setting please check new api
             scanSettings = new ScanSettings.Builder()
                     .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-    //				.setReportDelay(10001)
                     .build();
         }
 
+        //we implemented our own filter instead, which is more flexible
 //		List<ScanFilter> uuidFilter = new ScanFilter.Builder()
 //				.setRssiRange(-75, 0)
 //				.build();
@@ -184,6 +186,11 @@ public class BeaconService extends Service {
 		Log.d(TAG, "now the scanning state is" + mScanning);
 	}
 
+    /**
+     * Transfer from the map in service to a list, used for our ui
+     * @param map raw beacon map
+     * @param list raw beacon list
+     */
 	protected void mapToList(Map<String, BeaconsInfo> map, List<BeaconsInfo> list){
 		list.clear();
 		for(BeaconsInfo beaconsInfo : map.values()){
@@ -191,7 +198,6 @@ public class BeaconService extends Service {
         }
 		// speak out the most close place.
 		if(!list.isEmpty()){
-//			Collections.sort(list);
             updateNotification();
         }
 	}
@@ -206,6 +212,7 @@ public class BeaconService extends Service {
 //====================================backward-compatible functions========================================
 //=========================================================================================================
 
+    @SuppressWarnings("deprecation")
     private void startScan(){
         if (Build.VERSION.SDK_INT < 21) {
             mBluetoothAdapter.startLeScan((BluetoothAdapter.LeScanCallback) scanCallback);
@@ -215,6 +222,7 @@ public class BeaconService extends Service {
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void stopScan(){
         if (Build.VERSION.SDK_INT < 21) {
             mBluetoothAdapter.stopLeScan((BluetoothAdapter.LeScanCallback)scanCallback);
@@ -238,7 +246,7 @@ public class BeaconService extends Service {
                         }
 
                         public void onBatchScanResults(java.util.List<android.bluetooth.le.ScanResult> results) {
-                            Log.d(TAG, "event linstener is called!!!!");
+                            Log.d(TAG, "event listener is called!!!!");
                             Log.d(TAG, "batch result are:" + results);
                             //mAdapter.notifyDataSetChanged();
                             for (int i = 0; i < results.size(); i++) {
@@ -254,40 +262,22 @@ public class BeaconService extends Service {
                     new BluetoothAdapter.LeScanCallback() {
                         @Override
                         public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                            BeaconsInfo beaconInfo = new BeaconsInfo();
-                            beaconInfo.RSSI = rssi;
-                            beaconInfo.MACaddress = device.getAddress();
-
-                            String recordInfo = new String(scanRecord);
-                            String recordUUID ="NULL UUID";
-                            if(!recordInfo.equals("")){
-                                Log.d(TAG, "the scan record string is" + recordInfo);
-                                recordUUID = recordInfo;
-                            }
-                            beaconInfo.UUID = recordUUID;
-
-                            String deviceName = "NULL NAME";
-                            String mServiceName = device.getName();
-                            if(mServiceName != null){
-                                deviceName = mServiceName;
-                            }
-                            beaconInfo.name = deviceName;
-                            resultsMap.put(beaconInfo.MACaddress, beaconInfo);
+                            addBeaconToMap(device, rssi, scanRecord, resultsMap);
                         }
                     };
         }
 
     }
 
+    //collect beacon to map, which aimed at new api.
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void addBeaconToMap(ScanResult result, Map<String,BeaconsInfo> map){
         int receiveRSSI = result.getRssi();
         BluetoothDevice receiveBeacon = result.getDevice();
 
         String deviceMAC = receiveBeacon.getAddress();
-        Log.d(TAG, "macaddress from API 21 is" + deviceMAC);
+        Log.d(TAG, "macAddress from API 21 is" + deviceMAC);
         ScanRecord receiveRecord = result.getScanRecord();
-        String bleName = receiveRecord.getDeviceName();
         //name inspector
         String deviceName = "NULL NAME";
         String mServiceName = receiveBeacon.getName();
@@ -311,6 +301,29 @@ public class BeaconService extends Service {
         map.put(deviceMAC, beaconInfo);
     }
 
+    //collect beacon to map, which aimed at old api.
+    private void addBeaconToMap(BluetoothDevice device, int rssi, byte[] scanRecord, Map<String,BeaconsInfo> map ){
+        BeaconsInfo beaconInfo = new BeaconsInfo();
+        beaconInfo.RSSI = rssi;
+        beaconInfo.MACaddress = device.getAddress();
+
+        String recordInfo = new String(scanRecord);
+        String recordUUID ="NULL UUID";
+        if(!recordInfo.equals("")){
+            Log.d(TAG, "the scan record string is" + recordInfo);
+            recordUUID = recordInfo;
+        }
+        beaconInfo.UUID = recordUUID;
+
+        String deviceName = "NULL NAME";
+        String mServiceName = device.getName();
+        if(mServiceName != null){
+            deviceName = mServiceName;
+        }
+        beaconInfo.name = deviceName;
+        map.put(beaconInfo.MACaddress, beaconInfo);
+    }
+
 
 //	=======================================Notification=======================================
 //	==========================================================================================
@@ -324,13 +337,13 @@ public class BeaconService extends Service {
         // Creates an explicit intent for an Activity in your app
         Intent resultIntent = new Intent(this, MainActivity.class);
         resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//
-//        // The stack builder object will contain an artificial back stack for the
-//        // started Activity.
-//        // This ensures that navigating backward from the Activity leads out of
-//        // your application to the Home screen.
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-//        // Adds the back stack for the Intent (but not the Intent itself)
+        // Adds the back stack for the Intent (but not the Intent itself)
         stackBuilder.addParentStack(MainActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(resultIntent);
@@ -340,10 +353,11 @@ public class BeaconService extends Service {
                         PendingIntent.FLAG_UPDATE_CURRENT
                 );
         mBuilder.setContentIntent(resultPendingIntent);
-// mId allows you to update the notification later on.
+        // mId allows you to update the notification later on.
+        int mId = 0;
 
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(0, mBuilder.build());
+        mNotificationManager.notify(mId, mBuilder.build());
     }
 
     private void destroyNotification(){
@@ -363,7 +377,7 @@ public class BeaconService extends Service {
                 ;
 
         mNotificationManager.notify(
-                0,
+                notifyID,
                 mNotifyBuilder.build());
     }
 

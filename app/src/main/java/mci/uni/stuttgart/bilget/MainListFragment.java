@@ -14,14 +14,12 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.app.NotificationCompat;
@@ -59,21 +57,24 @@ public class MainListFragment extends Fragment
                                 implements SharedPreferences.OnSharedPreferenceChangeListener,
         BeaconsAdapter.OnListHeadChange
 {
-
+    //UI sweeties.
 	private RecyclerView mRecyclerView;
 	private Adapter<BeaconsViewHolder> mAdapter;
     private List<BeaconsInfo> resultList;
 	private SwipeRefreshLayout swipeLayout;
+    private Button startServiceButton;
+    private Button stopServiceButton;
 
 	//state variables
-	private boolean mScanning;
-	private Handler mHandler;
 	private String currentLocation = null;
-	
+    private List<BeaconsInfo> savedListInstance;
+
+    //Request code constants
 	private final static int REQUEST_ENABLE_BT = 1;
 	private final static int MY_DATA_CHECK_CODE = 2;
     private final static int REQUEST_SETTINGS =3;
-	
+
+    //text to speech constants
 	private TextToSpeech mSpeech;
 	private final static long UPDATE_PERIOD = 5000 ;
 	private final static String SPEAK_NAME = "name";//text to speech utteranceId
@@ -88,16 +89,11 @@ public class MainListFragment extends Fragment
     private SoundPoolPlayer player;
     private VibratorBuilder vibrator;
 
-	private Button startServiceButton;
-	private Button stopServiceButton;
-	
-	private IBeacon beaconInteface;
+    private Handler mHandler;
+	private IBeacon beaconInterface;
     private SharedPreferences sharedPreferences;
     private CalcList calcList;
 
-    MediaPlayer beapSounds;
-    SoundPoolPlayer soundPoolPlayer;
-    private List<BeaconsInfo> savedListInstance;
 
 //	========================================Initialization==========================================
 //	================================================================================================
@@ -109,26 +105,25 @@ public class MainListFragment extends Fragment
         super.onCreate(savedInstanceState);//TODO
 
         setHasOptionsMenu(true);//default is false;
+
+        //assign DOM element
 		View rootView = inflater.inflate(R.layout.fragment_main, container,
 				false);
 		swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
 		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
 		registerForContextMenu(mRecyclerView);
-
 		startServiceButton = (Button) rootView.findViewById(R.id.service_start);
 		stopServiceButton = (Button) rootView.findViewById(R.id.service_stop);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         calcList = CalcList.getInstance();// init algorithm module
 
-        //create sounds
-        beapSounds = MediaPlayer.create(getActivity(), Settings.System.DEFAULT_NOTIFICATION_URI);
-
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
 			@Override
 			public void onRefresh() {
 				swipeLayout.setRefreshing(true);
+                //do magic stuff here.
 				mHandler.postDelayed(new Runnable() {
 	                @Override
 	                public void run() {
@@ -138,12 +133,12 @@ public class MainListFragment extends Fragment
 			}
 		});
 
+        //enable swipe view only when we reach the top of the list
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener(){
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
             }
-
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 boolean enable = false;
@@ -154,6 +149,7 @@ public class MainListFragment extends Fragment
             }
         });
 
+        //expand when item is clicked
         mRecyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(
                         getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
@@ -251,6 +247,7 @@ public class MainListFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    //TTS quick setting when setting button is clicked
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
@@ -264,6 +261,7 @@ public class MainListFragment extends Fragment
                 }
                 sharedPreferences.edit().putBoolean(IS_TTS_ENABLE, item.isChecked()).apply();
                 return true;
+            //open more settings page
             case R.id.action_setting_activity:
                 Intent i = new Intent(getActivity(), SettingsActivity.class);
                 startActivityForResult(i, REQUEST_SETTINGS);
@@ -276,6 +274,7 @@ public class MainListFragment extends Fragment
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater menuInflater = getActivity().getMenuInflater();
+        //initial menu here.
         menuInflater.inflate(R.menu.options, menu);
     }
 
@@ -337,14 +336,16 @@ public class MainListFragment extends Fragment
 		startServiceButton.setEnabled(isEnable);
 		stopServiceButton.setEnabled(!isEnable);
 	}
-    
+
+    //get the beacons raw information from service.
     private void updateList(){
     	try {
-			Log.i(TAG, "get List" + beaconInteface.getList());
+			Log.i(TAG, "get List" + beaconInterface.getList());
 			@SuppressWarnings("unchecked")
-			List<BeaconsInfo> beaconsInfo = beaconInteface.getList();
+			List<BeaconsInfo> beaconsInfo = beaconInterface.getList();
             List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);//TODO
             savedListInstance = newList;
+            //ordered by their distance (RSSI value)
             Collections.sort(newList);
 			resultList.clear();
             if(!newList.isEmpty()){
@@ -364,6 +365,7 @@ public class MainListFragment extends Fragment
     }
 
 
+    //give audio hint and vibration when the first object changed (with data in BeaconsAdapter)
     @Override
     public void onLabelNameChange(String labelName, int position) {
         Log.i(TAG,"get label name is" + labelName);
@@ -436,7 +438,7 @@ public class MainListFragment extends Fragment
 		@Override
 		public void onServiceConnected(ComponentName name, IBinder service) {
 			Log.d(TAG, "Service has connected");
-			beaconInteface = IBeacon.Stub.asInterface(service);//IBeacon
+			beaconInterface = IBeacon.Stub.asInterface(service);//IBeacon
 			mHandler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
@@ -453,7 +455,7 @@ public class MainListFragment extends Fragment
 	
 	private void doUnBindService(){
 		setStartButtonEnable(true);
-		beaconInteface = null;
+		beaconInterface = null;
 		mHandler.removeCallbacks(updateUI);
 	}
 	
@@ -493,7 +495,7 @@ public class MainListFragment extends Fragment
 			setStartButtonEnable(true);
 		}else{
 			setStartButtonEnable(false);
-			if(beaconInteface != null){
+			if(beaconInterface != null){
 				updateUI.run();
 			}else{
 				Intent intent = new Intent(getActivity(), BeaconService.class);
@@ -507,47 +509,12 @@ public class MainListFragment extends Fragment
 	@Override
 	public void onPause() {
 		super.onPause();
-		if (beaconInteface != null) {
+		if (beaconInterface != null) {
 			mHandler.removeCallbacks(updateUI);
 		}
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
 	}
 
-
-//	=======================================Notification====================================
-//	==========================================================================================
-
-    public void createNotification(){
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getActivity())
-                        .setSmallIcon(R.drawable.ic_launcher)
-                        .setContentTitle("My notification")
-                        .setContentText("Hello World!");
-        // Creates an explicit intent for an Activity in your app
-        Intent resultIntent = new Intent(this.getActivity(), MainActivity.class);
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//
-//        // The stack builder object will contain an artificial back stack for the
-//        // started Activity.
-//        // This ensures that navigating backward from the Activity leads out of
-//        // your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this.getActivity());
-//        // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent);
-        NotificationManager mNotificationManager =
-                (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-// mId allows you to update the notification later on.
-        mNotificationManager.notify(0, mBuilder.build());
-    }
-	
 //	=======================================Intent Callback====================================
 //	==========================================================================================
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -615,10 +582,10 @@ public class MainListFragment extends Fragment
         }
         if( key.equals("prefFrequency")) {
             Log.i(TAG,"preference frequency changed!");
-            if(beaconInteface != null){
+            if(beaconInterface != null){
                 try {
                     //user MUST restart to see the effect
-                    beaconInteface.setPeriod();
+                    beaconInterface.setPeriod();
                 } catch (RemoteException e) {
                     Log.e(TAG, "error in set the scanning period");
                     e.printStackTrace();
@@ -630,6 +597,7 @@ public class MainListFragment extends Fragment
         }
     }
 
+    //save the instance in case of screen rotation
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

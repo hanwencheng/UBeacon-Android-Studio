@@ -1,7 +1,5 @@
 package mci.uni.stuttgart.bilget.algorithm;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
