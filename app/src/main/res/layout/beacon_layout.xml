@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:animateLayoutChanges="true"
+    android:layout_marginBottom="10dp"
     style="@style/BeaconView">
 
     <TextView
@@ -27,14 +28,6 @@
         android:layout_toRightOf="@+id/beacon_item_name"
         android:text="TextView" />
 
-    <TextView
-        android:id="@+id/beacon_item_label"
-        style="@style/myText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="label"
-        android:layout_below="@+id/beacon_item_name"
-        android:layout_alignStart="@+id/beacon_item_name" />
 
 
 
@@ -46,18 +39,30 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_below="@+id/beacon_item_label"
+        android:layout_below="@+id/beacon_item_name"
         android:layout_alignParentEnd="true"
         android:weightSum="1">
 
 
         <TextView
+            android:id="@+id/beacon_item_label"
+            style="@style/myText"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="label"
+            android:layout_alignStart="@+id/beacon_item_name" />
+
+
+        <TextView
             android:layout_width="fill_parent"
+            android:layout_marginTop="10dp"
             android:id="@+id/beacon_item_description"
+            android:layout_below="@+id/beacon_item_label"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Detail Information here"
-            android:layout_weight="0.95" />
+            android:layout_weight="1" />
 
     </LinearLayout>
 

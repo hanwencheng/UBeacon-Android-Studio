@@ -1,10 +1,7 @@
-package mci.uni.stuttgart.bilget;
+package mci.uni.stuttgart.bilget.scan;
 
 import android.animation.ValueAnimator;
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
@@ -22,14 +19,12 @@ import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.Adapter;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -47,13 +42,20 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import mci.uni.stuttgart.bilget.BeaconService;
+import mci.uni.stuttgart.bilget.BeaconsInfo;
+import mci.uni.stuttgart.bilget.BeaconsViewHolder;
+import mci.uni.stuttgart.bilget.IBeacon;
+import mci.uni.stuttgart.bilget.R;
+import mci.uni.stuttgart.bilget.SettingsActivity;
 import mci.uni.stuttgart.bilget.Util.RecyclerItemClickListener;
 import mci.uni.stuttgart.bilget.Util.SoundPoolPlayer;
 import mci.uni.stuttgart.bilget.Util.VibratorBuilder;
 import mci.uni.stuttgart.bilget.algorithm.CalcList;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
+import mci.uni.stuttgart.bilget.scan.BeaconsAdapter;
 
-public class MainListFragment extends Fragment
+public class ScanListFragment extends Fragment
                                 implements SharedPreferences.OnSharedPreferenceChangeListener,
         BeaconsAdapter.OnListHeadChange
 {
@@ -107,16 +109,18 @@ public class MainListFragment extends Fragment
         setHasOptionsMenu(true);//default is false;
 
         //assign DOM element
-		View rootView = inflater.inflate(R.layout.fragment_main, container,
+		View rootView = inflater.inflate(R.layout.scan_fragment_main, container,
 				false);
 		swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
-		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
+		mRecyclerView = (RecyclerView) rootView.findViewById(R.id.scan_recycler_view);
 		registerForContextMenu(mRecyclerView);
 		startServiceButton = (Button) rootView.findViewById(R.id.service_start);
 		stopServiceButton = (Button) rootView.findViewById(R.id.service_stop);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext());
         calcList = CalcList.getInstance();// init algorithm module
+
+        initRecyclerView(mRecyclerView);
 
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -206,17 +210,6 @@ public class MainListFragment extends Fragment
 				getActivity().unbindService(mServiceConnection);
 			}
 		});
-		
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-
-        mRecyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
-        
-        // use a linear layout manager
-        LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        ((LinearLayoutManager) mLayoutManager).setOrientation(LinearLayout.VERTICAL);
 
         resultList =  new ArrayList<BeaconsInfo>();
         // specify an adapter (see also next example)
@@ -424,6 +417,23 @@ public class MainListFragment extends Fragment
                 + sharedPreferences.getString("prefLink", "http://meschup.hcilab.org/map/"));
 
         return builder.toString();
+    }
+
+    /**
+     * set the focus function and layoutManager of the recycler view
+     * @param recyclerView target view
+     */
+    private void initRecyclerView(RecyclerView recyclerView){
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        recyclerView.setHasFixedSize(true);
+
+        recyclerView.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+
+        // use a linear layout manager
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(mLayoutManager);
+        ((LinearLayoutManager) mLayoutManager).setOrientation(LinearLayout.VERTICAL);
     }
 	
 //	=====================================Service Function=====================================

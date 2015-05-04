@@ -1,7 +1,7 @@
 package mci.uni.stuttgart.bilget.database;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 /**
@@ -32,7 +32,7 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 //		Log.d(TAG, firstRowId + " is inserted and the table is initialed" +hanwensHome);
         String macAddressWithoutColon = MACAddress.replace(":","");
         //TODO if the data is not found, then call internet downloading
-		LocationInfo location =  DatabaseUtil.queryData(beaconDBHelper, macAddressWithoutColon, null);
+		LocationInfo location =  DatabaseUtil.querySingleData(beaconDBHelper, macAddressWithoutColon, null);
         Log.d(TAG, "1:the callback of location query is" +MACAddress + "::" + location);
         return location;
 	}

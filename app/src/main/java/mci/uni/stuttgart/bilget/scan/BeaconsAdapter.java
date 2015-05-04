@@ -1,14 +1,14 @@
-package mci.uni.stuttgart.bilget;
+package mci.uni.stuttgart.bilget.scan;
 
-import android.app.Fragment;
-import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
-import android.content.Loader;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView.Adapter;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import mci.uni.stuttgart.bilget.BeaconsInfo;
+import mci.uni.stuttgart.bilget.BeaconsViewHolder;
+import mci.uni.stuttgart.bilget.R;
 import mci.uni.stuttgart.bilget.algorithm.RangeThreshold;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import mci.uni.stuttgart.bilget.database.BeaconDataLoader;
@@ -121,7 +124,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 //===========================================DataLoader Callback========================================
 //======================================================================================================
     
-    private class BeaconDataLoaderCallbacks implements LoaderCallbacks<LocationInfo>{
+    private class BeaconDataLoaderCallbacks implements LoaderManager.LoaderCallbacks<LocationInfo> {
         private String mac;
         private int position;
 
@@ -132,7 +135,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 			return new BeaconDataLoader(context, beaconDBHelper, mac);
 		}
 
-		@Override
+        @Override
 		public void onLoadFinished(Loader<LocationInfo> loader,
 				LocationInfo data) {
             BeaconsViewHolder mBeaconsViewHolder = viewMap.get(this.mac);

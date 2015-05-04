@@ -1,26 +1,40 @@
 package mci.uni.stuttgart.bilget;
 
-import android.app.Activity;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-public class MainActivity extends Activity {
+import mci.uni.stuttgart.bilget.Util.UBeaconPageAdapter;
+
+public class MainActivity extends FragmentActivity {
 
     private static String TAG = "main Activity";
+    UBeaconPageAdapter pagerAdapter;
+    FragmentManager fragmentManager;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 //        test();
 		setContentView(R.layout.activity_main);
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new MainListFragment()).commit();
-		}
+        fragmentManager = getSupportFragmentManager();
+        pagerAdapter = new UBeaconPageAdapter(fragmentManager);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setCurrentItem(0);
+
+//		if (savedInstanceState == null) {
+//			getSupportFragmentManager().beginTransaction()
+//					.add(R.id.container, new ScanListFragment()).commit();
+//		}
+
         //add apps audio volume control.
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
