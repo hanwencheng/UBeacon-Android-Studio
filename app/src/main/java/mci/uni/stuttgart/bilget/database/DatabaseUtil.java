@@ -58,7 +58,7 @@ public class DatabaseUtil {
      * @param queryNumber
      * @return
      */
-	protected static ArrayList<LocationInfo> queryData(BeaconDBHelper mDbHelper, String queryColumnValue, String queryColumnName, int queryNumber){
+	public static ArrayList<LocationInfo> queryData(BeaconDBHelper mDbHelper, String queryColumnValue, String queryColumnName, int queryNumber){
 		SQLiteDatabase db = mDbHelper.getReadableDatabase();
 		if(queryColumnName == null)
 			queryColumnName = LocationEntry.COLUMN_NAME_MACADDRESS;

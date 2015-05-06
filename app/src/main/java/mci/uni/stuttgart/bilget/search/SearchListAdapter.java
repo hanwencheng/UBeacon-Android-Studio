@@ -16,6 +16,9 @@ import mci.uni.stuttgart.bilget.R;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
 
+/**
+ *  The adapter for the Search mode's recycler list
+ */
 public class SearchListAdapter extends RecyclerView.Adapter <BeaconsViewHolder>{
 
     Context context;

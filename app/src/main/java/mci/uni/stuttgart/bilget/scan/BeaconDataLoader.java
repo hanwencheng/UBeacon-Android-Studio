@@ -1,18 +1,22 @@
-package mci.uni.stuttgart.bilget.database;
+package mci.uni.stuttgart.bilget.scan;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
+import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
+import mci.uni.stuttgart.bilget.database.DatabaseUtil;
+import mci.uni.stuttgart.bilget.database.LocationInfo;
+
 /**
- * background loader used in adpater
+ * background loader used in beacon scan adpater, for search certain macAddress
  */
 public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 
 	private LocationInfo entryData;
 	private BeaconDBHelper beaconDBHelper;
     private String MACAddress;
-	private static final String TAG = "BeaconDataLoader";
+	private static final String TAG = "BeaconScanLoader";
 	
 	public BeaconDataLoader(Context context, BeaconDBHelper beaconDBHelper, String MACAddress) {
 		super(context);

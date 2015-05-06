@@ -23,6 +23,8 @@ public class BeaconDBHelper extends SQLiteOpenHelper {
 	private static final String SPACE = " ";
 	private static final String SINGLE_QUOTE = "'";
 
+    private static BeaconDBHelper instance = null;
+
 
 	private static final String SQL_CREATE_ENTRIES = "CREATE TABLE " 
 				+ LocationEntry.TABLE_NAME
@@ -37,8 +39,16 @@ public class BeaconDBHelper extends SQLiteOpenHelper {
             + " (" + DownloadUrlTable.URLEntry.COLUNM_NAME_URL + TEXT_TYPE + COMMA_SEP
             + DownloadUrlTable.URLEntry._ID + INT_TYPE + IS_PRIMARY + AUTO_INCREMENT
             +" )";
-	
-	public BeaconDBHelper(Context context) {
+
+    public static BeaconDBHelper getInstance(Context mainActivity){
+        if(instance == null){
+            instance = new BeaconDBHelper(mainActivity);
+        }
+        return instance;
+    }
+
+
+	private BeaconDBHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);//the third parameter is factory.
 	}
 

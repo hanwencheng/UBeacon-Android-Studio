@@ -27,7 +27,7 @@ public class CalcList {
     Set<String> keySet;
 
     //should be instanced when scan start
-    public CalcList(){
+    private CalcList(){
         map = new HashMap<>();
         beaconStorageMap = new HashMap<>();
     }

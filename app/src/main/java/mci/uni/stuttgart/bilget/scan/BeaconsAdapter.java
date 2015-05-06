@@ -27,7 +27,6 @@ import mci.uni.stuttgart.bilget.BeaconsViewHolder;
 import mci.uni.stuttgart.bilget.R;
 import mci.uni.stuttgart.bilget.algorithm.RangeThreshold;
 import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
-import mci.uni.stuttgart.bilget.database.BeaconDataLoader;
 import mci.uni.stuttgart.bilget.database.LocationInfo;
 import mci.uni.stuttgart.bilget.network.JSONLoader;
 

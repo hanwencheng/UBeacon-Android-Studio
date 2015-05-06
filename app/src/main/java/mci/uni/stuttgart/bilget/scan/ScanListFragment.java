@@ -213,7 +213,7 @@ public class ScanListFragment extends Fragment
 
         resultList =  new ArrayList<BeaconsInfo>();
         // specify an adapter (see also next example)
-        mAdapter = new BeaconsAdapter(resultList, this, new BeaconDBHelper(getActivity()));
+        mAdapter = new BeaconsAdapter(resultList, this, BeaconDBHelper.getInstance(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         
         mHandler = new Handler();
