@@ -26,8 +26,7 @@
 		        android:layout_width="150dp"
 		        android:layout_gravity="left"
 		        android:layout_column="0"
-		        android:text="@string/start_service" 
-		        android:onClick = "onStartServiceClicked"/>
+		        android:text="@string/start_service" />
 	    
 	    
   			<Button
@@ -38,15 +37,14 @@
 		        android:layout_width="150dp"
 		        android:layout_gravity="right"
 		        android:layout_column="0"
-		        android:text="@string/stop_service"
-		        android:onClick = "onStopServiceClicked"/>
+		        android:text="@string/stop_service"/>
        	    
 	    </TableRow>
 
 
     
 	    <android.support.v7.widget.RecyclerView
-	        android:id="@+id/my_recycler_view"
+	        android:id="@+id/scan_recycler_view"
 	        android:layout_width="match_parent"
 	        android:layout_height="fill_parent"
 	        android:scrollbars="vertical" >

@@ -7,13 +7,13 @@ import android.widget.TextView;
 
 public class BeaconsViewHolder extends RecyclerView.ViewHolder {
 	
-	protected TextView vName;
-	protected TextView vRSSI;
-	protected TextView vLabel;
-	protected TextView vMACaddress;
-    protected TextView vCategory;
-    protected TextView vDescription;
-    protected LinearLayout vExpandArea;
+	public TextView vName;
+	public TextView vRSSI;
+	public TextView vLabel;
+	public TextView vMACaddress;
+    public TextView vCategory;
+    public TextView vDescription;
+    public LinearLayout vExpandArea;
 
     private static String TAG = "BeaconViewHolder";
 

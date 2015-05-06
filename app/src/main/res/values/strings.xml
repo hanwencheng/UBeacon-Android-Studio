@@ -35,5 +35,7 @@
     <string name="url_avaliable">download completed</string>
     <string name="pref_vibration_switch_summary">Use vibration when beacon is found nearby</string>
     <string name="pref_vibration_switch">Vibration Switch</string>
+    <string name="search_mode"><![CDATA[=>]]></string>
+    <string name="search_button">Search</string>
 
 </resources>

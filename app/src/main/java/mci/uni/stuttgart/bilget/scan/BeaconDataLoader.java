@@ -1,18 +1,22 @@
-package mci.uni.stuttgart.bilget.database;
+package mci.uni.stuttgart.bilget.scan;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
+import mci.uni.stuttgart.bilget.database.BeaconDBHelper;
+import mci.uni.stuttgart.bilget.database.DatabaseUtil;
+import mci.uni.stuttgart.bilget.database.LocationInfo;
+
 /**
- * background loader used in adpater
+ * background loader used in beacon scan adpater, for search certain macAddress
  */
 public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 
 	private LocationInfo entryData;
 	private BeaconDBHelper beaconDBHelper;
     private String MACAddress;
-	private static final String TAG = "BeaconDataLoader";
+	private static final String TAG = "BeaconScanLoader";
 	
 	public BeaconDataLoader(Context context, BeaconDBHelper beaconDBHelper, String MACAddress) {
 		super(context);
@@ -32,7 +36,7 @@ public class BeaconDataLoader extends AsyncTaskLoader<LocationInfo> {
 //		Log.d(TAG, firstRowId + " is inserted and the table is initialed" +hanwensHome);
         String macAddressWithoutColon = MACAddress.replace(":","");
         //TODO if the data is not found, then call internet downloading
-		LocationInfo location =  DatabaseUtil.queryData(beaconDBHelper, macAddressWithoutColon, null);
+		LocationInfo location =  DatabaseUtil.querySingleData(beaconDBHelper, macAddressWithoutColon, null);
         Log.d(TAG, "1:the callback of location query is" +MACAddress + "::" + location);
         return location;
 	}

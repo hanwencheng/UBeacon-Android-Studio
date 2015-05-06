@@ -5,7 +5,10 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
+import android.location.Location;
 import android.util.Log;
+
+import java.util.ArrayList;
 
 import mci.uni.stuttgart.bilget.database.BeaconLocationTable.LocationEntry;
 import mci.uni.stuttgart.bilget.network.DownloadUrlTable;
@@ -47,7 +50,15 @@ public class DatabaseUtil {
 		return newRowId;
 	}
 
-	protected static LocationInfo queryData(BeaconDBHelper mDbHelper, String queryColumnValue, String queryColumnName){
+    /**
+     *
+     * @param mDbHelper
+     * @param queryColumnValue
+     * @param queryColumnName
+     * @param queryNumber
+     * @return
+     */
+	public static ArrayList<LocationInfo> queryData(BeaconDBHelper mDbHelper, String queryColumnValue, String queryColumnName, int queryNumber){
 		SQLiteDatabase db = mDbHelper.getReadableDatabase();
 		if(queryColumnName == null)
 			queryColumnName = LocationEntry.COLUMN_NAME_MACADDRESS;
@@ -77,15 +88,31 @@ public class DatabaseUtil {
 		Log.d(TAG,"get the cursor" + DatabaseUtils.dumpCursorToString(cursor) + cursor.getCount());
 		LocationCursor locationCursor =  new LocationCursor(cursor);
 		locationCursor.moveToFirst();
-		LocationInfo location = null;
-		if(!locationCursor.isAfterLast()){
-			location = locationCursor.getLocationInfo();
-//			locationCursor.moveToNext();//to be used if we want to get a group of information
-		}
+        ArrayList<LocationInfo> resultList = new ArrayList<>();
+        for (int i = 0; i < queryNumber && !locationCursor.isAfterLast(); i++) {
+            LocationInfo location = locationCursor.getLocationInfo();
+            resultList.add(location);
+			locationCursor.moveToNext();
+        }
 		locationCursor.close();
-		return location;
+		return resultList;
 	}
 
+    public static LocationInfo querySingleData(BeaconDBHelper mDbHelper, String queryColumnValue, String queryColumnName){
+        ArrayList<LocationInfo> locations = queryData(mDbHelper, queryColumnValue, queryColumnName, 1);
+        if(!locations.isEmpty()){
+            return locations.get(0);
+        }else{
+            return null;
+        }
+    }
+
+    /**
+     *
+     * @param mDbHelper
+     * @param insertURL
+     * @return
+     */
     public static long insertURL(BeaconDBHelper mDbHelper, String insertURL){
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 

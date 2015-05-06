@@ -34,7 +34,7 @@ public class BeaconService extends Service {
 	protected static final long LONG_SCAN_PERIOD = 8000;
     protected static final long SHORT_SCAN_PERIOD = 2000;
     protected static final long MIDDLE_SCAN_PERIOD = 5000;
-    protected static String SERVICE_IS_RUNNING = "BeaconService.bildgetScanService";
+    public static String SERVICE_IS_RUNNING = "BeaconService.bildgetScanService";
     protected boolean mScanning = false;
     private static String TAG = "beacon service";
 
