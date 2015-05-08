@@ -122,32 +122,36 @@ public class ScanListFragment extends Fragment
 
         initRecyclerView(mRecyclerView);
 
+        player = SoundPoolPlayer.getInstance(getActivity());
+        vibrator = VibratorBuilder.getInstance(getActivity());
+
 //		======================set UI event listener======================
 		swipeLayout.setOnRefreshListener(new OnRefreshListener() {
-			@Override
-			public void onRefresh() {
-				swipeLayout.setRefreshing(true);
+            @Override
+            public void onRefresh() {
+                swipeLayout.setRefreshing(true);
                 //do magic stuff here.
-				mHandler.postDelayed(new Runnable() {
-	                @Override
-	                public void run() {
-	                	swipeLayout.setRefreshing(false);
-	                }
-	            }, 1000);
-			}
-		});
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        swipeLayout.setRefreshing(false);
+                    }
+                }, 1000);
+            }
+        });
 
         //enable swipe view only when we reach the top of the list
-        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener(){
+        mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
             }
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 boolean enable = false;
-                if(mRecyclerView != null && mRecyclerView.getChildCount() > 0){
-                    enable = mRecyclerView.getChildAt(0).getTop() == 0 ;
+                if (mRecyclerView != null && mRecyclerView.getChildCount() > 0) {
+                    enable = mRecyclerView.getChildAt(0).getTop() == 0;
                 }
                 swipeLayout.setEnabled(enable);
             }
@@ -160,6 +164,7 @@ public class ScanListFragment extends Fragment
                     private int mOriginalHeight = 0;
                     private boolean mIsViewExpanded = false;
                     private LinearLayout vExpandArea;
+
                     @Override
                     public void onItemClick(View view, int position) {
                         Log.d(TAG, "now touched on the view");
@@ -195,6 +200,7 @@ public class ScanListFragment extends Fragment
 			public void onClick(View v) {
 				Log.i(TAG, "start button clicked");
                 speakOut("scanning start");
+                vibrator.vibrate(VibratorBuilder.LONG_LONG);
 				Intent intent = new Intent(getActivity(), BeaconService.class);
 				getActivity().bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
 			}
@@ -204,6 +210,7 @@ public class ScanListFragment extends Fragment
 			@Override
 			public void onClick(View v) {
 				Log.i(TAG, "stop button clicked");
+                vibrator.vibrate(VibratorBuilder.SHORT_SHORT);
                 speakOut("scanning stops");
 				doUnBindService();
 				//unBind service and end the UI update runnable.
@@ -221,9 +228,6 @@ public class ScanListFragment extends Fragment
         checkBLE(getActivity());
         
         checkBluetooth(getActivity());
-
-        player = SoundPoolPlayer.getInstance(getActivity());
-        vibrator = VibratorBuilder.getInstance(getActivity());
 
         if(savedInstanceState!=null){
 //            resultList = savedInstanceState.getParcelableArrayList("list");
@@ -346,7 +350,7 @@ public class ScanListFragment extends Fragment
 //                    player.play(R.raw.scanning);
                 }
                 if(sharedPreferences.getBoolean("prefVibrationSwitch", true)) {
-//                    vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
+//                    vibrator.vibrate(VibratorBuilder.LONG_SHORT);
                 }
             }
 			resultList.addAll(newList);
@@ -376,7 +380,7 @@ public class ScanListFragment extends Fragment
                     player.play(R.raw.new_direction);
                 }
                 if(sharedPreferences.getBoolean("prefVibrationSwitch", true)) {
-                    vibrator.vibrate(VibratorBuilder.SHORT1PATTERN);
+                    vibrator.vibrate(VibratorBuilder.LONG_SHORT);
                 }
             }
         }
