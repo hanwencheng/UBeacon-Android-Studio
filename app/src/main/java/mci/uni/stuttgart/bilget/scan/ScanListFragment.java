@@ -165,23 +165,26 @@ public class ScanListFragment extends Fragment
                 new RecyclerItemClickListener(
                         getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     private int mOriginalHeight = 0;
+                    private int mExpandHeight = 0;
+                    private boolean isInited = false;
                     private boolean mIsViewExpanded = false;
-                    private LinearLayout vExpandArea;
 
                     @Override
                     public void onItemClick(View view, int position) {
                         Log.d(TAG, "now touched on the view");
-                        if (mOriginalHeight == 0) {
+                        if (!isInited) {
                             mOriginalHeight = view.getHeight();
+                            mExpandHeight = (int) (mOriginalHeight * (1 + EXPAND_RATION));
+                            isInited = true;
                         }
                         ValueAnimator valueAnimator;
-                        if (!mIsViewExpanded) {
+                        if (view.getHeight() == mOriginalHeight) {
                             mIsViewExpanded = true;
-                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight, mOriginalHeight + (int) (mOriginalHeight * EXPAND_RATION));
+                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight, mExpandHeight);
                             view.findViewById(R.id.expandArea).setVisibility(View.VISIBLE);
                         } else {
                             mIsViewExpanded = false;
-                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight + (int) (mOriginalHeight * EXPAND_RATION), mOriginalHeight);
+                            valueAnimator = ValueAnimator.ofInt(mExpandHeight, mOriginalHeight);
                             view.findViewById(R.id.expandArea).setVisibility(View.GONE);
                         }
                         valueAnimator.setDuration(200);

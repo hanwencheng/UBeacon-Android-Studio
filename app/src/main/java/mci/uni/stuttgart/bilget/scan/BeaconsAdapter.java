@@ -50,7 +50,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 
     //callback declared in mainListFragment
     public interface OnListHeadChange{
-        public void onLabelNameChange(String labelName, int position);
+        void onLabelNameChange(String labelName, int position);
     }
     OnListHeadChange mCallback;
 
