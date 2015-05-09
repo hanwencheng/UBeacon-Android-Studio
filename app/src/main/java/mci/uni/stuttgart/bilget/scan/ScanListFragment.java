@@ -97,6 +97,8 @@ public class ScanListFragment extends Fragment
     private SharedPreferences sharedPreferences;
     private CalcList calcList;
 
+    private final static double EXPAND_RATION = 1.8;
+
 
 //	========================================Initialization==========================================
 //	================================================================================================
@@ -175,16 +177,12 @@ public class ScanListFragment extends Fragment
                         ValueAnimator valueAnimator;
                         if (!mIsViewExpanded) {
                             mIsViewExpanded = true;
-                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight, mOriginalHeight + (int) (mOriginalHeight * 1.5));
+                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight, mOriginalHeight + (int) (mOriginalHeight * EXPAND_RATION));
                             view.findViewById(R.id.expandArea).setVisibility(View.VISIBLE);
-                            TextView label = (TextView) view.findViewById(R.id.beacon_item_label);
-                            Log.d(TAG, "visiblity is " + view.findViewById(R.id.beacon_item_label).getVisibility());
-                            Log.d(TAG, "text is " + label.getText());
                         } else {
                             mIsViewExpanded = false;
-                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight + (int) (mOriginalHeight * 1.5), mOriginalHeight);
+                            valueAnimator = ValueAnimator.ofInt(mOriginalHeight + (int) (mOriginalHeight * EXPAND_RATION), mOriginalHeight);
                             view.findViewById(R.id.expandArea).setVisibility(View.GONE);
-                            Log.d(TAG, "visiblity is " + view.findViewById(R.id.beacon_item_label).getVisibility());
                         }
                         valueAnimator.setDuration(200);
                         valueAnimator.setInterpolator(new LinearInterpolator());

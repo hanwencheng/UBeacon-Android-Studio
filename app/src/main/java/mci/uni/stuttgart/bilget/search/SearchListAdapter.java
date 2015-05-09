@@ -52,9 +52,13 @@ public class SearchListAdapter extends RecyclerView.Adapter <BeaconsViewHolder>{
     private void inflateView(BeaconsViewHolder viewHolder, int position){
         if(resultList.isEmpty()) return;
         LocationInfo beaconInfo = resultList.get(position);
-        viewHolder.vName.setText(beaconInfo.category);
-        viewHolder.vRSSI.setText(beaconInfo.subcategory);
-        viewHolder.vLabel.setText(beaconInfo.label);
-        viewHolder.vDescription.setText(beaconInfo.description);
+        if(beaconInfo.label !=null)
+            viewHolder.vName.setText(beaconInfo.label);
+        if(beaconInfo.description !=null)
+            viewHolder.vDescription.setText(beaconInfo.description);
+        if(beaconInfo.category != null)
+            viewHolder.vCategory.setText(beaconInfo.category);
+        if(beaconInfo.subcategory != null)
+            viewHolder.vSubcategory.setText(beaconInfo.subcategory);
     }
 }

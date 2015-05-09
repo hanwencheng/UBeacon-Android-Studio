@@ -37,5 +37,6 @@
     <string name="pref_vibration_switch">Vibration Switch</string>
     <string name="search_mode"><![CDATA[=>]]></string>
     <string name="search_button">Search</string>
+    <string name="description">description</string>
 
 </resources>

@@ -18,7 +18,7 @@
     </style>
     
     <style name="myText">
-        <item name="android:textColor">#ff0000</item>
+        <item name="android:textColor">#ff1d2a57</item>
         <item name="android:typeface">monospace</item>
     </style>
 

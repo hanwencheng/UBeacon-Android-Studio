@@ -9,10 +9,9 @@ public class BeaconsViewHolder extends RecyclerView.ViewHolder {
 	
 	public TextView vName;
 	public TextView vRSSI;
-	public TextView vLabel;
-	public TextView vMACaddress;
     public TextView vCategory;
     public TextView vDescription;
+	public TextView vSubcategory;
     public LinearLayout vExpandArea;
 
     private static String TAG = "BeaconViewHolder";
@@ -22,12 +21,10 @@ public class BeaconsViewHolder extends RecyclerView.ViewHolder {
 		
 		vName = (TextView) view.findViewById(R.id.beacon_item_name);
 		vRSSI = (TextView) view.findViewById(R.id.beacon_item_RSSI);
-		vLabel = (TextView) view.findViewById(R.id.beacon_item_label);
-//        vCategory = (TextView) view.findViewById(R.id.beacon_item_category);
-        vDescription = (TextView) view.findViewById(R.id.beacon_item_description);
-//		vMACaddress = (TextView) view.findViewById(R.id.beacon_item_MACaddress);
-        vExpandArea = (LinearLayout)view.findViewById(R.id.expandArea);
-
+		vExpandArea = (LinearLayout)view.findViewById(R.id.expandArea);
+		vDescription = (TextView) view.findViewById(R.id.beacon_item_description);
+		vCategory = (TextView) view.findViewById(R.id.beacon_item_category);
+		vSubcategory = (TextView) view.findViewById(R.id.beacon_item_subcategory);
 	}
 
 }

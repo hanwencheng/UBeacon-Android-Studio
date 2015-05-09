@@ -38,7 +38,7 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 	
 	private List<BeaconsInfo> beaconsList;//need to be filled
 	private static final String TAG = "BeaconsAdapter";
-    private static final String NOT_FOUND = "";
+    private static final String NOT_FOUND = "not_found";//TODO
 
 	//state variable;
 	private Context context;
@@ -86,8 +86,6 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	beaconsViewHolder.vName.setText(beaconInfo.name);
         String rangeHint = readRssi(beaconInfo.RSSI);
     	beaconsViewHolder.vRSSI.setText(rangeHint);
-    	beaconsViewHolder.vLabel.setText(beaconInfo.UUID);
-    	beaconsViewHolder.vDescription.setText(beaconInfo.macAddress);
 
     	//call the background database query function, get the macAddress from the bundle
         Bundle bundle = new Bundle();
@@ -138,21 +136,24 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 		public void onLoadFinished(Loader<LocationInfo> loader,
 				LocationInfo data) {
             BeaconsViewHolder mBeaconsViewHolder = viewMap.get(this.mac);
-			if(data!= null && data.category!=null){
+			if(data!= null){
 				Log.d(TAG, "3:get location info from the database" + data);
-                mBeaconsViewHolder.vName.setText(data.label);
-                mBeaconsViewHolder.vDescription.setText(data.description);
-//                mBeaconsViewHolder.vLabel.setText(data.subcategory);
-//                mBeaconsViewHolder.vCategory.setText(data.category);
+                if(data.label !=null)
+                    mBeaconsViewHolder.vName.setText(data.label);
+                if(data.description !=null)
+                    mBeaconsViewHolder.vDescription.setText(data.description);
+                if(data.category != null)
+                    mBeaconsViewHolder.vCategory.setText(data.category);
+                if(data.subcategory != null)
+                    mBeaconsViewHolder.vSubcategory.setText(data.subcategory);
 
                 Log.i(TAG, "interface is" + mCallback);
                 mCallback.onLabelNameChange(data.label, position);
 			}else{
-                Log.d(TAG, "3:the data itself or the category is null, data: " + data);
-//                mBeaconsViewHolder.vDescription.setText(NOT_FOUND);
-//                mBeaconsViewHolder.vLabel.setText(NOT_FOUND);
-//                mBeaconsViewHolder.vCategory.setText(NOT_FOUND);
-//                mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action, this UI action may be disabled
+                Log.d(TAG, "3:the data itself is null");
+                mBeaconsViewHolder.vCategory.setText(NOT_FOUND);
+                mBeaconsViewHolder.vSubcategory.setText(NOT_FOUND);
+                mBeaconsViewHolder.vDescription.setText(NOT_FOUND);
                 URL testURL = null;
                 try {
                     SharedPreferences sharedPreferences =

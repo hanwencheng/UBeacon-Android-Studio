@@ -4,16 +4,17 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:animateLayoutChanges="true"
-    android:layout_marginBottom="50dp"
+    android:layout_marginBottom="30dp"
+
     style="@style/BeaconView">
 
     <TextView
         android:id="@+id/beacon_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:text="Large Text"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -41,31 +42,46 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/expandArea"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_below="@+id/marginPlaceHolder"
         android:layout_alignParentEnd="true"
         >
 
 
+        <TableRow
+            android:layout_marginTop="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/beacon_item_category"
+                style="@style/myText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                />
+
+            <TextView
+                android:id="@+id/beacon_item_subcategory"
+                style="@style/myText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+        </TableRow>
+
+
         <TextView
-            android:id="@+id/beacon_item_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             style="@style/myText"
             android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="label" />
-
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_marginTop="10dp"
             android:id="@+id/beacon_item_description"
-            android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Detail Information here"
-            android:layout_weight="1" />
+            />
 
     </LinearLayout>
 

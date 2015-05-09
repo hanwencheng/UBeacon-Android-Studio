@@ -91,7 +91,6 @@ public class JSONLoader {
     private boolean downloadURL(URL url, boolean shouldCheck) throws IOException{
         InputStream inputStream = null;
 
-        //
         if( !shouldCheck || !DatabaseUtil.queryURL(this.beaconDBHelper, url.toString())) {
             try {
                 Log.i(TAG, "has not visited , start download");
