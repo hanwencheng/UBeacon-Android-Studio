@@ -85,7 +85,7 @@ public class DatabaseUtil {
 				null,
 				null, 
 				sortOrder);
-		Log.d(TAG,"get the cursor" + DatabaseUtils.dumpCursorToString(cursor) + cursor.getCount());
+		Log.d(TAG, "get the cursor" + DatabaseUtils.dumpCursorToString(cursor) + cursor.getCount());
 		LocationCursor locationCursor =  new LocationCursor(cursor);
 		locationCursor.moveToFirst();
         ArrayList<LocationInfo> resultList = new ArrayList<>();
@@ -106,6 +106,51 @@ public class DatabaseUtil {
             return null;
         }
     }
+
+	/**
+	 * Which use SQLite query function with LIKE clause, which means it is a fuse search.
+	 * The difference with the former queryData is only the selection clause;
+	 * @param mDbHelper
+	 * @param queryColumnValue
+	 * @param queryColumnName
+	 * @param queryNumber
+	 * @return
+	 */
+	public static ArrayList<LocationInfo> queryLikeData(BeaconDBHelper mDbHelper, String queryColumnValue, String queryColumnName, int queryNumber){
+		SQLiteDatabase db = mDbHelper.getReadableDatabase();
+		if(queryColumnName == null)
+			queryColumnName = LocationEntry.COLUMN_NAME_MACADDRESS;
+
+		String[] projection = {
+				LocationEntry.COLUMN_NAME_MACADDRESS,
+				LocationEntry.COLUMN_NAME_CATEGORY,
+				LocationEntry.COLUMN_NAME_SUBCATEGORY,
+				LocationEntry.COLUMN_NAME_LABEL,
+				LocationEntry.COLUNM_NAME_DESCRIPTION,
+		};
+		String selection = SPACE + queryColumnName  +  " LIKE " + SINGLE_QUOTE + "%" + queryColumnValue + "%" + SINGLE_QUOTE ;
+		String sortOrder = null;
+
+		Cursor cursor = db.query(
+				LocationEntry.TABLE_NAME,
+				projection,
+				selection,
+				null,
+				null,
+				null,
+				sortOrder);
+		Log.d(TAG,"get the cursor" + DatabaseUtils.dumpCursorToString(cursor) + cursor.getCount());
+		LocationCursor locationCursor =  new LocationCursor(cursor);
+		locationCursor.moveToFirst();
+		ArrayList<LocationInfo> resultList = new ArrayList<>();
+		for (int i = 0; i < queryNumber && !locationCursor.isAfterLast(); i++) {
+			LocationInfo location = locationCursor.getLocationInfo();
+			resultList.add(location);
+			locationCursor.moveToNext();
+		}
+		locationCursor.close();
+		return resultList;
+	}
 
     /**
      *

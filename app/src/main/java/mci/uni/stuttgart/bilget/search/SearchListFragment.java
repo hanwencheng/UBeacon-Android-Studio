@@ -7,6 +7,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +50,7 @@ public class SearchListFragment extends Fragment {
 
         beaconsList = new ArrayList<>();
         //set the adapter for the list
-        adapter = new SearchListAdapter(beaconsList, beaconDBHelper);
+        adapter = new SearchListAdapter(beaconsList);
         mRecyclerView.setAdapter(adapter);
 
 
@@ -113,6 +114,8 @@ public class SearchListFragment extends Fragment {
                     beaconsList.add(location);
                 }
             }
+            Log.d(TAG, "now the beaconsList is" + beaconsList);
+            mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         }
 

@@ -2,6 +2,7 @@ package mci.uni.stuttgart.bilget.search;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,9 @@ public class SearchListAdapter extends RecyclerView.Adapter <BeaconsViewHolder>{
 
     Context context;
     List<LocationInfo> resultList;
-    BeaconDBHelper dbHelper;
 
-    public SearchListAdapter(List<LocationInfo> beaconsList, BeaconDBHelper dbHelper){
+    public SearchListAdapter(List<LocationInfo> beaconsList){
         this.resultList = beaconsList;
-        this.dbHelper = dbHelper;
     }
 
     @Override
@@ -46,12 +45,14 @@ public class SearchListAdapter extends RecyclerView.Adapter <BeaconsViewHolder>{
 
     @Override
     public int getItemCount() {
-        return 0;
+        return resultList.size();
     }
 
     private void inflateView(BeaconsViewHolder viewHolder, int position){
         if(resultList.isEmpty()) return;
         LocationInfo beaconInfo = resultList.get(position);
+        Log.d("search adapter", "beacons info in adapter is" + beaconInfo);
+        viewHolder.vRSSI.setText("");
         if(beaconInfo.label !=null)
             viewHolder.vName.setText(beaconInfo.label);
         if(beaconInfo.description !=null)

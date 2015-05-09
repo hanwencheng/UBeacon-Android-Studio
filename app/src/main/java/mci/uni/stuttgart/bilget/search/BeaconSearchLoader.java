@@ -30,14 +30,7 @@ public class BeaconSearchLoader  extends AsyncTaskLoader<ArrayList<LocationInfo>
 
     @Override
     public ArrayList<LocationInfo> loadInBackground() {
-//		LocationInfo hanwensHome = new LocationInfo("E7D38F1CF82E",
-//				"indoor",
-//				"desk",
-//				"hanwen's desk",
-//				"my beautiful desk!");
-//		long firstRowId = DatabaseUtil.insertData(beaconDBHelper, hanwensHome);
-        //TODO if the data is not found, then call internet downloading
-        ArrayList<LocationInfo> locations = DatabaseUtil.queryData(beaconDBHelper, this.keyword, BeaconLocationTable.LocationEntry.COLUMN_NAME_LABEL, 100);
+        ArrayList<LocationInfo> locations = DatabaseUtil.queryLikeData(beaconDBHelper, this.keyword, BeaconLocationTable.LocationEntry.COLUMN_NAME_LABEL, 100);
         Log.d(TAG, "1:the callback of keyword query is" + keyword + "::" + locations);
         return locations;
     }
