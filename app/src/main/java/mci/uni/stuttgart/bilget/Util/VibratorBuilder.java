@@ -57,8 +57,8 @@ public class VibratorBuilder {
     /**
      * the vibrate with certain pattern
      * @param patternCode <ul>
-     *                    <li>0 for long once pattern</li>
-     *                    <li>1 for short once pattern</li>
+     *                    <li>0 for short once pattern</li>
+     *                    <li>1 for long once pattern</li>
      *                    <li>2 for short twice pattern</li>
      *                    </ul>
      */

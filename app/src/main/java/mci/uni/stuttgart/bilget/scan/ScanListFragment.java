@@ -36,6 +36,7 @@ import android.view.ViewGroup;
 import android.view.animation.LinearInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -176,10 +177,14 @@ public class ScanListFragment extends Fragment
                             mIsViewExpanded = true;
                             valueAnimator = ValueAnimator.ofInt(mOriginalHeight, mOriginalHeight + (int) (mOriginalHeight * 1.5));
                             view.findViewById(R.id.expandArea).setVisibility(View.VISIBLE);
+                            TextView label = (TextView) view.findViewById(R.id.beacon_item_label);
+                            Log.d(TAG, "visiblity is " + view.findViewById(R.id.beacon_item_label).getVisibility());
+                            Log.d(TAG, "text is " + label.getText());
                         } else {
                             mIsViewExpanded = false;
                             valueAnimator = ValueAnimator.ofInt(mOriginalHeight + (int) (mOriginalHeight * 1.5), mOriginalHeight);
                             view.findViewById(R.id.expandArea).setVisibility(View.GONE);
+                            Log.d(TAG, "visiblity is " + view.findViewById(R.id.beacon_item_label).getVisibility());
                         }
                         valueAnimator.setDuration(200);
                         valueAnimator.setInterpolator(new LinearInterpolator());

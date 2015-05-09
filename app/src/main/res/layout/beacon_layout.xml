@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:focusable="true"
     android:animateLayoutChanges="true"
-    android:layout_marginBottom="10dp"
+    android:layout_marginBottom="50dp"
     style="@style/BeaconView">
 
     <TextView
@@ -25,23 +25,28 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/beacon_item_name"
         android:layout_marginLeft="40dp"
-        android:layout_toRightOf="@+id/beacon_item_name"
+        android:layout_toEndOf="@+id/beacon_item_name"
         android:text="TextView" />
 
-
-
-
+    <ImageView
+        android:id="@+id/marginPlaceHolder"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="40dp"
+        />
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/expandArea"
-        android:visibility="gone"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:layout_below="@+id/beacon_item_name"
+        android:layout_below="@+id/marginPlaceHolder"
         android:layout_alignParentEnd="true"
-        android:weightSum="1">
+        >
 
 
         <TextView
@@ -50,15 +55,13 @@
             android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="label"
-            android:layout_alignStart="@+id/beacon_item_name" />
+            android:text="label" />
 
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_marginTop="10dp"
             android:id="@+id/beacon_item_description"
-            android:layout_below="@+id/beacon_item_label"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Detail Information here"

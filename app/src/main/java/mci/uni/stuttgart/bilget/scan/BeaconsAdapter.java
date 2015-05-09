@@ -86,8 +86,8 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
     	beaconsViewHolder.vName.setText(beaconInfo.name);
         String rangeHint = readRssi(beaconInfo.RSSI);
     	beaconsViewHolder.vRSSI.setText(rangeHint);
-//    	beaconsViewHolder.vLabel.setText(beaconInfo.UUID);
-//    	beaconsViewHolder.vMACaddress.setText(beaconInfo.macAddress);
+    	beaconsViewHolder.vLabel.setText(beaconInfo.UUID);
+    	beaconsViewHolder.vDescription.setText(beaconInfo.macAddress);
 
     	//call the background database query function, get the macAddress from the bundle
         Bundle bundle = new Bundle();
@@ -141,17 +141,16 @@ public class BeaconsAdapter extends Adapter<BeaconsViewHolder> {
 			if(data!= null && data.category!=null){
 				Log.d(TAG, "3:get location info from the database" + data);
                 mBeaconsViewHolder.vName.setText(data.label);
-//                mBeaconsViewHolder.vMACaddress.setText(this.mac);
                 mBeaconsViewHolder.vDescription.setText(data.description);
-                mBeaconsViewHolder.vLabel.setText(data.subcategory);
+//                mBeaconsViewHolder.vLabel.setText(data.subcategory);
 //                mBeaconsViewHolder.vCategory.setText(data.category);
 
                 Log.i(TAG, "interface is" + mCallback);
                 mCallback.onLabelNameChange(data.label, position);
 			}else{
                 Log.d(TAG, "3:the data itself or the category is null, data: " + data);
-                mBeaconsViewHolder.vDescription.setText(NOT_FOUND);
-                mBeaconsViewHolder.vLabel.setText(NOT_FOUND);
+//                mBeaconsViewHolder.vDescription.setText(NOT_FOUND);
+//                mBeaconsViewHolder.vLabel.setText(NOT_FOUND);
 //                mBeaconsViewHolder.vCategory.setText(NOT_FOUND);
 //                mBeaconsViewHolder.vMACaddress.setText(this.mac);//TODO start download action, this UI action may be disabled
                 URL testURL = null;
