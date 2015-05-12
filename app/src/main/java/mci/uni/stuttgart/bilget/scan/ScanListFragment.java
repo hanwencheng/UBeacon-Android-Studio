@@ -79,7 +79,8 @@ public class ScanListFragment extends Fragment
 
     //text to speech constants
 	private TextToSpeech mSpeech;
-	private final static long UPDATE_PERIOD = 5000 ;
+    //TODO the main screen refreshing frequency
+	private final static long UPDATE_PERIOD = 3000 ;
 	private final static String SPEAK_NAME = "name";//text to speech utteranceId
 	private final static String TAG = "Ubeacon";
     private final static String IS_TTS_ENABLE = "isTTSEnabled";
@@ -167,25 +168,28 @@ public class ScanListFragment extends Fragment
                     private int mOriginalHeight = 0;
                     private int mExpandHeight = 0;
                     private boolean isInited = false;
-                    private boolean mIsViewExpanded = false;
 
                     @Override
                     public void onItemClick(View view, int position) {
                         Log.d(TAG, "now touched on the view");
+                        player.play(R.raw.expand);
+                        LinearLayout expandArea = (LinearLayout) view.findViewById(R.id.expandArea);
                         if (!isInited) {
                             mOriginalHeight = view.getHeight();
                             mExpandHeight = (int) (mOriginalHeight * (1 + EXPAND_RATION));
                             isInited = true;
                         }
                         ValueAnimator valueAnimator;
+                        //expand the expand panel
                         if (view.getHeight() == mOriginalHeight) {
-                            mIsViewExpanded = true;
+                            readTheViewGroup(expandArea);
                             valueAnimator = ValueAnimator.ofInt(mOriginalHeight, mExpandHeight);
-                            view.findViewById(R.id.expandArea).setVisibility(View.VISIBLE);
-                        } else {
-                            mIsViewExpanded = false;
+                            expandArea.setVisibility(View.VISIBLE);
+                        }
+                        //extract the expand panel
+                        else {
                             valueAnimator = ValueAnimator.ofInt(mExpandHeight, mOriginalHeight);
-                            view.findViewById(R.id.expandArea).setVisibility(View.GONE);
+                            expandArea.setVisibility(View.GONE);
                         }
                         valueAnimator.setDuration(200);
                         valueAnimator.setInterpolator(new LinearInterpolator());
@@ -205,7 +209,7 @@ public class ScanListFragment extends Fragment
 			@Override
 			public void onClick(View v) {
 				Log.i(TAG, "start button clicked");
-                speakOut("scanning start");
+                speakOut("begin scanning");
                 vibrator.vibrate(VibratorBuilder.LONG_LONG);
 				Intent intent = new Intent(getActivity(), BeaconService.class);
 				getActivity().bindService(intent, mServiceConnection, Service.BIND_AUTO_CREATE);
@@ -217,7 +221,7 @@ public class ScanListFragment extends Fragment
 			public void onClick(View v) {
 				Log.i(TAG, "stop button clicked");
                 vibrator.vibrate(VibratorBuilder.SHORT_SHORT);
-                speakOut("scanning stops");
+                speakOut("stop scanning");
 				doUnBindService();
 				//unBind service and end the UI update runnable.
 				getActivity().unbindService(mServiceConnection);
@@ -290,6 +294,18 @@ public class ScanListFragment extends Fragment
 
 //	========================================Helper Functions========================================
 //	================================================================================================
+
+    private void readTheViewGroup(ViewGroup viewGroup){
+        for (int i = 0; i < viewGroup.getChildCount(); i++) {
+            View child = viewGroup.getChildAt(i);
+            if(child instanceof ViewGroup){
+                readTheViewGroup((ViewGroup) child);
+            }else if(child instanceof TextView){
+                TextView textView = (TextView) child;
+                speakOut(textView.getText().toString());
+            }
+        }
+    }
 	
 	private void checkBLE(Context context) {
 		// Use this check to determine whether BLE is supported on the device. Then
@@ -346,7 +362,7 @@ public class ScanListFragment extends Fragment
 			Log.i(TAG, "get List" + beaconInterface.getList());
 			@SuppressWarnings("unchecked")
 			List<BeaconsInfo> beaconsInfo = beaconInterface.getList();
-            List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);//TODO
+            List<BeaconsInfo> newList = calcList.calcList(beaconsInfo);//TODO using our algorithm here
             savedListInstance = newList;
             //ordered by their distance (RSSI value)
             Collections.sort(newList);
@@ -395,9 +411,9 @@ public class ScanListFragment extends Fragment
     //speak something with android TTS.
     private void speakOut(String words){
         if (Build.VERSION.SDK_INT < 21) {//TODO get the information from preference
-            mSpeech.speak(words, TextToSpeech.QUEUE_FLUSH, null);
+            mSpeech.speak(words, TextToSpeech.QUEUE_ADD, null);
         } else {
-            mSpeech.speak(words, TextToSpeech.QUEUE_FLUSH, null, SPEAK_NAME);
+            mSpeech.speak(words, TextToSpeech.QUEUE_ADD, null, SPEAK_NAME);
         }
     }
      
@@ -620,7 +636,7 @@ public class ScanListFragment extends Fragment
     //save the instance in case of screen rotation
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
+//        super.onSaveInstanceState(outState);
 //        if(!resultList.isEmpty()){
 //            outState.putParcelableArrayList("list", (ArrayList<? extends android.os.Parcelable>) savedListInstance);
 //        }

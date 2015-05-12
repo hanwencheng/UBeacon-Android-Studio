@@ -59,6 +59,7 @@ public class SoundPoolPlayer {
         //intitial loading
         mSoundsMap.put(R.raw.scanning, this.mShortPlayer.load(context, R.raw.scanning, 1));
         mSoundsMap.put(R.raw.new_direction, this.mShortPlayer.load(context, R.raw.scanning, 2));
+        mSoundsMap.put(R.raw.expand, this.mShortPlayer.load(context, R.raw.expand, 3));
     }
 
     public void load(int resourceID){
